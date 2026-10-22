@@ -1,6 +1,6 @@
 # Evidência de BMP: Literature Watch × CP2b × feedstocks.yaml
 
-> Registro: `analysis/data/literature_watch/REGISTRY_bmp_v2026-10-17.csv` (40 registros) · CP2b v5.1, cp2b_parametros.csv (sha256 conferido).
+> Registro: `data/literature_watch/REGISTRY_bmp_v2026-10-17.csv` (40 registros) · CP2b v5.1, cp2b_parametros.csv (sha256 conferido).
 > BMP em NmL CH₄/g SV, como o registro normalizou. Só substrato bruto é comparado às faixas.
 > Valor fora da faixa é evidência a conferir, não erro da faixa. Nada aqui muda a plataforma.
 

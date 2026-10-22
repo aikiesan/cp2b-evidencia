@@ -41,7 +41,7 @@
 
 ## 3. Sensibilidade
 
-N4 do estado hoje: 5.971,7 mi Nm³/ano. A coluna "Na faixa" diz se o N4 depois da troca fica entre o N4 mínimo e o máximo do próprio CP2b.
+N4 do estado hoje: 5.971,7 mi Nm³/ano; faixa do próprio CP2b, cenários min e max: 1.882,6–15.576,9 mi. A coluna "Na faixa" diz se o N4 depois da troca fica dentro dela. A faixa é larga; um cenário dentro dela ainda pode mudar o N4 de forma que o artigo precisa comentar.
 
 | Cenário | Tipo | O que muda | Multiplicador (med, faixa) | N1 | N2 | N3 | N4 | ΔN4 | N4 na faixa da literatura | Na faixa |
 |---|---|---|---|---:|---:|---:|---:|---:|---|---|

@@ -1,6 +1,6 @@
 # Evidência de FC, FCo, FS e FL: Literature Watch × CP2b
 
-> Registro: `analysis/data/literature_watch/REGISTRY_fde_factors_v2026-10-18.csv` (41 registros) · CP2b v5.1, cp2b_parametros.csv (sha256 conferido).
+> Registro: `data/literature_watch/REGISTRY_fde_factors_v2026-10-18.csv` (41 registros) · CP2b v5.1, cp2b_parametros.csv (sha256 conferido).
 > No CP2b: FC = eficiência de coleta da base A; FCo = fração que sobra após usos concorrentes (adubo é compatível com a digestão); FS = massa retida após perda documentada, nunca dias / 365 (DEC-013); FL = fração espacial por município.
 > O registro rotula pelo que o número parece; a leitura abaixo é pela definição da fonte. Valor fora da faixa é evidência a conferir, não erro da faixa. Nada aqui muda a plataforma.
 

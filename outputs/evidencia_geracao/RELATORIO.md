@@ -1,6 +1,6 @@
 # Evidência de geração de dejetos: Literature Watch × CP2b
 
-> Registro: `analysis/data/literature_watch/REGISTRY_livestock_generation_v2026-10-19.csv` (48 registros) · CP2b v5.1, cp2b_parametros.csv (sha256 conferido).
+> Registro: `data/literature_watch/REGISTRY_livestock_generation_v2026-10-19.csv` (48 registros) · CP2b v5.1, cp2b_parametros.csv (sha256 conferido).
 > Tudo na unidade do CP2b. Matéria seca = g × ST; a faixa do CP2b é mín×mín a máx×máx.
 > Valor fora da faixa é evidência a conferir, não erro da faixa. Nada aqui muda a plataforma.
 
