@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: cp2b-evidencia
+      # Lê o loader do CP2b no PILAR-2b. Se o PILAR-2b for privado, crie o
+      # secret PILAR2B_TOKEN (token de leitura do PILAR-2b).
+      - uses: actions/checkout@v4
+        with:
+          repository: aikiesan/Pilar-2b
+          ref: 116d2b2e2279eb1effab07e9b3b507f2b9c623b7
+          path: Pilar-2b
+          token: ${{ secrets.PILAR2B_TOKEN || github.token }}
+          sparse-checkout: |
+            analysis
+            cp2b-workspace/NewLook/data/canonical_parameters
+            cp2b-workspace/NewLook/backend/scripts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: pip install -r cp2b-evidencia/requirements.txt
+      - working-directory: cp2b-evidencia
+        env:
+          PILAR2B_DIR: ${{ github.workspace }}/Pilar-2b
+        run: |
+          python -m pytest -q -p no:cacheprovider
+          python -m flake8 --max-line-length=120 scripts tests

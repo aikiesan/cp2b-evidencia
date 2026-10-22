@@ -1,0 +1,18 @@
+codigo,setor,lignocelulosico,n4,parcela_n4,geracao,bmp,fc,fco,fs,cenarios
+PALHA,agricultural,True,2428718075.679061,0.4067042913770499,—,confere (1),—,confere (2),diverge: 1 de 1 (abaixo),palha_fs
+TORTA_FILTRO,agricultural,False,847284081.8291179,0.14188310926084677,—,confere (1),—,—,—,cana_fs_safra
+VINHACA,agricultural,False,809729493.6542755,0.13559435457805563,—,—,—,confere (1),—,cana_fs_safra
+BAGACO,agricultural,True,792305642.7185363,0.13267661990195584,—,diverge: 2 de 3 (acima),—,—,—,bagaco_bmp
+AVES_CORTE,livestock,False,255111591.9998336,0.04272005890076553,"diverge: 1 de 1 (acima); lotes/ano implícitos 6,0, 7,6",—,—,—,—,aves_fco_adubo
+PALHA_MILHO,agricultural,True,187045214.94423133,0.031321911077757385,—,—,—,confere (3),—,
+PALHA_SOJA,agricultural,True,177981336.81739163,0.029804107028115437,—,diverge: 1 de 1 (abaixo),—,confere (1),—,soja_bmp
+RSU_ORGANICO,urban,False,153619331.1395165,0.025724534205331717,—,—,—,—,—,
+AVES_POSTURA,livestock,False,104877940.64862947,0.017562478313033165,confere (5),—,—,—,—,aves_fco_adubo
+BOV_CONFINADO,livestock,False,55583678.068342716,0.009307840472424863,"diverge: 3 de 4 (abaixo, acima)",—,diverge: 1 de 1 (acima),—,—,"confinado_ms, confinado_fc, confinado_fs_dof"
+LODO_ETE,urban,False,42969096.17363491,0.00719544849005348,—,—,—,—,—,
+BAGACO_CITROS,agricultural,False,36043047.82315481,0.006035637635663715,—,—,—,diverge: 1 de 1 (abaixo),confere (1),citros_fco
+BOV_LEITE,livestock,False,23701590.89420148,0.0039689821662153065,diverge: 2 de 5 (acima),—,—,—,—,"leite_g, leite_fc1, leite_suinos_fco_adubo"
+PODA_URBANA,urban,False,23368831.78473828,0.003913259536582532,—,—,—,—,—,
+CASCA_CAFE,agricultural,False,17822518.780631073,0.0029844941427399187,—,confere (4),—,confere (1),—,
+SUINOS,livestock,False,15543589.353549514,0.002602872913408734,—,—,confere (1),confere (1),—,leite_suinos_fco_adubo
+BOV_PASTO_MISTO,livestock,False,0.0,0.0,diverge: 1 de 1 (acima),—,—,—,—,pasto_g

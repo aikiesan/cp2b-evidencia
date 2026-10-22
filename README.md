@@ -1,0 +1,37 @@
+# cp2b-evidencia
+
+Bibliotecas de evidência e análise de sensibilidade do CP2b (NIPE-UNICAMP).
+Compara os registros da rotina Literature Watch com os parâmetros do CP2b v5.1
+e refaz a cascata N1 → N4 com os valores da literatura.
+
+Este repositório existe para não poluir o histórico do PILAR-2b. Ele só lê o
+PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
+
+## Estrutura
+
+- `data/literature_watch/`: registros CSV da rotina (BMP, geração de dejetos,
+  fatores FC/FCo/FS/FL).
+- `scripts/`: um script por biblioteca, mais `pilar2b.py`, que acha o checkout
+  do PILAR-2b e confere a versão do método (CP2b v5.1).
+- `outputs/`: relatórios gerados com o snapshot real. Entram no git
+  normalmente.
+- `docs/NOTA_METODO_CP2B.md`: nota ao time do método.
+- `tests/`: testes com dados sintéticos; não precisam do snapshot.
+
+## Como rodar
+
+O PILAR-2b precisa estar clonado ao lado deste repositório (`../Pilar2b` ou
+`../Pilar-2b`), ou em `PILAR2B_DIR`. O snapshot do CP2b fica onde o loader do
+PILAR-2b espera; os scripts conferem o sha256 e não rodam com outro arquivo.
+
+```
+pip install -r requirements.txt
+python scripts/build_evidencia_bmp.py
+python scripts/build_evidencia_geracao.py
+python scripts/build_evidencia_fde.py
+python scripts/build_sensibilidade_cp2b.py
+python -m pytest -q
+```
+
+Sem o snapshot, os scripts escrevem um relatório dizendo que não rodaram. Não
+faça commit desses relatórios.
