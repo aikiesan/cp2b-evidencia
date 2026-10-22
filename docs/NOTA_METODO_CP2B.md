@@ -44,8 +44,9 @@ N3 7.001,9). A cana responde por cerca de 82 % do N4: palha 40,7 %, torta
 | Confinado: matéria seca (item 2) | literatura | −0,4 % |
 | Toda a literatura junta | combinado | −6,0 % (−31,8 a +1,5) |
 
-Todos os cenários ficam dentro da faixa mín–máx do próprio CP2b, mas essa
-faixa é larga; ficar dentro dela não dispensa comentário no artigo.
+Todos os cenários ficam dentro da faixa mín–máx do próprio CP2b
+(1.882,6–15.576,9 mi Nm³/ano, cenários min e max do snapshot), mas essa faixa
+é larga, um fator de 8; ficar dentro dela não dispensa comentário no artigo.
 
 Leitura para priorizar:
 
