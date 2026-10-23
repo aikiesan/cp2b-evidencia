@@ -1,0 +1,4 @@
+checagem,resultado,detalhe
+independente reproduz o p5 e o p95 de build_incerteza_cp2b (±1 %),True,"maior desvio 0,12 %"
+"tudo, ρ = 1: p5 e p95 = N4 com tudo no quantil 5 % e 95 % (±1 %)",True,"2.705,1–11.764,6 mi; maior desvio 0,49 %"
+"quantil 0 e 1 de tudo = faixa mín–máx do snapshot (±0,1 %)",True,"1.882,6–15.576,9 mi contra 1.882,6–15.576,9"

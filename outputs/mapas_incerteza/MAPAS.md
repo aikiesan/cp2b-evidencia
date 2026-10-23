@@ -10,7 +10,7 @@
 | `mapa_cenarios.png` | N4 do cenário contra o med, município a município, um painel por cenário |
 
 Municípios no ranking: 645; com polígono na malha: 645.
-N4 med zero: 17 municípios (por região intermediária: Sorocaba 14; São José dos Campos 2; São Paulo 1).
+N4 med zero: 27 municípios (por região intermediária: Sorocaba 17; São José dos Campos 8; São Paulo 2).
 
 Na fronteira do top 50 (entre 10 % e 90 % de chance): 13 municípios.
 
@@ -18,17 +18,17 @@ Na fronteira do top 50 (entre 10 % e 90 % de chance): 13 municípios.
 
 | Painel | Cenário | Municípios com queda > 5 % | Com alta > 5 % |
 |---|---|---:|---:|
-| leite_g | g do bovino de leite = excreção medida | 0 | 244 |
-| leite_fc1 | g do leite já é a fração coletável: FC = 1 | 0 | 127 |
+| leite_g | g do bovino de leite = excreção medida | 0 | 235 |
+| leite_fc1 | g do leite já é a fração coletável: FC = 1 | 0 | 118 |
 | confinado_ms | matéria orgânica fecal do confinado = medida | 23 | 0 |
 | confinado_fc | FC do confinado = 0,9 (coleta no alojamento) | 0 | 15 |
 | pasto_g | g do bovino de pasto = inventário nacional | 0 | 0 |
 | citros_fco | FCo do bagaço de laranja = sobra após a peletização | 11 | 0 |
 | palha_fs | FS da palha de cana = massa após decomposição no solo | 371 | 0 |
 | bagaco_bmp | BMP do bagaço de cana = medido (bruto) | 0 | 110 |
-| soja_bmp | BMP da palha de soja = medido (bruto) | 113 | 0 |
-| literatura_g_total | Toda a literatura, g do leite = excreção total | 308 | 151 |
-| literatura_g_coletavel | Toda a literatura, g do leite = fração coletável (FC = 1) | 357 | 105 |
+| soja_bmp | BMP da palha de soja = medido (bruto) | 112 | 0 |
+| literatura_g_total | Toda a literatura, g do leite = excreção total | 308 | 142 |
+| literatura_g_coletavel | Toda a literatura, g do leite = fração coletável (FC = 1) | 357 | 96 |
 
 ## Como ler
 
