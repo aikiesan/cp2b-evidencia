@@ -72,6 +72,31 @@ leituras são os dois limites: parâmetros independentes e parâmetros que andam
 todos juntos. O modelo reproduz o mín, o med e o máx do snapshot linha a
 linha.
 
+Onde fica o intervalo real depende de quais parâmetros andam juntos
+(`outputs/incerteza_correlacao/`, mesmas faixas, grupos sorteados juntos):
+
+| O que anda junto | Intervalo de 90 % do N4 (mi Nm³/ano) | Contra o med |
+|---|---|---|
+| nada (independentes) | 5.130–6.887 | −14 % a +15 % |
+| o mesmo elemento em todos os substratos, ρ = 1 | 4.411–7.738 | −26 % a +30 % |
+| todos os parâmetros de um substrato, ρ = 1 | 4.560–8.756 | −24 % a +47 % |
+| palha, bagaço, torta e vinhaça juntos, ρ = 1 | 3.449–10.177 | −42 % a +70 % |
+| tudo junto, ρ = 1 | 2.692–11.815 | −55 % a +98 % |
+
+- A leitura mais defensável é por elemento: todos os BMP vêm do mesmo tipo
+  de ensaio, e FC, FS e FL da mesma leitura da definição. Ela dá −26 % a
+  +30 %, e o ranking continua estável (Spearman p5 0,991; 46 dos 50 maiores
+  ficam no top 50 em ao menos 90 % dos sorteios).
+- O que mais alarga o intervalo é a cana andar junta: só ela leva a faixa a
+  −42 % a +70 %, perto de tudo junto com ρ = 0,5. Se as faixas da palha, do
+  bagaço, da torta e da vinhaça vêm das mesmas fontes, é esse o intervalo
+  que o artigo deveria citar.
+- O intervalo é assimétrico para cima (+70 contra −42 na cana), porque as
+  faixas do CP2b têm a cauda de cima mais longa (BMP da palha 140–175–250).
+- Com os substratos andando cada um por si, o ranking é o que mais mexe (35
+  dos 50 ficam no top 50 em ≥ 90 %): municípios com mistura diferente de
+  substratos trocam de posição. Com tudo junto ele volta a ficar estável.
+
 - A palha de cana responde por cerca de 70 % da variância do N4: BMP 39 %, FC
   14 %, SV 6 %, g 5 %, FCo, FL e FS juntos 7 %. Um BMP de palha tier A é o
   registro que mais estreitaria o intervalo; vale pedir à rotina.
