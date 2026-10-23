@@ -1,0 +1,131 @@
+codigo,elemento,min,med,max,fonte,referencias,valor_da_equipe,nota,grupo_fonte,grupo_fonte_ampla,grupo_fonte_equipe
+AVES_CORTE,BMP,200.0,280.0,360.0,feedstocks.yaml,,False,AVES_CORTE BMP: o yaml não tem refs para esse elemento,AVES_CORTE BMP,AVES_CORTE BMP,AVES_CORTE BMP
+AVES_CORTE,FCo,0.85,0.95,1.0,cp2b,,True,,AVES_CORTE FCo,AVES_CORTE FCo,VINHACA FCo
+AVES_CORTE,FL,0.65,0.75,0.85,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+AVES_CORTE,FS,0.9,0.95,0.98,cp2b,,True,,AVES_CORTE FS,AVES_CORTE FS,VINHACA FS
+AVES_CORTE,ST,0.2125,0.25,0.28750000000000003,feedstocks.yaml,,False,AVES_CORTE ST: o yaml não tem refs para esse elemento,AVES_CORTE ST,AVES_CORTE ST,AVES_CORTE ST
+AVES_CORTE,SV,0.6282,0.698,0.7678,feedstocks.yaml,,False,AVES_CORTE SV: o yaml não tem refs para esse elemento,AVES_CORTE SV,AVES_CORTE SV,AVES_CORTE SV
+AVES_CORTE,g,0.035,0.045,0.06,cp2b,,True,,AVES_CORTE g,AVES_CORTE g,SUINOS g
+AVES_POSTURA,BMP,150.0,250.0,340.0,feedstocks.yaml,,False,AVES_POSTURA BMP: o yaml não tem refs para esse elemento,AVES_POSTURA BMP,AVES_POSTURA BMP,AVES_POSTURA BMP
+AVES_POSTURA,FCo,0.85,0.95,1.0,cp2b,,True,,AVES_POSTURA FCo,AVES_POSTURA FCo,VINHACA FCo
+AVES_POSTURA,FL,0.62,0.7,0.78,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+AVES_POSTURA,FS,0.9,0.95,0.98,cp2b,,True,,AVES_POSTURA FS,AVES_POSTURA FS,VINHACA FS
+AVES_POSTURA,ST,0.2,0.25,0.3,override cp2b: ST 20–30% (dejeto fresco),,True,,AVES_POSTURA ST,AVES_POSTURA ST,SUINOS ST
+AVES_POSTURA,SV,0.65,0.75,0.86,feedstocks.yaml,,False,AVES_POSTURA SV: o yaml não tem refs para esse elemento,AVES_POSTURA SV,AVES_POSTURA SV,AVES_POSTURA SV
+AVES_POSTURA,g,0.04,0.05,0.055,"Planilha Resíduo_Disponível (0,15 kg/ave/dia postura)",planilha resíduo_disponível,False,,AVES_POSTURA g,AVES_POSTURA g,AVES_POSTURA g
+BAGACO,BMP,115.0,165.0,220.0,feedstocks.yaml,paulose2021_bagaco | talha2016_bagaco | unica2023_straw | velasquez2020_sugarcane,False,,TORTA_FILTRO BMP,TORTA_FILTRO SV,TORTA_FILTRO BMP
+BAGACO,FC,0.9,0.95,0.98,feedstocks.yaml,abiogas2021_atlas | epe_ben2024 | hashimoto1989_lignocellulosic | paulose2021_bagaco,False,,BAGACO FC,TORTA_FILTRO SV,BAGACO FC
+BAGACO,FCo,0.05,0.1,0.15,"decisão CP2b 23/09; SIGA/ANEEL 215 UTEs a bagaço (6,27 GW)",siga/aneel 215 utes a bagaço,True,,BAGACO FCo,BAGACO FCo,VINHACA FCo
+BAGACO,FL,0.85,0.9,0.98,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+BAGACO,FS,0.95,0.97,0.99,cp2b,,True,,BAGACO FS,BAGACO FS,VINHACA FS
+BAGACO,ST,0.5,0.589,0.66,feedstocks.yaml,talha2016_bagaco | velasquez2020_sugarcane,False,,TORTA_FILTRO ST,TORTA_FILTRO SV,TORTA_FILTRO ST
+BAGACO,SV,0.765,0.9,0.97,feedstocks.yaml,talha2016_bagaco,False,,TORTA_FILTRO SV,TORTA_FILTRO SV,TORTA_FILTRO SV
+BAGACO,g,0.25,0.28,0.3,cp2b,,True,,BAGACO g,BAGACO g,SUINOS g
+BAGACO_CITROS,BMP,170.0,230.0,310.0,feedstocks.yaml,pourbafrani2010_citrus | wikandari2014_citrus,False,,BAGACO_CITROS BMP,BAGACO_CITROS SV,BAGACO_CITROS BMP
+BAGACO_CITROS,FC,0.65,0.75,0.85,cp2b,,True,,BAGACO_CITROS FC,BAGACO_CITROS FC,VINHACA FC
+BAGACO_CITROS,FCo,0.15,0.25,0.4,cp2b,,True,,BAGACO_CITROS FCo,BAGACO_CITROS FCo,VINHACA FCo
+BAGACO_CITROS,FL,0.65,0.75,0.85,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+BAGACO_CITROS,FS,0.8,0.88,0.95,cp2b,,True,,BAGACO_CITROS FS,BAGACO_CITROS FS,VINHACA FS
+BAGACO_CITROS,ST,0.1,0.18,0.26,feedstocks.yaml,pourbafrani2010_citrus,False,,BAGACO_CITROS ST,BAGACO_CITROS SV,BAGACO_CITROS ST
+BAGACO_CITROS,SV,0.8200000000000001,0.88,0.9400000000000001,feedstocks.yaml,wikandari2014_citrus,False,,BAGACO_CITROS SV,BAGACO_CITROS SV,BAGACO_CITROS SV
+BAGACO_CITROS,g,0.48,0.5,0.52,cp2b,,True,,BAGACO_CITROS g,BAGACO_CITROS g,SUINOS g
+BOV_CONFINADO,BMP,210.0,260.0,307.0,"override cp2b: BMP 210–307 (Embrapa 0,21–0,23; Velásquez 2018 0,28; Montoro 2019 0,307)","montoro 2019 0,307) | velásquez 2018 0,28",True,,BOV_CONFINADO BMP,BOV_CONFINADO SV,BOV_CONFINADO BMP
+BOV_CONFINADO,FC,0.4,0.65,0.75,"IEA Task 37 (40%); Cenario_Bovinocultura/2 (0,60–0,75; Herrero 2018, Mendes 2023)","cenario_bovinocultura/2 (0,60–0,75 | herrero 2018, mendes 2023) | iea task 37",False,,BOV_CONFINADO FC,BOV_CONFINADO FC,BOV_CONFINADO FC
+BOV_CONFINADO,FCo,0.9,1.0,1.0,cp2b,,True,,BOV_CONFINADO FCo,BOV_CONFINADO FCo,VINHACA FCo
+BOV_CONFINADO,FL,0.52,0.65,0.85,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+BOV_CONFINADO,FS,0.9,0.95,1.0,cp2b,,True,,BOV_CONFINADO FS,BOV_CONFINADO FS,VINHACA FS
+BOV_CONFINADO,ST,0.18,0.205,0.23,"override cp2b: BMP 210–307 (Embrapa 0,21–0,23; Velásquez 2018 0,28; Montoro 2019 0,307)","montoro 2019 0,307) | velásquez 2018 0,28",True,,BOV_CONFINADO ST,BOV_CONFINADO SV,SUINOS ST
+BOV_CONFINADO,SV,0.78,0.81,0.84,"override cp2b: BMP 210–307 (Embrapa 0,21–0,23; Velásquez 2018 0,28; Montoro 2019 0,307)","montoro 2019 0,307) | velásquez 2018 0,28",True,,BOV_CONFINADO SV,BOV_CONFINADO SV,BOV_CONFINADO SV
+BOV_CONFINADO,g,4.8545,7.3,9.125,"Montoro 2017 (13,33 kg/dia, ST 20,49%, SV 81%, Presidente Prudente); Cenario_Bovinocultura2 (20 kg/dia)",cenario_bovinocultura2 | montoro 2017,False,,BOV_CONFINADO g,BOV_CONFINADO g,BOV_CONFINADO g
+BOV_LEITE,BMP,120.0,200.0,270.0,feedstocks.yaml,,False,BOV_LEITE BMP: o yaml não tem refs para esse elemento,BOV_LEITE BMP,BOV_LEITE BMP,BOV_LEITE BMP
+BOV_LEITE,FC,0.4,0.5,0.75,cp2b,,True,,BOV_LEITE FC,BOV_LEITE FC,VINHACA FC
+BOV_LEITE,FCo,0.9,1.0,1.0,cp2b,,True,,BOV_LEITE FCo,BOV_LEITE FCo,VINHACA FCo
+BOV_LEITE,FL,0.6,0.68,0.76,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+BOV_LEITE,FS,0.95,0.98,1.0,cp2b,,True,,BOV_LEITE FS,BOV_LEITE FS,VINHACA FS
+BOV_LEITE,ST,0.15,0.25,0.35000000000000003,feedstocks.yaml,,False,BOV_LEITE ST: o yaml não tem refs para esse elemento,BOV_LEITE ST,BOV_LEITE ST,BOV_LEITE ST
+BOV_LEITE,SV,0.68,0.78,0.85,feedstocks.yaml,,False,BOV_LEITE SV: o yaml não tem refs para esse elemento,BOV_LEITE SV,BOV_LEITE SV,BOV_LEITE SV
+BOV_LEITE,g,3.65,5.109999999999999,6.57,Embrapa Pecuária Sudeste via feedstocks.yaml (leite 10–18 kg/cab/dia),embrapa pecuária sudeste via feedstocks.yaml,False,,BOV_LEITE g,BOV_LEITE g,BOV_LEITE g
+BOV_PASTO_MISTO,BMP,120.0,200.0,270.0,feedstocks.yaml,,False,BOV_PASTO_MISTO BMP: o yaml não tem refs para esse elemento,BOV_PASTO_MISTO BMP,BOV_PASTO_MISTO BMP,BOV_PASTO_MISTO BMP
+BOV_PASTO_MISTO,FC,0.0,0.0,0.1,cp2b,,True,,BOV_PASTO_MISTO FC,BOV_PASTO_MISTO FC,VINHACA FC
+BOV_PASTO_MISTO,FCo,0.9,1.0,1.0,cp2b,,True,,BOV_PASTO_MISTO FCo,BOV_PASTO_MISTO FCo,VINHACA FCo
+BOV_PASTO_MISTO,FL,0.52,0.65,0.85,feedstocks.yaml,,False,BOV_PASTO_MISTO FL: o yaml não tem refs para esse elemento,BOV_PASTO_MISTO FL,BOV_PASTO_MISTO FL,BOV_PASTO_MISTO FL
+BOV_PASTO_MISTO,FS,0.95,0.98,1.0,cp2b,,True,,BOV_PASTO_MISTO FS,BOV_PASTO_MISTO FS,VINHACA FS
+BOV_PASTO_MISTO,ST,0.15,0.25,0.35000000000000003,feedstocks.yaml,,False,BOV_PASTO_MISTO ST: o yaml não tem refs para esse elemento,BOV_PASTO_MISTO ST,BOV_PASTO_MISTO ST,BOV_PASTO_MISTO ST
+BOV_PASTO_MISTO,SV,0.68,0.78,0.85,feedstocks.yaml,,False,BOV_PASTO_MISTO SV: o yaml não tem refs para esse elemento,BOV_PASTO_MISTO SV,BOV_PASTO_MISTO SV,BOV_PASTO_MISTO SV
+BOV_PASTO_MISTO,g,2.92,3.65,5.11,cp2b,,True,,BOV_PASTO_MISTO g,BOV_PASTO_MISTO g,SUINOS g
+CASCA_CAFE,BMP,120.0,165.0,220.0,feedstocks.yaml,murto2004_substrates | okonkwo2021_coffee,False,,CASCA_CAFE BMP,CASCA_CAFE SV,CASCA_CAFE BMP
+CASCA_CAFE,FC,0.8,0.9,0.95,cp2b,,True,,CASCA_CAFE FC,CASCA_CAFE FC,VINHACA FC
+CASCA_CAFE,FCo,0.5,0.6,0.7,cp2b,,True,,CASCA_CAFE FCo,CASCA_CAFE FCo,VINHACA FCo
+CASCA_CAFE,FL,0.55,0.65,0.75,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+CASCA_CAFE,FS,0.9,0.95,0.98,cp2b,,True,,CASCA_CAFE FS,CASCA_CAFE FS,VINHACA FS
+CASCA_CAFE,ST,0.8200000000000001,0.88,0.93,feedstocks.yaml,okonkwo2021_coffee,False,,CASCA_CAFE ST,CASCA_CAFE SV,CASCA_CAFE ST
+CASCA_CAFE,SV,0.88,0.93,0.97,feedstocks.yaml,okonkwo2021_coffee,False,,CASCA_CAFE SV,CASCA_CAFE SV,CASCA_CAFE SV
+CASCA_CAFE,g,1.0,1.0,1.18,cp2b,,True,,CASCA_CAFE g,CASCA_CAFE g,SUINOS g
+LODO_ETE,BMP,190.0,310.0,440.0,feedstocks.yaml,,False,LODO_ETE BMP: o yaml não tem refs para esse elemento,LODO_ETE BMP,LODO_ETE BMP,LODO_ETE BMP
+LODO_ETE,FCo,1.0,1.0,1.0,cp2b,,True,,LODO_ETE FCo,LODO_ETE FCo,VINHACA FCo
+LODO_ETE,FL,0.82,0.9,0.95,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+LODO_ETE,FS,0.98,1.0,1.0,cp2b,,True,,LODO_ETE FS,LODO_ETE FS,VINHACA FS
+LODO_ETE,ST,0.15,0.15,0.15,override cp2b:,,True,,LODO_ETE ST,LODO_ETE ST,SUINOS ST
+LODO_ETE,SV,0.55,0.68,0.8,feedstocks.yaml,,False,LODO_ETE SV: o yaml não tem refs para esse elemento,LODO_ETE SV,LODO_ETE SV,LODO_ETE SV
+LODO_ETE,g,0.037,0.073,0.122,cp2b,,True,,LODO_ETE g,LODO_ETE g,SUINOS g
+PALHA,BMP,140.0,175.0,250.0,feedstocks.yaml,paulose2021_bagaco | talha2016_bagaco | velasquez2020_sugarcane,False,,TORTA_FILTRO BMP,TORTA_FILTRO SV,TORTA_FILTRO BMP
+PALHA,FC,0.35,0.4,0.5,Atlas SP 2020 p.65 (40/50%); Tenelli et al. 2021 (35%),atlas sp 2020 | tenelli et al. 2021,False,,PALHA FC,TORTA_FILTRO g,PALHA FC
+PALHA,FCo,0.8,0.9,0.95,cp2b,,True,,PALHA FCo,PALHA FCo,VINHACA FCo
+PALHA,FL,0.78,0.85,0.92,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+PALHA,FS,0.85,0.92,0.97,cp2b,,True,,PALHA FS,PALHA FS,VINHACA FS
+PALHA,ST,1.0,1.0,1.0,override cp2b:,,True,,PALHA ST,PALHA ST,SUINOS ST
+PALHA,SV,0.72,0.8200000000000001,0.92,feedstocks.yaml,velasquez2020_sugarcane,False,,PALHA SV,TORTA_FILTRO SV,PALHA SV
+PALHA,g,0.12,0.14,0.15,cp2b,,True,,PALHA g,PALHA g,SUINOS g
+PALHA_MILHO,BMP,150.0,230.0,300.0,feedstocks.yaml,herrmann2012_corn,False,,PALHA_SOJA BMP,PALHA_SOJA SV,PALHA_SOJA BMP
+PALHA_MILHO,FC,0.25,0.4,0.5,cp2b,,True,,PALHA_MILHO FC,PALHA_MILHO FC,VINHACA FC
+PALHA_MILHO,FCo,0.85,0.95,1.0,cp2b,,True,,PALHA_MILHO FCo,PALHA_MILHO FCo,VINHACA FCo
+PALHA_MILHO,FL,0.35,0.67,0.75,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+PALHA_MILHO,FS,0.85,0.9,0.95,cp2b,,True,,PALHA_MILHO FS,PALHA_MILHO FS,VINHACA FS
+PALHA_MILHO,ST,0.7000000000000001,0.8200000000000001,0.9,feedstocks.yaml,herrmann2012_corn,False,,PALHA_MILHO ST,PALHA_SOJA SV,PALHA_MILHO ST
+PALHA_MILHO,SV,0.78,0.86,0.92,feedstocks.yaml,herrmann2012_corn,False,,PALHA_MILHO SV,PALHA_SOJA SV,PALHA_MILHO SV
+PALHA_MILHO,g,1.0,1.1,1.2,cp2b,,True,,PALHA_MILHO g,PALHA_MILHO g,SUINOS g
+PALHA_SOJA,BMP,150.0,220.0,280.0,feedstocks.yaml,herrmann2012_corn | kafle2016_soy,False,,PALHA_SOJA BMP,PALHA_SOJA SV,PALHA_SOJA BMP
+PALHA_SOJA,FC,0.2,0.3,0.4,cp2b,,True,,PALHA_SOJA FC,PALHA_SOJA FC,VINHACA FC
+PALHA_SOJA,FCo,0.9,1.0,1.0,cp2b,,True,,PALHA_SOJA FCo,PALHA_SOJA FCo,VINHACA FCo
+PALHA_SOJA,FL,0.3,0.55,0.7,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+PALHA_SOJA,FS,0.85,0.9,0.95,cp2b,,True,,PALHA_SOJA FS,PALHA_SOJA FS,VINHACA FS
+PALHA_SOJA,ST,0.8,0.84,0.88,feedstocks.yaml,kafle2016_soy,False,,PALHA_SOJA ST,PALHA_SOJA SV,PALHA_SOJA ST
+PALHA_SOJA,SV,0.8,0.85,0.9,feedstocks.yaml,kafle2016_soy,False,,PALHA_SOJA SV,PALHA_SOJA SV,PALHA_SOJA SV
+PALHA_SOJA,g,1.35,1.4,1.5,cp2b,,True,,PALHA_SOJA g,PALHA_SOJA g,SUINOS g
+PODA_URBANA,BMP,100.0,175.0,250.0,feedstocks.yaml,abrelpe2022_rsu | pognani2011_garden,False,,PODA_URBANA BMP,PODA_URBANA SV,PODA_URBANA BMP
+PODA_URBANA,FC,0.3,0.5,0.7,cp2b,,True,,PODA_URBANA FC,PODA_URBANA FC,VINHACA FC
+PODA_URBANA,FCo,0.8,0.9,1.0,cp2b,,True,,PODA_URBANA FCo,PODA_URBANA FCo,VINHACA FCo
+PODA_URBANA,FL,0.6,0.75,0.9,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+PODA_URBANA,FS,0.95,0.98,1.0,cp2b,,True,,PODA_URBANA FS,PODA_URBANA FS,VINHACA FS
+PODA_URBANA,ST,0.35000000000000003,0.55,0.7000000000000001,feedstocks.yaml,pognani2011_garden,False,,PODA_URBANA ST,PODA_URBANA SV,PODA_URBANA ST
+PODA_URBANA,SV,0.75,0.87,0.93,feedstocks.yaml,pognani2011_garden,False,,PODA_URBANA SV,PODA_URBANA SV,PODA_URBANA SV
+PODA_URBANA,g,0.005,0.015,0.03,cp2b,,True,,PODA_URBANA g,PODA_URBANA g,SUINOS g
+RSU_ORGANICO,BMP,170.0,270.0,360.0,feedstocks.yaml,,False,RSU_ORGANICO BMP: o yaml não tem refs para esse elemento,RSU_ORGANICO BMP,RSU_ORGANICO BMP,RSU_ORGANICO BMP
+RSU_ORGANICO,FC,0.5,0.65,0.8,cp2b,,True,,RSU_ORGANICO FC,RSU_ORGANICO FC,VINHACA FC
+RSU_ORGANICO,FCo,1.0,1.0,1.0,cp2b,,True,,RSU_ORGANICO FCo,RSU_ORGANICO FCo,VINHACA FCo
+RSU_ORGANICO,FL,0.7,0.82,0.9,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+RSU_ORGANICO,FS,0.98,1.0,1.0,cp2b,,True,,RSU_ORGANICO FS,RSU_ORGANICO FS,VINHACA FS
+RSU_ORGANICO,ST,0.26,0.3058,0.3517,feedstocks.yaml,,False,RSU_ORGANICO ST: o yaml não tem refs para esse elemento,RSU_ORGANICO ST,RSU_ORGANICO ST,RSU_ORGANICO ST
+RSU_ORGANICO,SV,0.738,0.8200000000000001,0.902,feedstocks.yaml,,False,RSU_ORGANICO SV: o yaml não tem refs para esse elemento,RSU_ORGANICO SV,RSU_ORGANICO SV,RSU_ORGANICO SV
+RSU_ORGANICO,g,0.46,0.5,0.55,"Atlas SP 2020 Eq. V.5 (0,4646); feedstocks.yaml (0,50–0,55)",atlas sp 2020 eq. v.5,False,RSU_ORGANICO g: o yaml não tem refs para esse elemento,RSU_ORGANICO g,RSU_ORGANICO g,RSU_ORGANICO g
+SUINOS,BMP,150.0,245.0,300.0,feedstocks.yaml,,False,SUINOS BMP: o yaml não tem refs para esse elemento,SUINOS BMP,SUINOS BMP,SUINOS BMP
+SUINOS,FC,0.7,0.85,0.95,cp2b,,True,,SUINOS FC,SUINOS FC,VINHACA FC
+SUINOS,FCo,0.9,1.0,1.0,cp2b,,True,,SUINOS FCo,SUINOS FCo,VINHACA FCo
+SUINOS,FL,0.55,0.72,0.88,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+SUINOS,FS,0.9,0.95,1.0,cp2b,,True,,SUINOS FS,SUINOS FS,VINHACA FS
+SUINOS,ST,0.08,0.1,0.12,override cp2b: ST 8–12% (excreta fresca; yaml 3% é chorume diluído),yaml 3% é chorume diluído),True,,SUINOS ST,SUINOS ST,SUINOS ST
+SUINOS,SV,0.7000000000000001,0.8,0.85,feedstocks.yaml,,False,SUINOS SV: o yaml não tem refs para esse elemento,SUINOS SV,SUINOS SV,SUINOS SV
+SUINOS,g,0.73,1.28,2.0,cp2b,,True,,SUINOS g,SUINOS g,SUINOS g
+TORTA_FILTRO,BMP,200.0,280.0,380.0,feedstocks.yaml,talha2016_bagaco | velasquez2020_sugarcane,False,,TORTA_FILTRO BMP,TORTA_FILTRO SV,TORTA_FILTRO BMP
+TORTA_FILTRO,FC,0.85,0.9,0.95,cp2b,,True,,TORTA_FILTRO FC,TORTA_FILTRO FC,VINHACA FC
+TORTA_FILTRO,FCo,0.9,1.0,1.0,cp2b,,True,,TORTA_FILTRO FCo,TORTA_FILTRO FCo,VINHACA FCo
+TORTA_FILTRO,FL,0.78,0.85,0.92,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+TORTA_FILTRO,FS,0.85,0.9,0.95,cp2b,,True,,TORTA_FILTRO FS,TORTA_FILTRO FS,VINHACA FS
+TORTA_FILTRO,ST,0.28,0.38,0.48,feedstocks.yaml,talha2016_bagaco,False,,TORTA_FILTRO ST,TORTA_FILTRO SV,TORTA_FILTRO ST
+TORTA_FILTRO,SV,0.68,0.8,0.9,feedstocks.yaml,talha2016_bagaco,False,,TORTA_FILTRO SV,TORTA_FILTRO SV,TORTA_FILTRO SV
+TORTA_FILTRO,g,0.03,0.035,0.04,Atlas SP 2020 p.66; real_rpr,atlas sp 2020 | real_rpr,False,,TORTA_FILTRO g,TORTA_FILTRO g,TORTA_FILTRO g
+VINHACA,FC,0.9,0.95,0.98,cp2b,,True,,VINHACA FC,VINHACA FC,VINHACA FC
+VINHACA,FCo,0.9,1.0,1.0,cp2b,,True,,VINHACA FCo,VINHACA FCo,VINHACA FCo
+VINHACA,FL,0.88,0.9,0.92,"espacial (codig_alocado), por município: fl_espacial/outputs/fl_v5_municipio_substrato.csv; valores mostrados = feedstocks.yaml (referência v4)",FL espacial do CP2b (fl_v5),False,,VINHACA FL,VINHACA FL,VINHACA FL
+VINHACA,FS,0.85,0.92,0.98,cp2b,,True,,VINHACA FS,VINHACA FS,VINHACA FS
+VINHACA,direto,57.0,65.55,74.1,cp2b,,True,,VINHACA direto,VINHACA direto,VINHACA direto
