@@ -1,16 +1,19 @@
 """Guards for scripts/build_incerteza_cp2b.py.
 
 The script samples each CP2b parameter inside its own range and recomputes the
-cascade municipality by municipality. These tests fail if the recomputation
-stops matching the sensitivity script's, if a parameter enters the wrong stage
-or is not divided by its median, if a fixed seed stops giving the same draws,
-if the variance shares stop adding up for a single parameter, or if the script
-writes numbers without the snapshot.
+cascade municipality by municipality, with the spatial FL following supply, U
+following N3a, and what the snapshot varies outside the parameter file as a
+residual. These tests build a snapshot the way the CP2b does and fail if the
+model stops reproducing its min, med and max row by row, if a residual or a
+med-zero substrate is missed, if a parameter enters the wrong stage, if a fixed
+seed stops giving the same draws, if the variance share of a lone parameter
+stops adding up, or if the script writes numbers without the snapshot.
 """
 
 import importlib.util
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,77 +21,114 @@ spec = importlib.util.spec_from_file_location("incerteza", ROOT / "scripts" / "b
 M = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(M)
 
-
-def _row(code, n1, fc, fco, u, fsfl, ibge, scen="med"):
-    n2 = n1 * fc
-    n3a = n2 * fco
-    n3 = max(n3a - u, 0.0)
-    return {"ibge": ibge, "codigo": code, "cenario": scen, "n1": n1, "n2": n2, "n3a": n3a, "u": u, "n3": n3,
-            "n4": n3 * fsfl, "fsfl": fsfl}
-
-
-ROWS = [_row("A", 100.0, 0.5, 0.8, 10.0, 0.5, "1"), _row("B", 50.0, 1.0, 1.0, 0.0, 0.9, "1"),
-        _row("A", 300.0, 0.5, 0.8, 0.0, 0.5, "2"), _row("B", 10.0, 1.0, 1.0, 0.0, 0.9, "3")]
 PARAMS = {("A", "BMP"): (200.0, 250.0, 300.0), ("A", "FC"): (0.4, 0.5, 0.6), ("A", "FS"): (0.9, 0.95, 1.0),
-          ("B", "FCo"): (0.5, 1.0, 1.0)}
+          ("P", "g"): (1.0, 2.0, 3.0), ("P", "FC"): (0.0, 0.0, 0.2)}
+BASE = {"A": 1.0, "P": 100.0}
+BASE_FACTOR = (0.9, 1.0, 1.1)              # A's base varies outside the parameter file
+SIZE = {"1": 4.0, "2": 1.0, "3": 0.2}       # municipality size
+EXIST = {"1": 30.0, "2": 0.0, "3": 5.0}     # existing use of A
 
 
-def test_no_multiplier_matches_the_sensitivity_recomputation():
-    state, by_sub, by_mun = M.run(M.med_rows(ROWS), {})
-    want = M.S.recompute(ROWS, {})
-    for lvl in M.LEVEL_KEYS:
-        assert state[lvl] == pytest.approx(want[lvl])
-    assert sum(by_sub.values()) == pytest.approx(want["n4"]) == pytest.approx(sum(by_mun.values()))
-    assert by_mun["2"] == pytest.approx(300 * 0.5 * 0.8 * 0.5)
+def spatial(n3):
+    return min(1.0, n3 / 200.0)
 
 
-def test_parameters_enter_their_stage_over_the_median():
-    m = M.stage_mult(PARAMS, {("A", "BMP"): 300.0, ("A", "FC"): 0.6, ("A", "FS"): 0.9, ("B", "FCo"): 0.5})
-    assert m["A"] == pytest.approx((1.2, 1.2, 1.0, 0.9 / 0.95))
-    assert m["B"] == pytest.approx((1.0, 1.0, 0.5, 1.0))
-    assert set(M.STAGE.values()) == {"n1", "n2", "n3a", "n4"}
+def snapshot_rows():
+    rows = []
+    for ibge, size in SIZE.items():
+        for s, scen in enumerate(M.SCEN):
+            bmp, fc, fs = (PARAMS[("A", e)][s] for e in ("BMP", "FC", "FS"))
+            n1 = size * BASE["A"] * bmp * BASE_FACTOR[s]
+            n2 = n1 * fc
+            n3a = n2 * 0.8
+            u = min(EXIST[ibge], n3a)
+            n3 = n3a - u
+            fsfl = fs * spatial(n3)
+            rows.append({"ibge": ibge, "codigo": "A", "cenario": scen, "n1": n1, "n2": n2, "n3a": n3a, "u": u,
+                         "n3": n3, "n4": n3 * fsfl, "fsfl": fsfl})
+            g, fcp = PARAMS[("P", "g")][s], PARAMS[("P", "FC")][s]
+            n1 = size * BASE["P"] * g
+            n3 = n1 * fcp
+            rows.append({"ibge": ibge, "codigo": "P", "cenario": scen, "n1": n1, "n2": n3, "n3a": n3, "u": 0.0,
+                         "n3": n3, "n4": n3 * 0.5, "fsfl": 0.5})
+    return rows
 
 
-def test_the_model_check_passes_when_min_and_max_are_the_products_of_the_parameter_ends():
-    rows = list(ROWS)
-    for i, scen in ((0, "min"), (2, "max")):
-        k = {c: M.stage_mult(PARAMS, {key: v[i] for key, v in PARAMS.items() if key[0] == c})[c] for c in "AB"}
-        for r in ROWS:
-            m1, m2, m3, m4 = k[r["codigo"]]
-            n1 = r["n1"] * m1
-            rows.append(_row(r["codigo"], n1, r["n2"] / r["n1"] * m2, r["n3a"] / r["n2"] * m3, r["u"],
-                             r["fsfl"] * m4, r["ibge"], scen))
-    out = M.model_check(rows, M.med_rows(rows), PARAMS)
-    assert out and all(r["razao"] == pytest.approx(1.0) for r in out if r["n4_snapshot"])
-    steps = M.stage_check(rows, PARAMS)
-    assert {r["etapa"] for r in steps} == {"N1", "FC", "FCo", "U", "FS × FL"}
-    ratios = [(r["razao_snapshot"], r["razao_modelo"]) for r in steps if r["razao_snapshot"] is not None]
-    assert ratios and all(a == pytest.approx(b) for a, b in ratios)
+ROWS = snapshot_rows()
 
 
-def test_a_fixed_seed_gives_the_same_draws_and_fixed_parameters_give_no_spread():
-    med = M.med_rows(ROWS)
-    a, b = M.simulate(med, PARAMS, 50), M.simulate(med, PARAMS, 50)
-    assert a["levels"]["n4"] == b["levels"]["n4"]
-    fixed = M.simulate(med, {k: (v[1],) * 3 for k, v in PARAMS.items()}, 20)
-    base = M.run(med, {})[0]["n4"]
-    assert all(x == pytest.approx(base) for x in fixed["levels"]["n4"])
-    assert fixed["spearman"] == [pytest.approx(1.0)] * 20 and fixed["top"]["2"] == 20
+def _snap(scen):
+    return {(r["ibge"], r["codigo"]): r["n4"] for r in ROWS if r["cenario"] == scen}
+
+
+def test_min_med_and_max_are_reproduced_row_by_row():
+    model = M.Model(ROWS, PARAMS)
+    keys = [(m, c) for m in model.munis for c in model.codes]
+    order = {(model.munis[mu], model.codes[su]): j for j, (mu, su) in enumerate(zip(model.mun, model.sub))}
+    for i, scen in enumerate(M.SCEN):
+        got = model.at(i)["rows"][0]
+        want = _snap(scen)
+        for key in keys:
+            assert got[order[key]] == pytest.approx(want[key], rel=1e-9, abs=1e-9), (scen, key)
+    rows, checks = M.check_model(model)
+    assert all(ok in (True, "vale") for _, ok, _ in checks)
+
+
+def test_the_base_residual_and_the_med_zero_substrate_are_found():
+    model = M.Model(ROWS, PARAMS)
+    assert set(model.residuals) == {("A", M.RESIDUAL["n1"])}
+    assert model.residual_range(("A", M.RESIDUAL["n1"])) == pytest.approx(BASE_FACTOR)
+    assert model.ref[model.codes.index("P")] == 2 and model.ref[model.codes.index("A")] == 1
+    assert model.at(1)["sub"][0][model.codes.index("P")] == 0.0
+    assert not model.dropped
+
+
+def test_parameters_and_extra_multipliers_enter_their_stage():
+    model = M.Model(ROWS, PARAMS)
+    med = model.evaluate()
+    up = model.evaluate({("A", "BMP"): np.array([275.0])})
+    a = model.codes.index("A")
+    assert up["state"]["n1"][0] - med["state"]["n1"][0] == pytest.approx(0.1 * sum(SIZE.values()) * 250.0)
+    fc2 = model.evaluate(extra={("A", "n2"): 2.0})
+    assert fc2["state"]["n1"][0] == pytest.approx(med["state"]["n1"][0])
+    assert fc2["state"]["n2"][0] == pytest.approx(med["state"]["n2"][0] + sum(SIZE.values()) * 125.0)
+    fs = model.evaluate({("A", "FS"): np.array([0.9])})
+    assert fs["sub"][0][a] == pytest.approx(med["sub"][0][a] * 0.9 / 0.95)
+    assert set(M.STAGE.values()) == set(M.STAGES)
+
+
+def test_spatial_and_existing_use_follow_supply_between_the_points():
+    model = M.Model(ROWS, PARAMS)
+    lo, mid, hi = (model.at(i)["state"]["n4"][0] for i in range(3))
+    steps = model.evaluate({("A", "BMP"): np.linspace(200.0, 300.0, 11)})["state"]["n4"]
+    assert np.all(np.diff(steps) > 0)
+    xs, ys = np.array([[0.0], [1.0], [2.0]]), np.array([[0.0], [10.0], [30.0]])
+    assert M._interp(np.array([-1.0, 0.5, 1.5, 9.0]), xs, ys).ravel() == pytest.approx([0.0, 5.0, 20.0, 30.0])
+    assert lo < mid < hi
+
+
+def test_a_fixed_seed_gives_the_same_draws():
+    model = M.Model(ROWS, PARAMS)
+    a, b = M.draw(model, 300), M.draw(model, 300)
+    assert np.array_equal(a["levels"]["n4"], b["levels"]["n4"]) and a["ranks"].shape == (300, 3)
+    assert np.all(a["levels"]["n4"] > 0) and a["spearman"].shape == (300,)
 
 
 def test_one_parameter_explains_all_of_the_variance():
-    med = [("1", "A", 100.0, 50.0, 40.0, 0.0, 0.5)]
-    params = {("A", "BMP"): (200.0, 250.0, 350.0)}
-    sim = M.simulate(med, params, 4000)
-    (row,) = M.tornado(med, params, sim)
-    assert row["n4_no_min"] == pytest.approx(16.0) and row["n4_no_max"] == pytest.approx(28.0)
+    rows = []
+    for s, scen in enumerate(M.SCEN):
+        bmp = (200.0, 250.0, 350.0)[s]
+        rows.append({"ibge": "1", "codigo": "A", "cenario": scen, "n1": bmp, "n2": bmp / 2, "n3a": bmp / 2,
+                     "u": 0.0, "n3": bmp / 2, "n4": bmp / 4, "fsfl": 0.5})
+    model = M.Model(rows, {("A", "BMP"): (200.0, 250.0, 350.0)})
+    sim = M.draw(model, 4000)
+    (row,) = M.tornado(model, float(np.var(sim["levels"]["n4"])))
+    assert row["n4_no_min"] == pytest.approx(50.0) and row["n4_no_max"] == pytest.approx(87.5)
     assert row["parcela_variancia"] == pytest.approx(1.0, rel=0.08)
 
 
-def test_ranks_and_quantiles():
-    assert M.ranked({"a": 1.0, "b": 3.0, "c": 3.0}) == {"b": 1, "c": 2, "a": 3}
-    assert M.spearman_rank({"a": 1, "b": 2, "c": 3}, {"a": 3, "b": 2, "c": 1}) == pytest.approx(-1.0)
-    assert M.quantile([1, 2, 3, 4, 5], 0.5) == 3 and M.quantile([0, 10], 0.05) == pytest.approx(0.5)
+def test_ranks_break_ties_by_column():
+    assert M.rank_rows(np.array([1.0, 3.0, 3.0])).tolist() == [[3, 1, 2]]
 
 
 def test_without_the_snapshot_it_says_so(tmp_path, monkeypatch):
