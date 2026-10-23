@@ -22,6 +22,9 @@ PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
   largura do intervalo e da mudança em cada cenário de literatura. Redesenham o
   `ranking.csv` da incerteza na malha municipal do IBGE, baixada uma vez para `.cache/`
   (fora do git), ou lida de `CP2B_MALHA`.
+- `outputs/incerteza_correlacao/`: o mesmo intervalo com grupos de parâmetros andando juntos
+  (por substrato, por elemento, a cana inteira, tudo), cópula gaussiana com ρ 0,5 e 1.
+- `outputs/diagnostico_n4_zero/`: onde a cascata zera os municípios de N4 med zero.
 - `docs/NOTA_METODO_CP2B.md`: nota ao time do método.
 - `tests/`: testes com dados sintéticos; não precisam do snapshot.
 
@@ -39,6 +42,8 @@ python scripts/build_evidencia_fde.py
 python scripts/build_sensibilidade_cp2b.py
 python scripts/build_incerteza_cp2b.py
 python scripts/build_mapas_incerteza.py
+python scripts/build_incerteza_correlacao.py
+python scripts/build_diagnostico_n4_zero.py
 python -m pytest -q
 ```
 
