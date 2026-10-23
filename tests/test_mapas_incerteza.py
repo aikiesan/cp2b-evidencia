@@ -40,7 +40,7 @@ ROWS = [
      "prob_top50": 1.0, "n4_palha_fs": 16e6},
     {"ibge": "3500204", "municipio": "B", "rank_med": 2, "n4_med": 2e6, "n4_p5": 1e6, "n4_p95": 4e6,
      "prob_top50": 0.4, "n4_palha_fs": 2.05e6},
-    {"ibge": "3500303", "municipio": "C", "rank_med": 3, "n4_med": 0.0, "n4_p5": 0.0, "n4_p95": 1e5,
+    {"ibge": "3500303", "municipio": "C", "rank_med": 3, "n4_med": 2.5e-12, "n4_p5": 0.0, "n4_p95": 1e5,
      "prob_top50": 0.0, "n4_palha_fs": 0.0},
 ]
 

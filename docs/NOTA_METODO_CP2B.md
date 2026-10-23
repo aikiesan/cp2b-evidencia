@@ -202,11 +202,17 @@ a fração que não vai para a peletização, ele resolve. Se não, a fonte de 2
 - FCo do bagaço de cana: 0,10 (0,05–0,15) pesa 8 % da variância do N4 (ver
   acima). Pergunta: qual é a fonte da faixa? Se for a fração de bagaço que as
   usinas de SP não queimam, uma citação basta.
-- 17 municípios com N4 med zero: 14 do Vale do Ribeira e litoral sul (região
-  intermediária de Sorocaba), Lavrinhas e São Bento do Sapucaí (São José dos
-  Campos) e Juquitiba (São Paulo). Vale conferir no snapshot se quem zera é o
-  FL espacial ou o uso existente, e dizer no artigo que é escolha de método,
-  não ausência de resíduo.
+- 26 municípios com N4 med zero (`outputs/diagnostico_n4_zero/`): 16 do
+  Vale do Ribeira e litoral sul (região intermediária de Sorocaba), 8 do Vale
+  Histórico e da Mantiqueira (Bananal, Silveiras, Areias, São José do
+  Barreiro, Queluz, Lavrinhas, Arapeí, São Bento do Sapucaí) e Juquitiba e
+  Pedro de Toledo. Em todos quem zera é o FL espacial: o resíduo existe e
+  sobra depois do uso existente (N3 de 0,04 a 0,60 mi Nm³/ano por
+  município, sobretudo leite e RSU), mas o FS × FL é zero. Todos voltam a ter
+  N4 no cenário máximo (0,09 a 2,93 mi). No estado é pouco (cerca de 6 mi de
+  N3), mas é uma escolha de método que o artigo precisa dizer, para o mapa
+  não ser lido como ausência de resíduo. Pergunta: qual é o limiar de oferta
+  abaixo do qual o FL vai a zero?
 - Palhas de milho e de soja: a mediana dos sorteios fica 29 % (milho) e 19 %
   (soja) abaixo do med do CP2b. As faixas têm o med perto do máximo (FL do
   milho 0,35–0,67–0,75, da soja 0,30–0,55–0,70; FC do milho 0,25–0,40–0,50),

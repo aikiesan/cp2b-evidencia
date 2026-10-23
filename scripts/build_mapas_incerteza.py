@@ -50,6 +50,8 @@ MALHA_URL = ("https://servicodados.ibge.gov.br/api/v3/malhas/estados/35"
              "?formato=application/vnd.geo+json&qualidade=intermediaria&intrarregiao=municipio")
 CODE_KEYS = ("codarea", "CD_MUN", "ibge")
 NEEDED = ("ibge", "n4_med", "n4_p5", "n4_p95", "prob_top50")
+# Below this the med N4 is rounding noise of the model (it rebuilds a snapshot zero as ~1e-12): zero.
+ZERO_NM3 = 1.0
 
 INK, INK2, SURFACE, EDGE, EMPTY = "#0b0b0b", "#52514e", "#fcfcfb", "#ffffff", "#c3c2b7"
 BLUE = ("#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b")
@@ -101,6 +103,11 @@ def _num(x: str | None) -> float | None:
         return float(x)
     except (TypeError, ValueError):
         return None
+
+
+def _med(r: dict) -> float:
+    v = _num(r["n4_med"])
+    return v if v is not None and v > ZERO_NM3 else 0.0
 
 
 def read_ranking(path: Path) -> tuple[list[dict] | None, str]:
@@ -250,18 +257,18 @@ def fmt(x: float, nd: int = 1) -> str:
 
 def build(rows: list[dict], rings: dict, origin: str, sha: str, labels: dict[str, str]) -> list[str]:
     by = {r["ibge"]: r for r in rows}
-    n4 = {k: (_num(r["n4_med"]) or 0.0) / 1e6 for k, r in by.items()}
+    n4 = {k: _med(r) / 1e6 for k, r in by.items()}
     prob = {k: _num(r["prob_top50"]) for k, r in by.items()}
     width = {}
     for k, r in by.items():
-        med, lo, hi = _num(r["n4_med"]), _num(r["n4_p5"]), _num(r["n4_p95"])
+        med, lo, hi = _med(r), _num(r["n4_p5"]), _num(r["n4_p95"])
         width[k] = (hi - lo) / med if med and lo is not None and hi is not None else None
     keys = [c[3:] for c in rows[0] if c.startswith("n4_") and c not in NEEDED]
     deltas = {}
     for key in keys:
         deltas[key] = {}
         for k, r in by.items():
-            med, v = _num(r["n4_med"]), _num(r[f"n4_{key}"])
+            med, v = _med(r), _num(r[f"n4_{key}"])
             deltas[key][k] = 100 * (v / med - 1) if med and v is not None else None
 
     OUT.mkdir(parents=True, exist_ok=True)
@@ -299,7 +306,7 @@ def build(rows: list[dict], rings: dict, origin: str, sha: str, labels: dict[str
         L.append(f"Sem polígono (ficam fora dos mapas): {', '.join(missing)}.")
     if extra:
         L.append(f"Na malha e fora do ranking (cinza): {', '.join(extra)}.")
-    zero = [r for r in by.values() if not _num(r["n4_med"])]
+    zero = [r for r in by.values() if not _med(r)]
     regions: dict[str, int] = {}
     for r in zero:
         regions[r.get("rgint") or "sem região"] = regions.get(r.get("rgint") or "sem região", 0) + 1
