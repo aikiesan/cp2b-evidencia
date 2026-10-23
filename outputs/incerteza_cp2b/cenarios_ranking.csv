@@ -1,12 +1,12 @@
 cenario,descricao,top10_mantidos,top50_mantidos,spearman,maiores_mudancas_top50
-leite_g,g do bovino de leite = excreção medida,10,50,0.9993929241112655,Mirante do Paranapanema 40→35; Guaiçara 25→26; Jaboticabal 12→13
-leite_fc1,g do leite já é a fração coletável: FC = 1,10,50,0.9998722792826353,Guaiçara 25→26; Mococa 39→40; Piracicaba 26→25
-confinado_ms,matéria orgânica fecal do confinado = medida,10,50,0.9998675389478872,Barretos 27→32; Pereira Barreto 44→46; Sandovalina 31→29
-confinado_fc,"FC do confinado = 0,9 (coleta no alojamento)",10,50,0.9998725476034701,Guaiçara 25→27; Barretos 27→25; Itápolis 36→34
-pasto_g,g do bovino de pasto = inventário nacional,10,50,1.0,Orindiúva 47→47; Olímpia 21→21; Sertãozinho 3→3
-citros_fco,FCo do bagaço de laranja = sobra após a peletização,10,49,0.9996872720670409,Colina 42→54; Araraquara 32→38; Catanduva 18→20
+leite_g,g do bovino de leite = excreção medida,10,49,0.9908090275650465,Mirante do Paranapanema 40→34; Guaraci 37→39; Palestina 46→44
+leite_fc1,g do leite já é a fração coletável: FC = 1,10,50,0.9981628072441259,Mirante do Paranapanema 40→38; Araçatuba 30→29; Cerqueira César 38→39
+confinado_ms,matéria orgânica fecal do confinado = medida,10,50,0.9995146970501254,Barretos 27→33; Itápolis 36→38; Pereira Barreto 44→46
+confinado_fc,"FC do confinado = 0,9 (coleta no alojamento)",10,50,0.9998820282729664,Barretos 27→25; Guaiçara 25→27; Itápolis 36→35
+pasto_g,g do bovino de pasto = inventário nacional,10,50,1.0,
+citros_fco,FCo do bagaço de laranja = sobra após a peletização,10,49,0.9996302091695067,Colina 42→54; Araraquara 32→38; Catanduva 18→20
 palha_fs,FS da palha de cana = massa após decomposição no solo,9,47,0.9975559996762262,Barretos 27→44; Itápolis 36→52; Serrana 50→38
-bagaco_bmp,BMP do bagaço de cana = medido (bruto),10,48,0.9997835098064557,Barretos 27→35; Palestina 46→54; Paulicéia 49→43
-soja_bmp,BMP da palha de soja = medido (bruto),10,50,0.9993213271685131,Mococa 39→42; Paulicéia 49→47; Cerqueira César 38→40
-literatura_g_total,"Toda a literatura, g do leite = excreção total",9,45,0.9958171912264453,Barretos 27→59; Itápolis 36→62; Araraquara 32→48
-literatura_g_coletavel,"Toda a literatura, g do leite = fração coletável (FC = 1)",9,45,0.9966599869685514,Barretos 27→59; Itápolis 36→62; Araraquara 32→48
+bagaco_bmp,BMP do bagaço de cana = medido (bruto),10,48,0.999795047602352,Barretos 27→35; Palestina 46→53; Orindiúva 47→42
+soja_bmp,BMP da palha de soja = medido (bruto),10,50,0.997384810983624,Cerqueira César 38→41; Maracaí 28→31; Mococa 39→42
+literatura_g_total,"Toda a literatura, g do leite = excreção total",9,45,0.9839270006336843,Barretos 27→60; Itápolis 36→62; Araraquara 32→47
+literatura_g_coletavel,"Toda a literatura, g do leite = fração coletável (FC = 1)",9,45,0.9933795858825676,Barretos 27→60; Itápolis 36→62; Araraquara 32→47
