@@ -1,6 +1,6 @@
 # Nota ao time do método CP2b: o que a literatura diz e quanto pesa no N4
 
-Data: 22/10/2026 · Rascunho para revisão interna antes de circular.
+Data: 23/10/2026 · Rascunho para revisão interna antes de circular.
 
 ## Por que esta nota
 
@@ -20,6 +20,9 @@ Fontes desta nota (repositório `aikiesan/cp2b-evidencia`):
   lidos pela definição de cada fonte; 14 têm a definição do CP2b.
 - `outputs/sensibilidade_cp2b/RELATORIO.md`: a cascata N1 → N4 refeita por
   município com cada valor da literatura no lugar do parâmetro do CP2b.
+- `outputs/incerteza_cp2b/RELATORIO.md`: 20.000 sorteios dos parâmetros
+  dentro das faixas do próprio CP2b, tornado e estabilidade do ranking
+  municipal; `outputs/mapas_incerteza/` traz os mapas por município.
 - As faixas e os níveis do CP2b vêm do snapshot v5.1, com o sha256 do loader
   conferido e os totais do estado batendo com o loader.
 
@@ -58,6 +61,32 @@ Leitura para priorizar:
   (N4/N3 = 0,30) e o peso no N4 é pequeno. Vale corrigir o texto, não o
   número, antes da submissão.
 - RSU, lodo e poda não têm registro comparável; o N4 deles não foi testado.
+
+## Quanto o N4 varia dentro do próprio CP2b
+
+A faixa mín–máx do snapshot põe todos os parâmetros juntos no mínimo ou no
+máximo. Sorteando cada parâmetro na sua faixa (triangular mín, med, máx,
+independentes) e refazendo a cascata por município, o N4 do estado fica entre
+5.130 e 6.895 mi Nm³/ano em 90 % dos sorteios (−14 % a +15 % do med). As duas
+leituras são os dois limites: parâmetros independentes e parâmetros que andam
+todos juntos. O modelo reproduz o mín, o med e o máx do snapshot linha a
+linha.
+
+- A palha de cana responde por cerca de 70 % da variância do N4: BMP 39 %, FC
+  14 %, SV 6 %, g 5 %, FCo, FL e FS juntos 7 %. Um BMP de palha tier A é o
+  registro que mais estreitaria o intervalo; vale pedir à rotina.
+- O FCo do bagaço (0,05–0,10–0,15) é o terceiro parâmetro, com 8 % da
+  variância: entre o mínimo e o máximo o N4 vai de 5.585 a 6.345. A faixa
+  diz que 85 a 95 % do bagaço vai para a caldeira. Vale escrever de onde ela
+  vem (item 6).
+- O ranking municipal é estável: Spearman 0,995 contra o med, e 44 dos 50
+  maiores ficam no top 50 em ao menos 90 % dos sorteios. A exceção é a
+  capital (rank 4 a 48, por RSU e lodo). No cenário com toda a literatura,
+  45 dos 50 continuam.
+- A incerteza relativa é maior onde o N4 é pequeno: no leste (Vale do
+  Paraíba, litoral norte, metrópole), onde pesam leite, RSU e lodo, o
+  intervalo de 90 % passa de 150 % do med; no interior canavieiro fica entre
+  25 e 75 %.
 
 ## O que pede decisão
 
@@ -167,6 +196,27 @@ bagaço de laranja cai a cerca de 1/12 do que o CP2b conta hoje.
 Pergunta: de onde vem o 0,25? Se houver dado das fábricas de suco de SP sobre
 a fração que não vai para a peletização, ele resolve. Se não, a fonte de 2004
 é antiga, mas é a única no registro. Peso no N4: −0,6 %.
+
+### 6. O que a incerteza mostrou e o texto precisa dizer
+
+- FCo do bagaço de cana: 0,10 (0,05–0,15) pesa 8 % da variância do N4 (ver
+  acima). Pergunta: qual é a fonte da faixa? Se for a fração de bagaço que as
+  usinas de SP não queimam, uma citação basta.
+- 17 municípios com N4 med zero: 14 do Vale do Ribeira e litoral sul (região
+  intermediária de Sorocaba), Lavrinhas e São Bento do Sapucaí (São José dos
+  Campos) e Juquitiba (São Paulo). Vale conferir no snapshot se quem zera é o
+  FL espacial ou o uso existente, e dizer no artigo que é escolha de método,
+  não ausência de resíduo.
+- Palhas de milho e de soja: a mediana dos sorteios fica 29 % (milho) e 19 %
+  (soja) abaixo do med do CP2b. As faixas têm o med perto do máximo (FL do
+  milho 0,35–0,67–0,75, da soja 0,30–0,55–0,70; FC do milho 0,25–0,40–0,50),
+  e o FL espacial cai junto com a oferta. O med dessas palhas é uma leitura
+  alta dentro das faixas do próprio CP2b. É isso que puxa a região de
+  Sorocaba (o sudoeste do estado, de grãos) para perto do p95 dos sorteios.
+- Bovino de pasto: com FC med 0, nenhum parâmetro do pasto mexe no N4 med;
+  só o FC máximo de 0,10 acrescenta 88 mi Nm³/ano. O cenário de literatura do
+  g do pasto não aparece no N4 por construção. Uma frase no artigo dizendo
+  que o pasto fica fora do N4 por premissa evita a pergunta.
 
 ## O que a literatura sustenta
 
