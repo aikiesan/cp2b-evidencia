@@ -81,6 +81,7 @@ def test_maps_are_drawn_and_gaps_reported(setup):
     assert "Sem polígono (ficam fora dos mapas): 3500303" in text
     assert "fora do ranking (cinza): 3599999" in text
     assert "| palha_fs |  | 1 | 0 |" in text
+    assert "N4 med zero: 1 municípios (por região intermediária: sem região 1)" in text
     assert not (setup[1].parent / "no-download").exists()
 
 

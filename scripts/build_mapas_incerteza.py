@@ -69,9 +69,9 @@ def classify(v: float | None, breaks: list[float]) -> int | None:
 
 
 def n4_classes():
-    breaks = [0.0, 1.0, 2.5, 5.0, 10.0, 20.0, 40.0, math.inf]
-    labels = ["< 1", "1–2,5", "2,5–5", "5–10", "10–20", "20–40", "≥ 40"]
-    return breaks, labels, list(BLUE)
+    breaks = [0.0, 1e-9, 1.0, 2.5, 5.0, 10.0, 20.0, 40.0, math.inf]
+    labels = ["zero", "< 1", "1–2,5", "2,5–5", "5–10", "10–20", "20–40", "≥ 40"]
+    return breaks, labels, [NEUTRAL, *BLUE]
 
 
 def prob_classes():
@@ -205,6 +205,7 @@ def single_map(path: Path, rings, values, classes, title: str, subtitle: str, le
     fig = plt.figure(figsize=(10, 6.4), facecolor=SURFACE)
     ax = fig.add_axes((0.02, 0.08, 0.78, 0.76))
     draw(ax, rings, values, classes)
+    empty = empty if any(classify(values.get(c), classes[0]) is None for c in rings) else None
     legend(fig, classes, legend_title, empty, loc="center left", bbox_to_anchor=(0.81, 0.46))
     fig.text(0.04, 0.95, title, fontsize=13, color=INK, weight="bold", va="top")
     fig.text(0.04, 0.905, subtitle, fontsize=9, color=INK2, va="top")
@@ -226,7 +227,9 @@ def scenario_maps(path: Path, rings, deltas: dict[str, dict]) -> None:
         ax.set_title(key, fontsize=9.5, color=INK, loc="left")
     for ax in axes[len(keys):]:
         ax.set_axis_off()
-    legend(axes[len(keys)], classes, "N4 do cenário contra o med", "N4 med zero ou sem dado", loc="center left")
+    gaps = any(classify(d.get(c), classes[0]) is None for d in deltas.values() for c in rings)
+    legend(axes[len(keys)], classes, "N4 do cenário contra o med", "N4 med zero ou sem dado" if gaps else None,
+           loc="center left")
     fig.text(0.02, 1 - 0.2 / height, "Quanto o N4 de cada município muda em cada cenário de literatura",
              fontsize=13, color=INK, weight="bold", va="top")
     fig.text(0.02, 1 - 0.5 / height, "Valor central de cada cenário; o FL espacial responde ao N3 do "
@@ -296,6 +299,13 @@ def build(rows: list[dict], rings: dict, origin: str, sha: str, labels: dict[str
         L.append(f"Sem polígono (ficam fora dos mapas): {', '.join(missing)}.")
     if extra:
         L.append(f"Na malha e fora do ranking (cinza): {', '.join(extra)}.")
+    zero = [r for r in by.values() if not _num(r["n4_med"])]
+    regions: dict[str, int] = {}
+    for r in zero:
+        regions[r.get("rgint") or "sem região"] = regions.get(r.get("rgint") or "sem região", 0) + 1
+    if zero:
+        L.append(f"N4 med zero: {len(zero)} municípios (por região intermediária: "
+                 f"{'; '.join(f'{g} {n}' for g, n in sorted(regions.items(), key=lambda kv: -kv[1]))}).")
     L += ["", f"Na fronteira do top 50 (entre 10 % e 90 % de chance): {len(frontier)} municípios.", "",
           "## Cenários", "", "| Painel | Cenário | Municípios com queda > 5 % | Com alta > 5 % |",
           "|---|---|---:|---:|"]
