@@ -18,6 +18,10 @@ PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
 - `outputs/incerteza_cp2b/`: intervalo do N4 com os parâmetros sorteados nas faixas do
   CP2b, tornado e estabilidade do ranking municipal (`CP2B_MC_N` sorteios, padrão
   20000, semente fixa).
+- `outputs/mapas_incerteza/`: mapas municipais do N4 med, da chance de ficar no top 50, da
+  largura do intervalo e da mudança em cada cenário de literatura. Redesenham o
+  `ranking.csv` da incerteza na malha municipal do IBGE, baixada uma vez para `.cache/`
+  (fora do git), ou lida de `CP2B_MALHA`.
 - `docs/NOTA_METODO_CP2B.md`: nota ao time do método.
 - `tests/`: testes com dados sintéticos; não precisam do snapshot.
 
@@ -34,6 +38,7 @@ python scripts/build_evidencia_geracao.py
 python scripts/build_evidencia_fde.py
 python scripts/build_sensibilidade_cp2b.py
 python scripts/build_incerteza_cp2b.py
+python scripts/build_mapas_incerteza.py
 python -m pytest -q
 ```
 

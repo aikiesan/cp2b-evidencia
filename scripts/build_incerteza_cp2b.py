@@ -44,7 +44,7 @@ Outputs answer three questions:
   tornado     each parameter at its min and max, the others at the median
               (swing in N4), and its first-order share of the N4 variance
   ranking     municipal N4: chance of staying in the top 50, rank p5-p95, N4
-              p5-p95, rank in each literature scenario of the sensitivity
+              p5-p95, rank and N4 in each literature scenario of the sensitivity
               script, and the same by intermediate region (IBGE RGInt)
 
 Nothing here changes the platform, the snapshot or the article numbers.
@@ -396,8 +396,9 @@ def tornado(model: Model, var_n4: float) -> list[dict]:
 # ── Ranking under the literature scenarios ──────────────────────────────────
 
 
-def scenario_ranks(model: Model) -> list[tuple[str, str, np.ndarray]]:
-    """(key, label, municipal ranks) for each literature or hypothesis scenario of the sensitivity script."""
+def scenario_ranks(model: Model) -> list[tuple[str, str, np.ndarray, np.ndarray]]:
+    """(key, label, municipal ranks, municipal N4) for each literature or hypothesis scenario of the
+    sensitivity script."""
     lib = S.literature()
     out = []
     found = {}
@@ -406,7 +407,8 @@ def scenario_ranks(model: Model) -> list[tuple[str, str, np.ndarray]]:
         found[key] = mult
         if mult is None or kind == "definição":
             continue
-        out.append((key, label, rank_rows(model.evaluate(extra={k: v[1] for k, v in mult.items()})["mun"])[0]))
+        mun = model.evaluate(extra={k: v[1] for k, v in mult.items()})["mun"]
+        out.append((key, label, rank_rows(mun)[0], mun[0]))
     for key, label, parts in S.COMBINED:
         if any(found.get(p) is None for p in parts):
             continue
@@ -414,7 +416,8 @@ def scenario_ranks(model: Model) -> list[tuple[str, str, np.ndarray]]:
         for p in parts:
             for k, v in found[p].items():
                 mult[k] = mult.get(k, 1.0) * v[1]
-        out.append((key, label, rank_rows(model.evaluate(extra=mult)["mun"])[0]))
+        mun = model.evaluate(extra=mult)["mun"]
+        out.append((key, label, rank_rows(mun)[0], mun[0]))
     return out
 
 
@@ -459,13 +462,14 @@ def build(rows, params, other, param_note, levels_note, n, names) -> tuple[dict[
                "n4_p5": q(sim["munis"][:, j], .05), "n4_p95": q(sim["munis"][:, j], .95), "rank_med": int(r0[j]),
                "rank_p5": q(ranks[:, j], .05), "rank_p95": q(ranks[:, j], .95),
                "prob_top50": float((ranks[:, j] <= TOP).mean())}
-        row.update({f"rank_{key}": int(order[j]) for key, _, order in scen})
+        row.update({f"rank_{key}": int(order[j]) for key, _, order, _ in scen})
+        row.update({f"n4_{key}": float(mun[j]) for key, _, _, mun in scen})
         rank_out.append(row)
 
     scen_rows = []
     top0, top10 = r0 <= TOP, r0 <= 10
     n_mun = len(model.munis)
-    for key, label, order in scen:
+    for key, label, order, _ in scen:
         moved = [j for j in np.argsort(-np.abs(order - r0) * top0, kind="stable")[:3] if top0[j]]
         rho = 1 - 6 * float(((order - r0) ** 2).sum()) / (n_mun * (n_mun ** 2 - 1)) if n_mun > 1 else 1.0
         scen_rows.append({"cenario": key, "descricao": label,
