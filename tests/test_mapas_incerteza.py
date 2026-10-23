@@ -8,6 +8,7 @@ when the mesh is given locally.
 """
 
 import csv
+import gzip
 import importlib.util
 import json
 import math
@@ -105,3 +106,12 @@ def test_polygons_read_the_code_and_skip_the_rest():
     assert list(rings) == ["3500105"] and len(rings["3500105"][0]) == 5
     with pytest.raises(ValueError):
         M.polygons({"type": "Topology"})
+
+
+def test_a_gzipped_mesh_is_read(tmp_path, monkeypatch):
+    mesh = {"type": "FeatureCollection", "features": [square("3500105", 0)]}
+    path = tmp_path / "mesh.geojson.gz"
+    path.write_bytes(gzip.compress(json.dumps(mesh).encode("utf-8")))
+    monkeypatch.setenv("CP2B_MALHA", str(path))
+    got, _, _ = M.load_mesh()
+    assert list(M.polygons(got)) == ["3500105"]

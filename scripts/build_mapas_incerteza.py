@@ -27,6 +27,7 @@ Outputs (outputs/mapas_incerteza/):
 from __future__ import annotations
 
 import csv
+import gzip
 import hashlib
 import json
 import math
@@ -122,6 +123,11 @@ def scenario_labels(path: Path) -> dict[str, str]:
         return {r["cenario"]: r.get("descricao", "") for r in csv.DictReader(f)}
 
 
+def _gunzip(data: bytes) -> bytes:
+    """The IBGE API answers gzip even unasked; a local file may be gzipped too."""
+    return gzip.decompress(data) if data[:2] == b"\x1f\x8b" else data
+
+
 def load_mesh() -> tuple[dict, str, str]:
     """GeoJSON, where it came from, and its sha256."""
     local = os.environ.get("CP2B_MALHA")
@@ -132,11 +138,11 @@ def load_mesh() -> tuple[dict, str, str]:
         if not path.exists():
             req = urllib.request.Request(MALHA_URL, headers={"User-Agent": "cp2b-evidencia"})
             with urllib.request.urlopen(req, timeout=120) as r:
-                data = r.read()
+                data = _gunzip(r.read())
             json.loads(data)                     # fail here, not after caching, if it is not JSON
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
-    raw = path.read_bytes()
+    raw = _gunzip(path.read_bytes())
     return json.loads(raw), origin, hashlib.sha256(raw).hexdigest()
 
 
