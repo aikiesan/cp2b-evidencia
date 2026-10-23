@@ -93,6 +93,7 @@ SOURCE_STRUCTURES = (
 YAML_KEY = {"BMP": ("bmp", 1.0), "ST": ("ts", 0.01), "SV": ("vs_of_ts", 0.01), "g": ("rpr", 1.0)}
 YAML_FACTOR = {"FC": "fc", "FCo": "fco", "FS": "fs", "FL": "fl"}
 TEAM = ("cp2b", "override cp2b", "decisão cp2b", "decisao cp2b")
+SHOWN = "valores mostrados"     # "valores mostrados = feedstocks.yaml": where the shown range came from, not a source
 NO_REFS = "o yaml não tem refs para esse elemento"
 TAG = re.compile(r"^\s*(FC|FCo|FS|FL|eta)\s*=", re.IGNORECASE)
 
@@ -161,7 +162,7 @@ def source_info(fonte: str, code: str, element: str, rng: tuple, yml: dict) -> t
     refs, team, notes = set(), False, []
     for part in fonte.split(";"):
         t = _norm(part)
-        if not t:
+        if not t or t.startswith(SHOWN):
             continue
         if t == "feedstocks.yaml":
             got, note = yaml_refs(code, element, rng, yml)

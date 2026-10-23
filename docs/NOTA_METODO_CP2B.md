@@ -78,19 +78,32 @@ Onde fica o intervalo real depende de quais parâmetros andam juntos
 | O que anda junto | Intervalo de 90 % do N4 (mi Nm³/ano) | Contra o med |
 |---|---|---|
 | nada (independentes) | 5.130–6.887 | −14 % a +15 % |
+| o mesmo elemento quando cita a mesma referência, ρ = 1 | 4.892–7.173 | −18 % a +20 % |
+| idem, mais os valores da equipe de um mesmo elemento juntos, ρ = 1 | 4.738–7.356 | −21 % a +23 % |
+| idem, também entre elementos do mesmo artigo, ρ = 1 | 4.537–7.761 | −24 % a +30 % |
 | o mesmo elemento em todos os substratos, ρ = 1 | 4.411–7.738 | −26 % a +30 % |
 | todos os parâmetros de um substrato, ρ = 1 | 4.560–8.756 | −24 % a +47 % |
 | palha, bagaço, torta e vinhaça juntos, ρ = 1 | 3.449–10.177 | −42 % a +70 % |
 | tudo junto, ρ = 1 | 2.692–11.815 | −55 % a +98 % |
 
-- A leitura mais defensável é por elemento: todos os BMP vêm do mesmo tipo
-  de ensaio, e FC, FS e FL da mesma leitura da definição. Ela dá −26 % a
-  +30 %, e o ranking continua estável (Spearman p5 0,991; 46 dos 50 maiores
-  ficam no top 50 em ao menos 90 % dos sorteios).
-- O que mais alarga o intervalo é a cana andar junta: só ela leva a faixa a
-  −42 % a +70 %, perto de tudo junto com ρ = 0,5. Se as faixas da palha, do
-  bagaço, da torta e da vinhaça vêm das mesmas fontes, é esse o intervalo
-  que o artigo deveria citar.
+- O que as fontes citadas sustentam (coluna `fonte` do arquivo de parâmetros e
+  refs do `feedstocks.yaml`, `fontes.csv`): andam juntos o BMP de bagaço,
+  palha e torta (Talha 2016, Velásquez 2020), o ST e o SV de bagaço e torta
+  (Talha 2016), o BMP das palhas de milho e soja (Herrmann 2012) e o FL de
+  todos os substratos (o mesmo modelo espacial). O FC da palha (Atlas SP
+  2020, Tenelli 2021) e o g, FCo e FS da cana (valores da equipe) não dividem
+  fonte com ninguém. Com esses grupos em ρ = 1, o intervalo é −18 % a +20 %
+  (4.892–7.173 mi); juntando também os valores da equipe, −21 % a +23 %; e
+  juntando elementos diferentes do mesmo artigo, −24 % a +30 %.
+- Por isso a cana andar inteira junta (−42 % a +70 %) não tem apoio nas
+  fontes: da palha, só o BMP (o que mais pesa) anda com o resto da cana; o
+  FC e o g não vêm das mesmas referências. Ela fica como teste do pior caso.
+- Para o artigo, a proposta é citar −18 % a +20 % como o intervalo que as
+  fontes sustentam e −26 % a +30 % (o mesmo elemento em todos os substratos)
+  como leitura conservadora. O ranking fica estável nas quatro (Spearman p5
+  ≥ 0,985; 44 a 46 dos 50 maiores ficam no top 50 em ≥ 90 % dos sorteios).
+  Nenhuma delas estima o ρ real: cada intervalo vale se aquela correlação for
+  verdadeira.
 - O intervalo é assimétrico para cima (+70 contra −42 na cana), porque as
   faixas do CP2b têm a cauda de cima mais longa (BMP da palha 140–175–250).
 - Com os substratos andando cada um por si, o ranking é o que mais mexe (35

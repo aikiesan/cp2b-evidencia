@@ -95,6 +95,8 @@ def test_sources_follow_the_citation():
     assert "não tem refs" in C.source_info("feedstocks.yaml", "B", "SV", (0, 0, 0), YML)[2]
     assert C.source_info("espacial (x), por município: fl_espacial/a.csv", "A", "FL", (0, 0, 0), {})[0] == \
         ("FL espacial do CP2b (fl_v5)",)
+    assert C.source_info("espacial: fl_espacial/a.csv; valores mostrados = feedstocks.yaml", "A", "FL", (0, 0, 0),
+                         YML) == (("FL espacial do CP2b (fl_v5)",), False, "")
 
 
 def test_groups_join_what_cites_the_same_reference():
