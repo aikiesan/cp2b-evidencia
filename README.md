@@ -22,7 +22,7 @@ PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
   largura do intervalo e da mudança em cada cenário de literatura. Redesenham o
   `ranking.csv` da incerteza na malha municipal do IBGE, baixada uma vez para `.cache/`
   (fora do git), ou lida de `CP2B_MALHA`.
-- `outputs/incerteza_correlacao/`: o mesmo intervalo com grupos de parâmetros andando juntos
+- `outputs/incerteza_correlacao/`: o mesmo intervalo com grupos de parâmetros andando juntos, inclusive pelos grupos que as fontes citadas sustentam (`fontes.csv`: a referência de cada parâmetro, lida da coluna `fonte` e das refs do `feedstocks.yaml`)
   (por substrato, por elemento, a cana inteira, tudo), cópula gaussiana com ρ 0,5 e 1.
 - `outputs/diagnostico_n4_zero/`: onde a cascata zera os municípios de N4 med zero.
 - `docs/NOTA_METODO_CP2B.md`: nota ao time do método.
