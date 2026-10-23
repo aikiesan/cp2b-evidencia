@@ -15,6 +15,9 @@ PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
   do PILAR-2b e confere a versão do método (CP2b v5.1).
 - `outputs/`: relatórios gerados com o snapshot real. Entram no git
   normalmente.
+- `outputs/incerteza_cp2b/`: intervalo do N4 com os parâmetros sorteados nas faixas do
+  CP2b, tornado e estabilidade do ranking municipal (`CP2B_MC_N` sorteios, padrão
+  5000, semente fixa).
 - `docs/NOTA_METODO_CP2B.md`: nota ao time do método.
 - `tests/`: testes com dados sintéticos; não precisam do snapshot.
 
@@ -30,6 +33,7 @@ python scripts/build_evidencia_bmp.py
 python scripts/build_evidencia_geracao.py
 python scripts/build_evidencia_fde.py
 python scripts/build_sensibilidade_cp2b.py
+python scripts/build_incerteza_cp2b.py
 python -m pytest -q
 ```
 
