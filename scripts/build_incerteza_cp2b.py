@@ -165,6 +165,37 @@ def model_check(rows: list[dict], med: list[tuple], params: dict) -> list[dict]:
     return out
 
 
+STAGE_STEPS = (("N1", "n1", None, 0), ("FC", "n2", "n1", 1), ("FCo", "n3a", "n2", 2), ("U", "u", None, None),
+               ("FS × FL", "n4", "n3", 3))
+
+
+def stage_check(rows: list[dict], params: dict) -> list[dict]:
+    """Per substrate and stage: the snapshot's min/med and max/med ratio against the model's multiplier.
+
+    N1 is the ratio of N1 totals; FC, FCo and FS × FL are ratios of the stage
+    factor (N2/N1, N3a/N2, N4/N3, state totals of the substrate); U is the ratio
+    of existing use, which the model keeps at the med value.
+    """
+    casc = {s: S.cascade(rows, s) for s in ("min", "med", "max")}
+    out = []
+    for i, scen in ((0, "min"), (2, "max")):
+        mult = stage_mult(params, {k: v[i] for k, v in params.items()})
+        for code in sorted(casc["med"]):
+            med, snap = casc["med"][code], casc[scen].get(code)
+            if snap is None:
+                continue
+            m = mult.get(code, (1.0, 1.0, 1.0, 1.0))
+            for name, num, den, idx in STAGE_STEPS:
+                if den and (not snap[den] or not med[den]):
+                    continue
+                a = snap[num] / snap[den] if den else snap[num]
+                b = med[num] / med[den] if den else med[num]
+                out.append({"codigo": code, "cenario": scen, "etapa": name,
+                            "razao_snapshot": a / b if b else None,
+                            "razao_modelo": m[idx] if idx is not None else 1.0})
+    return out
+
+
 def triangular(rng: random.Random, lo: float, mode: float, hi: float) -> float:
     return lo if lo == hi else rng.triangular(lo, hi, mode)
 
@@ -299,6 +330,7 @@ def build(rows, params, other, param_note, levels_note, n, names) -> tuple[dict[
     base_state, base_sub, base_mun = run(med, {})
     chk = S.checks(rows)
     mcheck = model_check(rows, med, params)
+    scheck = stage_check(rows, params)
     sim = simulate(med, params, n)
     torn = tornado(med, params, sim)
     scen = scenario_ranks(med)
@@ -348,13 +380,14 @@ def build(rows, params, other, param_note, levels_note, n, names) -> tuple[dict[
                 for reg, v in sorted(reg_sum.items(), key=lambda kv: -reg_base[kv[0]])]
 
     tables = {"incerteza.csv": inc, "tornado.csv": torn, "ranking.csv": rank_rows, "regioes.csv": reg_rows,
-              "cenarios_ranking.csv": scen_rows, "conferencia_modelo.csv": mcheck}
-    lines = report(base_state, band, inc, torn, scen_rows, reg_rows, rank_rows, sim, chk, mcheck, other,
+              "cenarios_ranking.csv": scen_rows, "conferencia_modelo.csv": mcheck,
+              "conferencia_etapas.csv": scheck}
+    lines = report(base_state, band, inc, torn, scen_rows, reg_rows, rank_rows, sim, chk, mcheck, scheck, other,
                    param_note, levels_note, names)
     return tables, lines
 
 
-def report(base, band, inc, torn, scen_rows, reg_rows, rank_rows, sim, chk, mcheck, other, param_note,
+def report(base, band, inc, torn, scen_rows, reg_rows, rank_rows, sim, chk, mcheck, scheck, other, param_note,
            levels_note, names) -> list[str]:
     n4 = inc[4]
     var_total = sum(r["parcela_variancia"] or 0 for r in torn)
@@ -433,6 +466,13 @@ def report(base, band, inc, torn, scen_rows, reg_rows, rank_rows, sim, chk, mche
         L += ["", "Onde o modelo não reproduz o snapshot, o CP2b varia algo que não está em `cp2b_parametros.csv` "
               "como multiplicador (a base, ou o FL espacial de cada município). Nesses substratos o intervalo acima "
               "é o dos parâmetros, não o do CP2b inteiro. Detalhe em `conferencia_modelo.csv`."]
+        bad = [r for r in scheck if r["razao_snapshot"] is not None
+               and not math.isclose(r["razao_snapshot"], r["razao_modelo"], rel_tol=0.01)]
+        if bad:
+            L += ["", "Onde está a diferença, etapa por etapa (razão do cenário sobre o med; snapshot × modelo):", "",
+                  "| Substrato | Cenário | Etapa | Snapshot | Modelo |", "|---|---|---|---:|---:|"]
+            L += [f"| {r['codigo']} | {r['cenario']} | {r['etapa']} | {fmt(r['razao_snapshot'], 3)} "
+                  f"| {fmt(r['razao_modelo'], 3)} |" for r in bad]
     if other:
         L += ["", f"Elementos do arquivo de parâmetros não sorteados: {', '.join(other)}."]
 

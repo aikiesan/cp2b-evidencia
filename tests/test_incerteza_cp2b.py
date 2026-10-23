@@ -60,6 +60,10 @@ def test_the_model_check_passes_when_min_and_max_are_the_products_of_the_paramet
                              r["fsfl"] * m4, r["ibge"], scen))
     out = M.model_check(rows, M.med_rows(rows), PARAMS)
     assert out and all(r["razao"] == pytest.approx(1.0) for r in out if r["n4_snapshot"])
+    steps = M.stage_check(rows, PARAMS)
+    assert {r["etapa"] for r in steps} == {"N1", "FC", "FCo", "U", "FS × FL"}
+    ratios = [(r["razao_snapshot"], r["razao_modelo"]) for r in steps if r["razao_snapshot"] is not None]
+    assert ratios and all(a == pytest.approx(b) for a, b in ratios)
 
 
 def test_a_fixed_seed_gives_the_same_draws_and_fixed_parameters_give_no_spread():
