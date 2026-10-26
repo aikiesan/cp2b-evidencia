@@ -275,6 +275,19 @@ a fração que não vai para a peletização, ele resolve. Se não, a fonte de 2
   estrada até o hub selecionado mais próximo, zero além de r2, e um hub só é
   selecionado se acrescenta pelo menos Q_min de resíduo (3.200, 1.500 e 500
   Nm³ CH₄/dia no mín, med e máx).
+- Em km (`outputs/fl_espacial/`, rodando o fl_v5 numa cópia): o hub
+  selecionado mais próximo fica a 27–141 km por estrada desses 26 municípios
+  (mediana 52 km). Em todos, nenhuma oferta fica a menos de r2 de um hub; a
+  menor folga é 4,2 km (Silveiras e São Bento do Sapucaí). Em 25 dos 26 a
+  oferta própria fica abaixo do Q_min de 1.500 Nm³/dia, então o município não
+  forma um hub sozinho. A exceção é Bananal (1.648 Nm³/dia), que também não
+  ganha hub. Pergunta: por quê? A oferta espalhada pelo município, pesada por
+  w(d) em volta de um candidato, não chega ao Q_min?
+- FL municipal e hubs: rodando a alocação de novo com o BMP do bagaço
+  proposto para a v5.2 (C02), o FL estadual muda no máximo 0,005, mas 835
+  linhas município × substrato mudam mais de 0,01, até ±0,95 no leite e nos
+  suínos do máx. A seleção gulosa troca hubs de lugar quando a oferta muda
+  longe dali. O ranking municipal da pecuária dispersa é sensível a isso.
 - A escolha da variante mexe pouco no estado: o N4 med vai de −3,8 % (mono
   alocada) a +4,5 % (palha em qualquer hub), menos que a incerteza dos
   parâmetros. No mín pesa mais (−12 % a +6 %).

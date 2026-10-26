@@ -44,11 +44,20 @@ mantenedores, não pelo Claude.
 
 O FL espacial entra como na incerteza: interpolado no N3 de cada município.
 O código do fl_v5 (v5.1) está em `../fl_espacial/` (veja o LEIA-ME de lá), mas
-refazer o FL ainda não roda aqui. O pipeline precisa da malha viária do OSM,
-dos shapefiles e cadastros de entrada, que ficam fora do git, e de cerca de
-1h40 de máquina. Enquanto isso, uma mudança que mexe no N3 (C02, BMP do
-bagaço) entra com o FL da v5.1; uma que só mexe no FS (C01) não muda o FL,
-porque o FS vem depois do N3.
+refazer o FL não roda aqui: precisa da malha viária do OSM, dos shapefiles e
+cadastros de entrada, que ficam fora do git. Uma mudança que só mexe no FS
+(C01) não muda o FL, porque o FS vem depois do N3.
+
+A C02 (BMP do bagaço) foi rodada no fl_v5 numa cópia, com a alocação (`04b`)
+refeita sobre a oferta de bagaço escalada (`../outputs/fl_espacial/`, §4).
+O FL estadual muda no máximo 0,0046 (suínos, med), e o número de hubs quase
+não muda (med 455 → 456, com 25 entrando e 24 saindo; contagem da rodada
+no notebook, fora de `data/`). Por isso o N4 da C02
+no `build_v52.py`, que mantém o FL da v5.1, vale para o estado. No município
+a história é outra: 835 linhas município × substrato mudam mais de 0,01, até
+±0,95 no leite e nos suínos do máx, porque a seleção gulosa troca hubs de
+lugar. As bacias de cobertura (filtro dos candidatos) ficaram as da v5.1,
+então esse efeito é um piso.
 
 ## Candidatas de hoje
 

@@ -287,7 +287,15 @@ The number of zero municipalities depends on the scenario: 146 in min, 27 in
 med and 0 in max.¹ This follows from the FL rule (section 2.x): a hub needs
 Q_min of residue from the supply around it, and Q_min falls from 3,200 to
 500 Nm³ CH₄ d⁻¹ between min and max while the radii grow, so what counts is
-the supply around the municipality, not its own. The choice of variant moves state
+the supply around the municipality, not its own. Measured by road, the
+nearest selected hub is 27–141 km from these 26 municipalities (median
+52 km; 137–141 km for Cananéia and Ilha Comprida). None of them has a supply point
+within r2 of a selected hub; the smallest margin beyond r2 is 4.2 km
+(Silveiras and São Bento do Sapucaí). In 25 of the 26, the municipality's own
+supply is below Q_min (1,500 Nm³ CH₄ d⁻¹ in med), so it could not support a
+hub alone. The exception is Bananal (1,648 Nm³ CH₄ d⁻¹), where no hub was
+selected either. `[TEAM: confirm why; w(d) weighting of a dispersed supply
+around a candidate?]` The choice of variant moves state
 N4 by −3.8 % (mono-digestion with allocation) to +4.5 % (straw at any hub) in
 med, and by −12.1 % to +6.3 % in min. In med this is less than the parameter
 uncertainty.
@@ -303,6 +311,12 @@ uncertainty.
 - The model takes FL as a function of each municipality's own N3. It ignores
   the supply of neighbouring municipalities, which the FL results suggest
   matters.
+- Municipal FL depends on which hubs the greedy selection picks, and so on
+  supply far from the municipality. Re-running the allocation with the bagasse
+  BMP proposed for v5.2 moves state FL by at most 0.005, but municipal FL by
+  more than 0.01 in 835 municipality × substrate rows, by up to ±0.95 for
+  dairy and pig manure in max. Municipal rankings of dispersed livestock
+  should be read with that in mind.
 - The sugarcane straw FCo, the largest parameter without a quantitative source
   for São Paulo, is a team estimate.
 - Municipal solid waste, sewage sludge and urban pruning have no comparable
@@ -319,7 +333,7 @@ uncertainty.
 | 1 | Time between harvest and baling assumed by the straw FS of 0.92 | 2.x, 3.z | −11.1 % if FS = 0.67 |
 | 2 | Source of the straw FCo of 0.90, or state it as a gap | 2.x, Limitations | 3.0 % of variance |
 | 3 | Source of the bagasse FCo range 0.05–0.15 | 3.x | 8.4 % of variance |
-| 4 | fl_v5 rule that sets FL = 0: drafted from the code (radius and Q_min); confirm | 2.x, 3.w | 26 municipalities |
+| 4 | fl_v5 rule that sets FL = 0: drafted from the code (radius and Q_min), distances measured; confirm, and why Bananal gets no hub | 2.x, 3.w | 26 municipalities |
 | 5 | FS definition: align DECISOES_METODOLOGICAS.md with DEC-013 | 2.x | −6.7 % under the other reading |
 | 6 | Dairy g: total excretion or collectable fraction? | 3.z | +1.0 % / +0.4 % |
 | 7 | Feedlot g × ST representative of SP, or anchor on faecal dry matter? | 3.z | −0.4 % |
@@ -341,6 +355,7 @@ uncertainty.
 | Correlated intervals, source groups | `outputs/incerteza_correlacao/RELATORIO.md`, `fontes.csv` | 610f947 |
 | N4-zero municipalities | `outputs/diagnostico_n4_zero/RELATORIO.md` | 1cd3c07 |
 | FL variants, threshold test | `outputs/fl_variantes/RELATORIO.md` | 7ab5ca8 |
+| Distance to the nearest hub, Q_min, C02 effect on FL | `outputs/fl_espacial/RELATORIO.md` §3–4 (from `data/fl_v51/`) | f6a1815 |
 
 The correlation run (base seed 20261024) gives an independent interval of
 5,130–6,887. It matches the uncertainty run within 0.12 %; the text uses the

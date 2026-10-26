@@ -56,6 +56,16 @@ Numa cópia da pasta (`Metodo_CP2b/fl_espacial_v52/`), com o cache da v5.1 e o
 e `alocacao_hubs_codigestao.csv` byte a byte iguais aos da v5.1. As etapas
 00–04 (grafo, oferta, hubs, bacias) não foram refeitas: entram pelo cache.
 
+Na mesma cópia, rodadas à parte (saídas agregadas em `../data/fl_v51/`,
+relatório em `../outputs/fl_espacial/`):
+
+- C02: `oferta_wide.pkl` com o bagaço escalado pelo BMP proposto e o `04b` de
+  novo (2,9 min, outra cópia, `fl_espacial_v52_C02/`). Os pares em cache
+  continuam válidos, porque a assinatura é dos nós, não da oferta.
+- Municípios zerados: distância por estrada de cada ponto de oferta ao hub
+  selecionado mais próximo (`fl_comum.Roteador`, limite de 150 km), contra o
+  r2 da classe.
+
 Cuidado ao rodar: `06_integracao.py` grava em `integracao.saida_v5`, que no
 config aponta para a pasta da v5.1 (`Metodo_CP2b/outputs_v5`). Numa cópia,
 troque esse caminho antes.
