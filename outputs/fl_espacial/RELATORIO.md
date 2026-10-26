@@ -42,7 +42,7 @@
 
 Quase zero no B med (maior FL entre os substratos acima de 0 e até 0,01): Tapiraí (0,0000); Campos do Jordão (0,0003); Bertioga (0,0004); São Lourenço da Serra (0,0006); Natividade da Serra (0,0018); Ubatuba (0,0023); Joanópolis (0,0036).
 
-Mapa não desenhado: a malha do IBGE não pôde ser lida (URLError); rode de novo com acesso à API do IBGE ou com CP2B_MALHA apontando para a malha municipal.
+Malha: API de malhas do IBGE (v3): https://servicodados.ibge.gov.br/api/v3/malhas/estados/35?formato=application/vnd.geo+json&qualidade=intermediaria&intrarregiao=municipio (sha256 a9296e20334d…). Mapa: `mapa_zeros_variantes.png`.
 
 ## 3. Por que os municípios zeram, em km (B, med, palha nas usinas)
 
