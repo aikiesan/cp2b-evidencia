@@ -1,0 +1,208 @@
+# FL espacial — Método CP2b (gera a v5 do Nível 4)
+# Todos os parâmetros do cálculo ficam neste arquivo. Os scripts não têm números "mágicos".
+# Unidades: oferta em Nm³ CH4/dia (Nível 3 ÷ 365); distâncias em metros no EPSG:5880; relatório em km.
+
+versao: "fl_espacial v0.2 — 24/09/2026 (v5.1: bagaço de citros nas fábricas de suco)"
+semente: 20260923
+crs_metrico: "EPSG:5880"      # SIRGAS 2000 / Policônica do Brasil (SP cruza UTM 22 e 23)
+
+caminhos:
+  metodo: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Metodo_CP2b"
+  # N3 da cascata v4 (bagaço de citros nos pomares) → 00_fabricas_suco.py grava a base v5.1, que é a que o resto lê
+  n3_municipal_v4: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Metodo_CP2b/outputs/cp2b_municipio_substrato.csv"
+  atividade_v4: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Metodo_CP2b/outputs/cp2b_atividade_municipal.csv"
+  n3_municipal: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Metodo_CP2b/fl_espacial/outputs/n3_base_v51.csv"
+  rais_staging: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/DADOS_ESPACIAIS/dados_staging/rais_sp_cnaes_prioritarios.csv"
+  fabricas_suco: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Metodo_CP2b/fl_espacial/outputs/fabricas_suco_alocacao.csv"
+  usinas_alocacao_v4: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Metodo_CP2b/outputs/cp2b_usinas_alocacao.csv"
+  feedstocks_yaml: "C:/Users/Lucas/Documents/Pilar2b/cp2b-workspace/NewLook/data/canonical_parameters/feedstocks.yaml"
+  osm_roads: "C:/Users/Lucas/Documents/CP2B/Validacao_dados/02_LITERATURA/PROTOCO_CODIGESTAO/sudeste-260112-free.shp/gis_osm_roads_free_1.shp"
+  municipios: "C:/Users/Lucas/Documents/Pilar2b/cp2b-workspace/NewLook/backend/data/shapefiles/SP_Municipios_2024.shp"
+  usinas_etanol: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/00_Primary_Data_Sources_PILAR2b/SHAPEFILES_MAPBIOMAS_10.1/INFRAESTRUTURA/structure_ethanol_plant/usina_etanol.shp"
+  biogas_mapbiomas: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/00_Primary_Data_Sources_PILAR2b/SHAPEFILES_MAPBIOMAS_10.1/INFRAESTRUTURA/structure_biogas_plant/usina_biogas.shp"
+  biogas_pilar: "C:/Users/Lucas/Documents/Pilar2b/cp2b-workspace/NewLook/backend/data/shapefiles/Plantas_Biogas_SP.shp"
+  biogas_anp: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Resultados em Mapas-20260807T123054Z-1-001/analysis/data/05_biogas_plants_brazil.csv"
+  etes: "C:/Users/Lucas/Documents/Pilar2b/cp2b-workspace/NewLook/backend/data/shapefiles/ETEs_2019_SP.shp"
+  areas_urbanas: "C:/Users/Lucas/Documents/Pilar2b/cp2b-workspace/NewLook/backend/data/shapefiles/Areas_Urbanas_SP.shp"
+  mapbiomas_2024: "C:/Users/Lucas/Documents/Pilar2b/cp2b-workspace/NewLook/backend/data/mapbiomas/mapbiomas_agropecuaria_sp_2024.tif"
+  mapbiomas_2a_safra_2024: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/00_Primary_Data_Sources_PILAR2b/07_MapBiomas/Segunda_Safra_TIF/2024_agriculture_agricultural_use_second_crop_1-1-1_f968dc13-8eb5-4c84-a28f-d603591dd6b6.tif"
+  aves_gedave: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/00_Primary_Data_Sources_PILAR2b/Relatorio_0082803826_granjas_aves_UNICAMP.xlsx"
+  suinos_farms: "C:/Users/Lucas/Documents/CP2B/_DATA_FILES/farms_for_gee.csv"
+  bovinos_gedave: "C:/Users/Lucas/Documents/CP2B/Validacao_dados/02_LITERATURA/PROTOCO_CODIGESTAO/Relatorio_de_bovinocultura_intensiva_em_SP_03_11_2025(Bovino).csv"
+  exclusoes:
+    - "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/00_Primary_Data_Sources_PILAR2b/SHAPEFILES_MAPBIOMAS_10.1/STATE_PROTECTED_AREAS_INTEGRAL_PROTECTION_v2/STATE_PROTECTED_AREAS_INTEGRAL_PROTECTION_v2.shp"
+    - "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/00_Primary_Data_Sources_PILAR2b/SHAPEFILES_MAPBIOMAS_10.1/FEDERAL_PROTECTED_AREAS_INTEGRAL_PROTECTION_v2/FEDERAL_PROTECTED_AREAS_INTEGRAL_PROTECTION_v2.shp"
+    - "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/00_Primary_Data_Sources_PILAR2b/SHAPEFILES_MAPBIOMAS_10.1/INDIGENOUS_TERRITORIES_v3/INDIGENOUS_TERRITORIES_v3.shp"
+
+# ---------------------------------------------------------------------------
+# Etapa 1 — grafo viário
+# ---------------------------------------------------------------------------
+grafo:
+  buffer_estado_km: 50
+  fclass_completo: [motorway, motorway_link, trunk, trunk_link, primary, primary_link, secondary, secondary_link,
+                    tertiary, tertiary_link, unclassified, residential, living_street, service, track]
+  # Sensibilidade: estradas de fazenda importam para a coleta rural, mas o mapeamento OSM é desigual
+  fclass_excluir_variante_sem_track: [track, service]
+  tortuosidade:
+    n_pares: 5000
+    dist_min_km: 1
+    dist_max_km: 60
+    faixas_km: [1, 5, 10, 20, 40, 60]
+    tolerancia_destino_m: 1000     # nó sorteado tem de estar a ≤ 1 km do ponto-alvo
+
+# ---------------------------------------------------------------------------
+# Etapa 2 — espacialização da oferta (N3)
+# ---------------------------------------------------------------------------
+grade:
+  celula_oferta_m: 1000
+  celula_hub_m: 2000
+  raster_base_m: 100              # grade auxiliar (100 m, alinhada à de 1 km) para áreas MapBiomas e urbanas
+
+mapbiomas:
+  # Coleção 10 (legenda conferida): 20 cana; 39 soja; 41 outras lavouras temporárias; 46 café; 47 citros
+  cana: [20]
+  soja: [39]
+  outras_temporarias: [41]
+  cafe: [46]
+  citros: [47]
+  agropecuaria: [15, 20, 39, 40, 41, 46, 47, 48, 62]   # fallback: centroide da área agropecuária
+  segunda_safra_milho: [41]       # raster de 2ª safra 2024: classe 41 (milho safrinha e outras temporárias)
+  fator_leitura_2a_safra: 3       # raster de 30 m lido a ~90 m (amostragem por vizinho mais próximo)
+
+pecuaria:
+  aves_capacidade_sentinela: 9999999
+  aves_corte: ["Estab. de Aves Comerciais de Corte"]
+  aves_postura: ["Estab. de Postura Comercial", "Estab. de Recria de Postura", "Estab. Matrizeiro",
+                 "Estab. Matrizeiro de Recria"]
+  bovinos_colunas_lgpd: [LATITUDE, LONGITUDE, NOME_MUN, FINALIDADE_PRINCIPAL, SISTEMA_PRODUCAO, SALDO_GERAL]
+  bov_leite_finalidade: [Leite, Mista]
+  bov_confinado_sistema: [Confinado]
+  # ponto só é usado se estiver a ≤ esta distância do polígono do município declarado no cadastro
+  tolerancia_municipio_km: 5
+
+etes:
+  status_ativo: "Ativa"
+  tipos_lagoa: ["Sistemas de Lagoas", "Processos Simplificados"]   # mesma regra da v4 (não compatíveis com digestão)
+
+# Onde a oferta de cada substrato "nasce" (a ordem da lista de fontes é a hierarquia de fallback)
+espacializacao:
+  VINHACA:        {fonte: usina, peso: w_etanol}
+  TORTA_FILTRO:   {fonte: usina, peso: w_cana}
+  BAGACO:         {fonte: usina, peso: w_cana}
+  PALHA:          {fonte: pixel, classes: cana}
+  PALHA_MILHO:    {fonte: pixel, classes: [outras_temporarias, segunda_safra_milho]}
+  PALHA_SOJA:     {fonte: pixel, classes: soja}
+  CASCA_CAFE:     {fonte: pixel, classes: cafe}
+  BAGACO_CITROS:  {fonte: fabrica_suco}     # v5.1: nasce nas fábricas (00_fabricas_suco.py); v5.0 = pixels de citros
+  AVES_CORTE:     {fonte: aves, grupo: aves_corte}
+  AVES_POSTURA:   {fonte: aves, grupo: aves_postura}
+  SUINOS:         {fonte: suinos}
+  BOV_LEITE:      {fonte: bovinos, grupo: leite}
+  BOV_CONFINADO:  {fonte: bovinos, grupo: confinado}
+  BOV_PASTO_MISTO: {fonte: ignorar}          # N3 = 0 em min/med; no max mantém o FL do yaml (declarado)
+  RSU_ORGANICO:   {fonte: urbano}
+  PODA_URBANA:    {fonte: urbano}
+  LODO_ETE:       {fonte: ete}
+
+# Fábricas de suco (v5.1, 24/09/2026): RAIS local, sem ano nem CNPJ → só peso agregado por município. Estabelecimentos em
+# municípios sem laranja na PAM saem (escritórios e terminais portuários). Ponto da fábrica = centroide da área urbana.
+fabricas_suco:
+  cnae_subclasse: "1033301"      # fabricação de sucos concentrados de frutas, hortaliças e legumes
+  vinculos_min: 100              # porte industrial; sem escritórios e portos: 20 estab., 78% dos vínculos da subclasse
+
+tolerancia_fechamento: 0.0001     # soma da grade = soma municipal (0,01%)
+
+# ---------------------------------------------------------------------------
+# Etapas 3–4 — hubs, bacias e viabilidade
+# ---------------------------------------------------------------------------
+# Hubs existentes: usinas, ETEs ativas não-lagoa e plantas de biogás operantes (03_hubs.py). Hubs novos só dentro
+# de SP: a oferta fora do estado não é modelada.
+hubs:
+  dist_max_via_m: 2000            # centroide da grade de 2 km a ≤ 2 km de uma via do grafo
+
+classes_raio:
+  liquidos:        [SUINOS, BOV_LEITE, LODO_ETE, VINHACA]
+  solidos_umidos:  [BOV_CONFINADO, AVES_CORTE, AVES_POSTURA, TORTA_FILTRO, BAGACO_CITROS, RSU_ORGANICO, PODA_URBANA]
+  solidos_secos:   [PALHA, PALHA_MILHO, PALHA_SOJA, CASCA_CAFE, BAGACO]
+
+# Na fonte: resíduo gerado no local de conversão (vinhaça, torta e bagaço na usina; lodo na ETE) → d = 0 até o
+# próprio hub (FL = 1 se o hub for viável). A regra decorre de o ponto de oferta e o hub terem o mesmo `ref`
+# (02_oferta.py / 03_hubs.py). Fora da fonte, o substrato usa o raio da sua classe acima.
+
+# r1 / r2 (km) por cenário. w(d) = 1 se d ≤ r1; (r2 − d)/(r2 − r1) se r1 < d < r2; 0 se d ≥ r2
+raios_km:
+  min: {liquidos: [3, 10],  solidos_umidos: [10, 20], solidos_secos: [5, 15]}
+  med: {liquidos: [5, 15],  solidos_umidos: [15, 30], solidos_secos: [10, 25]}
+  max: {liquidos: [10, 20], solidos_umidos: [20, 45], solidos_secos: [15, 40]}
+
+# Limiar de viabilidade do hub (N3, Nm³ CH4/dia). ≈ 500 / 240 / 80 kWe
+q_min:                    # confirmado no CHECKPOINT 2 (24/09/2026)
+  min: 3200
+  med: 1500
+  max: 500
+biometano_referencia_m3dia: 10000   # só informativo (contagem de hubs)
+
+# Variantes (decisão do CHECKPOINT 2, 24/09/2026): B = co-digestão com alocação (principal; ver
+# integracao.variante_principal); A = co-digestão por cobertura (limite superior); D = monodigestão com alocação
+# (limite inferior); C = monodigestão por cobertura (sensibilidade). Co-digestão sem lignocelulósicos sai sempre.
+# A definição original "FL é cobertura" não discrimina quando há candidatos em toda parte e a oferta é densa.
+variantes:
+  tolerancia_robustez_alocacao: 0.02   # |ΔFL| estadual acima disso → reportar as duas versões (04b_alocacao.py)
+
+# Palha de cana: só vai para as usinas (decisão do CHECKPOINT 2). Raios calibrados pela distância POR ESTRADA das
+# células com cana até a usina mais próxima (SP + divisa), percentis ponderados pela oferta de PALHA (N3 med).
+# A palha não conta para a viabilidade dos hubs da grade; palhadas de milho e soja seguem com hubs gerais.
+palha:
+  modo: usinas                       # usinas | qualquer_hub (a segunda é reportada lado a lado)
+  ufs_divisa: [MG, PR, MS]           # usinas dessas UFs dentro do buffer do grafo também recebem palha
+  percentis_raio:                    # r1 / r2 = percentis da distância ponderada
+    min: [50, 90]
+    med: [75, 95]
+    max: [90, 99]
+  estimativa_previa_km: {P50: 17, P75: 24, P90: 31, P95: 37, P99: 50}   # euclidiana × 1,30 (nota de 24/09)
+
+# ---------------------------------------------------------------------------
+# Etapa 5 — validação e sensibilidade
+# ---------------------------------------------------------------------------
+validacao:
+  raio_acerto_km: 2
+  # mesmas reclassificações da v4 (cp2b_cascade.py, RECLASS), confirmadas em 23/09
+  reclassificacao_anp: {sp_zeg_jambeiro: aterro, sp_cri_geo_elias_fausto: industria}
+  duplicata_mesmo_municipio_km: 5     # registro MapBiomas a ≤ 5 km de uma planta ANP do mesmo município = mesma planta
+sensibilidade:
+  r2_km: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60]   # r1 = r2 × (r1/r2 do cenário med da classe)
+  q_min: [250, 500, 1000, 1500, 2000, 3200, 5000, 7500, 10000]
+  mclp_metas: [0.50, 0.80, 0.95]
+
+# ---------------------------------------------------------------------------
+# Etapa 6 — integração à cascata (v5) e exportação para o banco
+# ---------------------------------------------------------------------------
+integracao:
+  variante_principal: codig_alocado       # FL da v5 (B); as quatro variantes são gravadas em outputs_v5/
+  saida_v5: "C:/Users/Lucas/Documents/Reposicionamento_Submissão_ESD/Metodo_CP2b/outputs_v5"
+  prefixo: "v5_"
+  fl_yaml_para: [BOV_PASTO_MISTO]         # não espacializados: mantêm o FL do feedstocks.yaml
+
+# Três namespaces de código (docs/data/CANONICAL_VERIFICATION_PLAN.md do PILAR-2b):
+#   CP2b (este método) → chave do feedstocks.yaml → residuos.codigo (slug de produção).
+# Slugs tirados de docs/sql/sql_sync_factors_to_database.sql e DATABASE_RESIDUES_VISUALIZATION.md.
+# CONFERIR NO BANCO antes de aplicar qualquer UPDATE (UPDATE 0 = slug errado). ORGANICO_RSU e PODA_URBANA só
+# aparecem em MAIÚSCULAS; forsu_ur_rsu é FORSU de coleta seletiva, NÃO o orgânico do RSU misturado.
+banco:
+  slug_residuos:
+    VINHACA: vinhaca_cana
+    TORTA_FILTRO: torta_filtro
+    BAGACO: bagaco_cana
+    PALHA: palha_cana
+    PALHA_MILHO: palha_milho
+    PALHA_SOJA: palha_soja
+    CASCA_CAFE: casca_cafe
+    BAGACO_CITROS: bagaco_citros
+    BOV_LEITE: dejetos_bovinos_liquidos
+    BOV_CONFINADO: esterco_bovino_fresco
+    SUINOS: dejetos_suinos_liquidos
+    AVES_CORTE: cama_aviario
+    AVES_POSTURA: dejetos_aves_frescos
+    RSU_ORGANICO: ORGANICO_RSU
+    PODA_URBANA: PODA_URBANA
+    LODO_ETE: lodo_primario_ete

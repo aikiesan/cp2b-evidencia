@@ -1,0 +1,223 @@
+diff --git a/cp2b_params.py b/fl_espacial/patch_v5/cp2b_params.py
+index 413fe66..779ffb3 100644
+--- a/cp2b_params.py
++++ b/fl_espacial/patch_v5/cp2b_params.py
+@@ -1,4 +1,4 @@
+-"""Método CP2b v4 — elementos de cálculo (formato BASISDATEN, DBFZ).
++"""Método CP2b v5 — elementos de cálculo (formato BASISDATEN, DBFZ).
+ 
+ Cascata (tudo em Nm³ CH4):
+   N1 teórico     P1 = A × g × ST × SV × BMP   (ou coeficiente direto de CH4 por unidade de A)
+@@ -14,6 +14,10 @@ Referências de validação consolidadas em Evidencias_CP2B_FC_FCo_FL.md.
+ v4 (23/09/2026): PAM/PPM 2024; UNICA 2020/21 (cana moída e etanol) alocados às usinas (EPE/MapBiomas);
+ bovinos por sistema com GEDAVE (confinado) e PPM Tab. 94 (vacas ordenhadas); aves corte × postura;
+ RSU = massa coletada SNIS 2022; lodo primário com fração de ETEs compatíveis com digestão.
++
++v5: FL="espacial" — FL por município × substrato × cenário calculado em fl_espacial/ (fração do N3 a distância por
++estrada de um hub viável; ver fl_espacial/RELATORIO_FL_espacial.md). FL_ref = chave do feedstocks.yaml mantida só
++como referência (BASISDATEN, comparação com a v4). Saída em outputs_v5/; a v4 continua em outputs/.
+ """
+ 
+ 
+@@ -55,56 +59,64 @@ GLOBAIS = {
+     "eta_eletrica_motor": {"min": 0.35, "med": 0.38, "max": 0.42, "fonte": "motor a biogás", "status": "cp2b"},
+ }
+ 
++# v5 — FL espacial. Município sem oferta N3 do substrato (N3 = 0) recebe o FL estadual, só para completar.
++# Variantes (CHECKPOINT 2, 24/09/2026): "codig_alocado" = B, principal (co-digestão com alocação);
++# "codigestao" = A (limite superior); "mono_alocado" = D (limite inferior); "mono" = C. Palha só nas usinas em todas.
++FL_ESPACIAL = {"arquivo": "fl_espacial/outputs/fl_v5_municipio_substrato.csv",
++               "arquivo_estado": "fl_espacial/outputs/fl_v5_estado_substrato.csv",
++               "variante": "codig_alocado"}
++PASTA_SAIDA = "outputs_v5"
++
+ KG_DIA = 365 / 1000  # kg/dia -> t/ano
+ 
+ SUBSTRATOS = [
+     # ---------------- CANA (resíduos de usina alocados às usinas) ----------------
+     dict(codigo="BAGACO", fluxo="sugarcane", setor="agricultural", atividade="cana_moida_t", lignocel=True,
+          g=T(0.25, 0.28, 0.30), g_unid="t úmida / t cana moída", yaml="BAGACO",
+-         FC=T(0.90, 0.95, 0.98), FCo=T(0.05, 0.10, 0.15), FS=T(0.95, 0.97, 0.99), FL="yaml",
++         FC=T(0.90, 0.95, 0.98), FCo=T(0.05, 0.10, 0.15), FS=T(0.95, 0.97, 0.99), FL="espacial",
+          u="Cogeração (excludente). Sempre há excedente: 5–15% (decisão da equipe; o yaml cita 15–38% em usinas modernas, Paulose 2021).",
+          fonte_FC="feedstocks.yaml", fonte_FCo="decisão CP2b 23/09; SIGA/ANEEL 215 UTEs a bagaço (6,27 GW)", status="cp2b"),
+     dict(codigo="TORTA_FILTRO", fluxo="sugarcane", setor="agricultural", atividade="cana_moida_t", lignocel=False,
+          g=T(0.030, 0.035, 0.040), g_unid="t úmida / t cana moída", yaml="TORTA_FILTRO",
+-         FC=T(0.85, 0.90, 0.95), FCo=T(0.90, 1.00, 1.00), FS=T(0.85, 0.90, 0.95), FL="yaml",
++         FC=T(0.85, 0.90, 0.95), FCo=T(0.90, 1.00, 1.00), FS=T(0.85, 0.90, 0.95), FL="espacial",
+          u="Adubo é compatível com digestão (DBFZ).", fonte_g="Atlas SP 2020 p.66; real_rpr", status="cp2b"),
+     dict(codigo="VINHACA", fluxo="sugarcane", setor="agricultural", atividade="etanol_m3", lignocel=False,
+          direto=T(57.0, 65.55, 74.1), g_unid="Nm³ CH4 / m³ etanol", yaml=None,
+-         FC=T(0.90, 0.95, 0.98), FCo=T(0.90, 1.00, 1.00), FS=T(0.85, 0.92, 0.98), FL="VINHACA",
++         FC=T(0.90, 0.95, 0.98), FCo=T(0.90, 1.00, 1.00), FS=T(0.85, 0.92, 0.98), FL="espacial", FL_ref="VINHACA",
+          u="Fertirrigação é compatível.", fonte_g="Atlas SP 2020 p.67 (114 m³ biogás/m³ etanol × 50–65% CH4)", status="cp2b"),
+     dict(codigo="PALHA", fluxo="sugarcane", setor="agricultural", atividade="cana_t", lignocel=True,
+          g=T(0.12, 0.14, 0.15), g_unid="t MS / t cana colhida (PAM)", yaml="PALHA", ts_override=T(1.0, 1.0, 1.0),
+-         FC=T(0.35, 0.40, 0.50), FCo=T(0.80, 0.90, 0.95), FS=T(0.85, 0.92, 0.97), FL="yaml",
++         FC=T(0.35, 0.40, 0.50), FCo=T(0.80, 0.90, 0.95), FS=T(0.85, 0.92, 0.97), FL="espacial",
+          u="Queima em caldeira/2G (excludente) — FCo sem fonte quantitativa para SP (lacuna). "
+            "BMP sem pré-tratamento: parâmetro inicial; digestão de lignocelulósicos em pesquisa no CP2b.",
+          fonte_FC="Atlas SP 2020 p.65 (40/50%); Tenelli et al. 2021 (35%)", status="provisorio"),
+     # ---------------- GRÃOS / CULTURAS ----------------
+     dict(codigo="PALHA_MILHO", fluxo="corn", setor="agricultural", atividade="milho_t", lignocel=True,
+          g=T(1.0, 1.1, 1.2), g_unid="t / t grão", yaml="PALHA_MILHO",
+-         FC=T(0.25, 0.40, 0.50), FCo=T(0.85, 0.95, 1.00), FS=T(0.85, 0.90, 0.95), FL="yaml",
++         FC=T(0.25, 0.40, 0.50), FCo=T(0.85, 0.95, 1.00), FS=T(0.85, 0.90, 0.95), FL="espacial",
+          u="Ração/cama (menor). Cobertura de solo no FC.", status="provisorio"),
+     dict(codigo="PALHA_SOJA", fluxo="soybean", setor="agricultural", atividade="soja_t", lignocel=True,
+          g=T(1.35, 1.40, 1.50), g_unid="t / t grão", yaml="PALHA_SOJA",
+-         FC=T(0.20, 0.30, 0.40), FCo=T(0.90, 1.00, 1.00), FS=T(0.85, 0.90, 0.95), FL="yaml",
++         FC=T(0.20, 0.30, 0.40), FCo=T(0.90, 1.00, 1.00), FS=T(0.85, 0.90, 0.95), FL="espacial",
+          u="Sem uso excludente relevante.", status="provisorio"),
+     dict(codigo="CASCA_CAFE", fluxo="coffee", setor="agricultural", atividade="cafe_t", lignocel=False,
+          g=T(1.0, 1.0, 1.18), g_unid="t / t café beneficiado", yaml="CASCA_CAFE",
+-         FC=T(0.80, 0.90, 0.95), FCo=T(0.50, 0.60, 0.70), FS=T(0.90, 0.95, 0.98), FL="yaml",
++         FC=T(0.80, 0.90, 0.95), FCo=T(0.50, 0.60, 0.70), FS=T(0.90, 0.95, 0.98), FL="espacial",
+          u="Combustível em secadores (excludente).", status="provisorio"),
+     dict(codigo="BAGACO_CITROS", fluxo="citrus", setor="agricultural", atividade="laranja_t", lignocel=False,
+          g=T(0.48, 0.50, 0.52), g_unid="t úmida / t fruta", yaml="BAGACO_CITROS",
+-         FC=T(0.65, 0.75, 0.85), FCo=T(0.15, 0.25, 0.40), FS=T(0.80, 0.88, 0.95), FL="yaml",
++         FC=T(0.65, 0.75, 0.85), FCo=T(0.15, 0.25, 0.40), FS=T(0.80, 0.88, 0.95), FL="espacial",
+          u="Polpa peletizada para ração, pectina, d-limoneno (excludentes).", status="provisorio"),
+     # ---------------- BOVINOS (três sistemas) ----------------
+     dict(codigo="BOV_LEITE", fluxo="cattle", setor="livestock", atividade="bov_leite_cab", lignocel=False,
+          g=T(10 * KG_DIA, 14 * KG_DIA, 18 * KG_DIA), g_unid="t / vaca / ano (10–18 kg/dia)", yaml="ESTERCO_BOVINO",
+-         FC=T(0.40, 0.50, 0.75), FCo=T(0.90, 1.00, 1.00), FS=T(0.95, 0.98, 1.00), FL="DEJETOS_BOVINO",
++         FC=T(0.40, 0.50, 0.75), FCo=T(0.90, 1.00, 1.00), FS=T(0.95, 0.98, 1.00), FL="espacial", FL_ref="DEJETOS_BOVINO",
+          u="Adubo compatível. A = vacas ordenhadas (PPM 94). FC: IEA Task 37 (~40% coletável, Liebetrau 2021); yaml 0,75.",
+          fonte_g="Embrapa Pecuária Sudeste via feedstocks.yaml (leite 10–18 kg/cab/dia)", status="provisorio"),
+     dict(codigo="BOV_CONFINADO", fluxo="cattle", setor="livestock", atividade="bov_conf_cab", lignocel=False,
+          g=T(13.3 * KG_DIA, 20 * KG_DIA, 25 * KG_DIA), g_unid="t / cab / ano (13,3–25 kg/dia)", yaml="ESTERCO_BOVINO",
+          quim_override=dict(ST=T(0.18, 0.205, 0.23), SV=T(0.78, 0.81, 0.84), BMP=T(210, 260, 307)),
+-         FC=T(0.40, 0.65, 0.75), FCo=T(0.90, 1.00, 1.00), FS=T(0.90, 0.95, 1.00), FL="ESTERCO_BOVINO",
++         FC=T(0.40, 0.65, 0.75), FCo=T(0.90, 1.00, 1.00), FS=T(0.90, 0.95, 1.00), FL="espacial", FL_ref="ESTERCO_BOVINO",
+          u="Adubo compatível. A = estoque confinado GEDAVE. Nota: a consistência das fezes em confinamento varia com a dieta "
+            "(teor de fibra fisicamente efetiva; Contadini 2020) — afeta ST e, portanto, a faixa de ST adotada.",
+          fonte_g="Montoro 2017 (13,33 kg/dia, ST 20,49%, SV 81%, Presidente Prudente); Cenario_Bovinocultura2 (20 kg/dia)",
+@@ -118,34 +130,34 @@ SUBSTRATOS = [
+     # ---------------- SUÍNOS / AVES ----------------
+     dict(codigo="SUINOS", fluxo="swine", setor="livestock", atividade="suinos_cab", lignocel=False,
+          g="DEJETOS_SUINO", g_unid="t / cab / ano", yaml="DEJETOS_SUINO", ts_override=T(0.08, 0.10, 0.12),
+-         FC=T(0.70, 0.85, 0.95), FCo=T(0.90, 1.00, 1.00), FS=T(0.90, 0.95, 1.00), FL="DEJETOS_SUINO",
++         FC=T(0.70, 0.85, 0.95), FCo=T(0.90, 1.00, 1.00), FS=T(0.90, 0.95, 1.00), FL="espacial", FL_ref="DEJETOS_SUINO",
+          u="Adubo compatível. FC reduzido: mediana paulista 33 cab/granja; 0,90–0,95 só para coleta ≤ 7 d (Kunz 2009).",
+          nota_quim="ST 8–12% (excreta fresca; yaml 3% é chorume diluído)", status="provisorio"),
+     dict(codigo="AVES_CORTE", fluxo="poultry", setor="livestock", atividade="aves_corte_cab", lignocel=False,
+          g="CAMA_AVIARIO", g_unid="t cama / ave alojada / ano", yaml="CAMA_AVIARIO",
+-         FC="municipal:aves_fc", FCo=T(0.85, 0.95, 1.00), FS=T(0.90, 0.95, 0.98), FL="yaml",
++         FC="municipal:aves_fc", FCo=T(0.85, 0.95, 1.00), FS=T(0.90, 0.95, 0.98), FL="espacial",
+          u="Adubo compatível. A = galináceos − galinhas (PPM).", fonte_FC="GEDAVE: fração comercial da capacidade × 0,90",
+          status="cp2b"),
+     dict(codigo="AVES_POSTURA", fluxo="poultry", setor="livestock", atividade="aves_postura_cab", lignocel=False,
+          g=T(0.040, 0.050, 0.055), g_unid="t dejeto fresco / galinha / ano (~0,15 kg/dia)", yaml="DEJETOS_AVES",
+          ts_override=T(0.20, 0.25, 0.30),
+-         FC="municipal:aves_fc", FCo=T(0.85, 0.95, 1.00), FS=T(0.90, 0.95, 0.98), FL="DEJETOS_AVES",
++         FC="municipal:aves_fc", FCo=T(0.85, 0.95, 1.00), FS=T(0.90, 0.95, 0.98), FL="espacial", FL_ref="DEJETOS_AVES",
+          u="Adubo compatível. A = galinhas (PPM).", fonte_g="Planilha Resíduo_Disponível (0,15 kg/ave/dia postura)",
+          nota_quim="ST 20–30% (dejeto fresco)", status="provisorio"),
+     # ---------------- URBANO ----------------
+     dict(codigo="RSU_ORGANICO", fluxo="rsu", setor="urban", atividade="rsu_coletado_t", lignocel=False,
+          g=T(0.46, 0.50, 0.55), g_unid="fração orgânica do RSU coletado", yaml="ORGANICO_RSU",
+-         FC=T(0.50, 0.65, 0.80), FCo=T(1.0, 1.0, 1.0), FS=T(0.98, 1.00, 1.00), FL="yaml",
++         FC=T(0.50, 0.65, 0.80), FCo=T(1.0, 1.0, 1.0), FS=T(0.98, 1.00, 1.00), FL="espacial",
+          u="A = massa coletada SNIS 2022 (RDO+RPU). FC = separabilidade do orgânico em resíduo misturado (triagem mecânica; "
+            "sem fonte primária — provisório). Aterro com captura = uso existente (subtraído no N3).",
+          fonte_g="Atlas SP 2020 Eq. V.5 (0,4646); feedstocks.yaml (0,50–0,55)", status="provisorio"),
+     dict(codigo="PODA_URBANA", fluxo="rpo", setor="urban", atividade="pop", lignocel=False,
+          g="PODA_URBANA", g_unid="t / hab / ano", yaml="PODA_URBANA",
+-         FC=T(0.30, 0.50, 0.70), FCo=T(0.80, 0.90, 1.00), FS=T(0.95, 0.98, 1.00), FL="yaml",
++         FC=T(0.30, 0.50, 0.70), FCo=T(0.80, 0.90, 1.00), FS=T(0.95, 0.98, 1.00), FL="espacial",
+          u="Compostagem compatível; caldeira excludente. FCo sem fonte primária.", status="provisorio"),
+     dict(codigo="LODO_ETE", fluxo="sewage", setor="urban", atividade="pop", lignocel=False,
+          g="LODO_PRIMARIO", g_unid="t úmida / hab / ano (ST 15%)", yaml="LODO_PRIMARIO", ts_override=T(0.15, 0.15, 0.15),
+-         FC="municipal:esgoto_fc", FCo=T(1.0, 1.0, 1.0), FS=T(0.98, 1.00, 1.00), FL="yaml",
++         FC="municipal:esgoto_fc", FCo=T(1.0, 1.0, 1.0), FS=T(0.98, 1.00, 1.00), FL="espacial",
+          u="FC = atendimento (IN056) × tratamento (IN016) × fração de ETEs compatíveis com digestão (não-lagoa; ANA/Atlas "
+            "Esgotos 2019). Metagás subtraída no N3.", status="cp2b"),
+ ]
+diff --git a/cp2b_cascade.py b/fl_espacial/patch_v5/cp2b_cascade.py
+index f4fd120..b0d5ab5 100644
+--- a/cp2b_cascade.py
++++ b/fl_espacial/patch_v5/cp2b_cascade.py
+@@ -1,7 +1,9 @@
+ #!/usr/bin/env python3
+-"""Método CP2b v4 — cascata teórico → técnico → mobilizável → acessível (SP, 645 municípios).
++"""Método CP2b v5 — cascata teórico → técnico → mobilizável → acessível (SP, 645 municípios).
+ 
+ Base volumétrica primária: Nm³ CH4. Biogás e biometano são derivados e rotulados.
++v5: substratos com FL="espacial" usam o FL por município × cenário de fl_espacial/ (P.FL_ESPACIAL); saída em
++P.PASTA_SAIDA (outputs_v5/), sem tocar em outputs/ da v4. Ambiente: Metodo_CP2b/requirements.txt (pandas 2.2).
+ Executar:  python cp2b_cascade.py
+ """
+ from __future__ import annotations
+@@ -29,8 +31,8 @@ MASTER = REPO / "data" / "canonical_parameters" / "SP_master_residue_streams_202
+ YAML = REPO / "data" / "canonical_parameters" / "feedstocks.yaml"
+ SHP = REPO / "backend" / "data" / "shapefiles"
+ INFRA = PRIM / "SHAPEFILES_MAPBIOMAS_10.1" / "INFRAESTRUTURA"
+-OUT = HERE / "outputs"
+-OUT.mkdir(exist_ok=True)
++OUT = HERE / getattr(P, "PASTA_SAIDA", "outputs")
++OUT.mkdir(parents=True, exist_ok=True)
+ SC = ["min", "med", "max"]
+ DAYS = 365
+ ANO = P.ANO_PAM_PPM
+@@ -69,7 +71,11 @@ def resolve(sub):
+         r["SV"] = q.get("SV") or tri(v["vs_of_ts"], 0.01)
+         r["BMP"] = q.get("BMP") or tri(v["bmp"])
+     fl = sub["FL"]
+-    code = sub["yaml"] if fl == "yaml" else fl
++    if fl == "espacial":   # v5: FL municipal vem de fl_espacial/; o do yaml fica como referência
++        r["FL_espacial"] = True
++        code = sub.get("FL_ref") or sub["yaml"]
++    else:
++        code = sub["yaml"] if fl == "yaml" else fl
+     r["FL"] = tri(Y[code]["fde"]["components"]["fl"]) if isinstance(code, str) else fl
+     return r
+ 
+@@ -85,6 +91,9 @@ for s in SUBS:
+         fonte = s.get(f"fonte_{e}") or ("feedstocks.yaml" if e in ("ST", "SV", "BMP", "FL") else "cp2b")
+         if e in ("ST", "SV", "BMP") and (s.get("quim_override") or (e == "ST" and s.get("ts_override"))):
+             fonte = "override cp2b: " + s.get("nota_quim", "")
++        if e == "FL" and s.get("FL_espacial"):
++            fonte = (f"espacial ({P.FL_ESPACIAL['variante']}), por município: {P.FL_ESPACIAL['arquivo']}; "
++                     "valores mostrados = feedstocks.yaml (referência v4)")
+         if isinstance(v, str):
+             rows.append(dict(codigo=s["codigo"], fluxo=s["fluxo"], elemento=e, min=None, med=None, max=None,
+                              unidade="municipal", fonte=fonte, status=s["status"]))
+@@ -246,6 +255,16 @@ def fc_municipal(tag, s):
+     raise KeyError(tag)
+ 
+ 
++# FL espacial (v5): FL por município × substrato × cenário; município sem oferta (N3 = 0) usa o FL estadual
++FLESP = {}
++if any(s.get("FL_espacial") for s in SUBS):
++    fe = pd.read_csv(HERE / P.FL_ESPACIAL["arquivo"])
++    fe_est = pd.read_csv(HERE / P.FL_ESPACIAL["arquivo_estado"]).set_index(["codigo", "cenario"])
++    colfl = {"codig_alocado": "FL_codig_alocado", "codigestao": "FL_codigestao", "mono": "FL_mono",
++             "mono_alocado": "FL_mono_alocado"}[P.FL_ESPACIAL["variante"]]
++    for (c, sc), g in fe.groupby(["codigo", "cenario"]):
++        FLESP[(c, sc)] = A["ibge"].map(g.set_index("ibge")[colfl]).fillna(fe_est.at[(c, sc), colfl]).to_numpy()
++
+ # ---------------------------------------------------------------------------
+ # 2. Cascata N1–N3a
+ # ---------------------------------------------------------------------------
+@@ -260,9 +279,10 @@ for s in SUBS:
+             p1 = act * k * s["g"][sc] * s["ST"][sc] * s["SV"][sc] * s["BMP"][sc]
+         fc = fc_municipal(s["FC"].split(":")[1], sc) if isinstance(s["FC"], str) else s["FC"][sc]
+         p2 = p1 * fc
++        fl = FLESP.get((s["codigo"], sc), s["FL"][sc]) if s.get("FL_espacial") else s["FL"][sc]
+         recs.append(pd.DataFrame({"ibge": A["ibge"], "rgint": A["rgint"], "codigo": s["codigo"], "fluxo": s["fluxo"],
+                                   "setor": s["setor"], "lignocel": s["lignocel"], "cenario": sc, "L1": p1, "L2": p2,
+-                                  "L3a": p2 * s["FCo"][sc], "FSxFL": s["FS"][sc] * s["FL"][sc]}))
++                                  "L3a": p2 * s["FCo"][sc], "FSxFL": s["FS"][sc] * fl}))
+ L = pd.concat(recs, ignore_index=True)
+ 
+ # ---------------------------------------------------------------------------
+@@ -409,6 +429,7 @@ diag = {
+     "esgoto_fc_pond": round(float((A.esgoto_fc * A["pop"]).sum() / A["pop"].sum()), 3),
+     "uso_existente_alocavel_bi": round(float(U.loc[U.fluxo.notna(), "ch4_m3_ano"].sum() / 1e9), 4),
+     "uso_existente_nao_alocado_bi": round(nao_alocado / 1e9, 4),
++    "fl_espacial": (P.FL_ESPACIAL["variante"] if FLESP else None),
+ }
+ json.dump(diag, open(OUT / "cp2b_diagnostico.json", "w"), indent=1, ensure_ascii=False)
+ pd.set_option("display.width", 220)
