@@ -231,6 +231,8 @@ def build(data: dict, cfg: dict) -> dict:
     scale = 100.0 if max((c for _, c, _ in curve), default=0) > 1.5 else 1.0
     mclp = [{"meta": t, "hubs_N3_total": next((h for h, c, _ in curve if c / scale >= t), None),
              "hubs_sem_palha": next((h for h, _, c in curve if c / scale >= t), None)} for t in (0.5, 0.8, 0.9, 0.95)]
+    mclp_top = (len(curve), max((c for _, c, _ in curve), default=0.0) / scale,
+                max((c for _, _, c in curve), default=0.0) / scale)
     rob = []
     for s in SCEN:
         rede = [r for r in data["robustez_rede.csv"] if r["cenario"] == s]
@@ -244,7 +246,7 @@ def build(data: dict, cfg: dict) -> dict:
     return {"estado": state, "zeros": zrows, "zero_sets": z, "near": [(m, names.get(m, m),
             top[("FL_codig_alocado", "med")][m]) for m in near], "dist": dist, "q_min": q_min,
             "r2": cfg["raios_km"]["med"], "c02_estado": c02_state, "c02_lista": c02_list, "c02_mun": c02_mun,
-            "mclp": mclp, "robustez": rob, "r2_tab": data["sensibilidade_r2.csv"],
+            "mclp": mclp, "mclp_top": mclp_top, "robustez": rob, "r2_tab": data["sensibilidade_r2.csv"],
             "qmin_tab": data["sensibilidade_qmin.csv"], "conferencia": chk}
 
 
@@ -256,7 +258,8 @@ def zero_map(path: Path, res: dict) -> str:
     try:
         mesh, origin, sha = M.load_mesh()
     except Exception as e:  # noqa: BLE001 — no mesh is a note, not a failure
-        return f"Mapa não desenhado: a malha do IBGE não pôde ser lida ({type(e).__name__})."
+        return (f"Mapa não desenhado: a malha do IBGE não pôde ser lida ({type(e).__name__}); rode de novo com "
+                "acesso à API do IBGE ou com CP2B_MALHA apontando para a malha municipal.")
     rings = M.polygons(mesh)
     count: dict = defaultdict(int)
     for v, _ in VARIANTS:
@@ -279,7 +282,10 @@ def _f(x, nd=3) -> str:
 
 
 def _signed(x, nd=4) -> str:
-    return "—" if x is None else ("+" if x > 0 else "") + fmt(x, nd)
+    if x is None:
+        return "—"
+    x = round(x, nd) + 0.0                    # no "-0,0000"
+    return ("+" if x > 0 else "") + fmt(x, nd)
 
 
 def report(res: dict, map_note: str) -> list[str]:
@@ -340,8 +346,11 @@ def report(res: dict, map_note: str) -> list[str]:
     L += ["", "## 5. Sensibilidades que o fl_v5 já rodou", "",
           "Cobertura da rede B (curva MCLP): hubs para cobrir cada fração do N3.", "",
           "| Meta | Hubs (N3 total) | Hubs (sem palha) |", "|---:|---:|---:|"]
-    L += [f"| {fmt(100 * r['meta'], 0)} % | {r['hubs_N3_total'] or '—'} | {r['hubs_sem_palha'] or '—'} |"
-          for r in res["mclp"]]
+    L += [f"| {fmt(100 * r['meta'], 0)} % | {r['hubs_N3_total'] or 'não chega'} | "
+          f"{r['hubs_sem_palha'] or 'não chega'} |" for r in res["mclp"]]
+    n, top_all, top_np = res["mclp_top"]
+    L += ["", f"Com os {fmt(n, 0)} candidatos da curva, a cobertura chega a {fmt(100 * top_all, 1)} % do N3 total e "
+          f"{fmt(100 * top_np, 1)} % do N3 sem palha (a palha só vai às usinas)."]
     L += ["", "Robustez (maior \\|ΔFL\\| estadual entre os substratos): rede sem trilhas e regra de atribuição.", "",
           "| Cenário | Rede, codigestão | Rede, mono | Atribuição pelo maior w | Atribuição exclusiva |",
           "|---|---:|---:|---:|---:|"]

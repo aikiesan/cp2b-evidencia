@@ -1,0 +1,13 @@
+cenario,variante,descricao,municipios_fl_zero,contra_B
+min,FL_codig_alocado,"B · codigestão, alocado",143,0
+min,FL_codigestao,"A · codigestão, cobertura",122,-21
+min,FL_mono,"C · mono, cobertura",159,16
+min,FL_mono_alocado,"D · mono, alocado",169,26
+med,FL_codig_alocado,"B · codigestão, alocado",26,0
+med,FL_codigestao,"A · codigestão, cobertura",14,-12
+med,FL_mono,"C · mono, cobertura",29,3
+med,FL_mono_alocado,"D · mono, alocado",46,20
+max,FL_codig_alocado,"B · codigestão, alocado",0,0
+max,FL_codigestao,"A · codigestão, cobertura",0,0
+max,FL_mono,"C · mono, cobertura",1,1
+max,FL_mono_alocado,"D · mono, alocado",1,1
