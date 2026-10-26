@@ -21,6 +21,7 @@ saídas ficam fora do git.
 | `07_reconciliacao_v5.py` | N4 v4 × v5 |
 | `fl_comum.py`, `config_fl.yaml` | Funções comuns; todos os parâmetros (raios, Q_min, semente 20260923) |
 | `rodar_pipeline.sh`, `ambiente.txt` | Ordem de execução e versões dos pacotes (Python 3.11) |
+| `analises_v52/` | Rodadas da v5.2 numa cópia da pasta: C02 no FL, distâncias dos zerados, Bananal (ver abaixo) |
 | `cascata_v51/` | `cp2b_cascade.py` e `cp2b_params.py` da v5.1 e o log da rodada (N4 1,883 / 5,972 / 15,577 bi Nm³ CH4/ano, igual ao snapshot); a seção de alocação do uso existente está somada por fluxo, sem os nomes dos titulares |
 | `patch_v5/` | O diff v4 → v5.0 da cascata e o teste dele |
 | `RELATORIO_FL_espacial.md` | O relatório da v5.1: decisões, FL por substrato, robustez, validação, limitações |
@@ -65,6 +66,12 @@ relatório em `../outputs/fl_espacial/`):
 - Municípios zerados: distância por estrada de cada ponto de oferta ao hub
   selecionado mais próximo (`fl_comum.Roteador`, limite de 150 km), contra o
   r2 da classe.
+- Bananal, o único zerado com oferta acima do Q_min: oferta por classe de raio,
+  candidatos que a alcançam e quanto cada um junta pesado por w(d). Refaz antes
+  a alocação gulosa do med e confere com a da v5.1 (455 hubs, iguais).
+
+Os três scripts estão em `analises_v52/` (`v52_c02_oferta.py`, `v52_zeros.py`,
+`v52_bananal.py`); rodam com `cwd` na cópia, pelo `Metodo_CP2b/.venv`.
 
 Cuidado ao rodar: `06_integracao.py` grava em `integracao.saida_v5`, que no
 config aponta para a pasta da v5.1 (`Metodo_CP2b/outputs_v5`). Numa cópia,

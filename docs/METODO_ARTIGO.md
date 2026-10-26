@@ -293,9 +293,12 @@ nearest selected hub is 27–141 km from these 26 municipalities (median
 within r2 of a selected hub; the smallest margin beyond r2 is 4.2 km
 (Silveiras and São Bento do Sapucaí). In 25 of the 26, the municipality's own
 supply is below Q_min (1,500 Nm³ CH₄ d⁻¹ in med), so it could not support a
-hub alone. The exception is Bananal (1,648 Nm³ CH₄ d⁻¹), where no hub was
-selected either. `[TEAM: confirm why; w(d) weighting of a dispersed supply
-around a candidate?]` The choice of variant moves state
+hub alone. The exception is Bananal (1,648 Nm³ CH₄ d⁻¹). Without sugarcane
+straw, which goes only to the mills, 1,571 remain for co-digestion, 85 % of it
+dairy manure spread over 87 supply points, with the 5/15 km radii of liquids.
+None of the 57 candidate hubs that reach this supply is viable: the best one
+gathers 618 Nm³ CH₄ d⁻¹ weighted by w(d), almost all from Bananal itself,
+against a Q_min of 1,500. The choice of variant moves state
 N4 by −3.8 % (mono-digestion with allocation) to +4.5 % (straw at any hub) in
 med, and by −12.1 % to +6.3 % in min. In med this is less than the parameter
 uncertainty.
@@ -333,7 +336,7 @@ uncertainty.
 | 1 | Time between harvest and baling assumed by the straw FS of 0.92 | 2.x, 3.z | −11.1 % if FS = 0.67 |
 | 2 | Source of the straw FCo of 0.90, or state it as a gap | 2.x, Limitations | 3.0 % of variance |
 | 3 | Source of the bagasse FCo range 0.05–0.15 | 3.x | 8.4 % of variance |
-| 4 | fl_v5 rule that sets FL = 0: drafted from the code (radius and Q_min), distances measured; confirm, and why Bananal gets no hub | 2.x, 3.w | 26 municipalities |
+| 4 | fl_v5 rule that sets FL = 0: drafted from the code (radius and Q_min), distances measured, Bananal explained (dispersed supply, best candidate 618 < Q_min); confirm | 2.x, 3.w | 26 municipalities |
 | 5 | FS definition: align DECISOES_METODOLOGICAS.md with DEC-013 | 2.x | −6.7 % under the other reading |
 | 6 | Dairy g: total excretion or collectable fraction? | 3.z | +1.0 % / +0.4 % |
 | 7 | Feedlot g × ST representative of SP, or anchor on faecal dry matter? | 3.z | −0.4 % |
@@ -356,6 +359,7 @@ uncertainty.
 | N4-zero municipalities | `outputs/diagnostico_n4_zero/RELATORIO.md` | 1cd3c07 |
 | FL variants, threshold test | `outputs/fl_variantes/RELATORIO.md` | 7ab5ca8 |
 | Distance to the nearest hub, Q_min, C02 effect on FL | `outputs/fl_espacial/RELATORIO.md` §3–4 (from `data/fl_v51/`) | f6a1815 |
+| Bananal: supply, candidates, best basin | `fl_espacial/analises_v52/v52_bananal.py`, run on the v5.1 cache; output outside the repo | — (notebook run, 26/10/2026) |
 
 The correlation run (base seed 20261024) gives an independent interval of
 5,130–6,887. It matches the uncertainty run within 0.12 %; the text uses the

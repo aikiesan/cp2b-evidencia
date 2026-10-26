@@ -281,8 +281,11 @@ a fração que não vai para a peletização, ele resolve. Se não, a fonte de 2
   menor folga é 4,2 km (Silveiras e São Bento do Sapucaí). Em 25 dos 26 a
   oferta própria fica abaixo do Q_min de 1.500 Nm³/dia, então o município não
   forma um hub sozinho. A exceção é Bananal (1.648 Nm³/dia), que também não
-  ganha hub. Pergunta: por quê? A oferta espalhada pelo município, pesada por
-  w(d) em volta de um candidato, não chega ao Q_min?
+  ganha hub. Sem a palha de cana, que vai só para as usinas, sobram 1.571 para
+  a codigestão, 85 % esterco de leite espalhado em 87 pontos, com os raios de
+  5/15 km dos líquidos. Dos 57 candidatos que alcançam essa oferta, nenhum é
+  viável: o melhor junta 618 Nm³/dia pesados por w(d), quase tudo do próprio
+  Bananal, contra 1.500 do Q_min.
 - FL municipal e hubs: rodando a alocação de novo com o BMP do bagaço
   proposto para a v5.2 (C02), o FL estadual muda no máximo 0,005, mas 835
   linhas município × substrato mudam mais de 0,01, até ±0,95 no leite e nos
