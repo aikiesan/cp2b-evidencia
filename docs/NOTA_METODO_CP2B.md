@@ -1,6 +1,8 @@
 # Nota ao time do método CP2b: o que a literatura diz e quanto pesa no N4
 
-Data: 23/10/2026 · Rascunho para revisão interna antes de circular.
+Data: 23/10/2026, números conferidos com os outputs em 26/10/2026 · Rascunho
+para revisão interna antes de circular. O texto de método do artigo, em
+inglês, está em `docs/METODO_ARTIGO.md`.
 
 ## Por que esta nota
 
@@ -67,7 +69,7 @@ Leitura para priorizar:
 A faixa mín–máx do snapshot põe todos os parâmetros juntos no mínimo ou no
 máximo. Sorteando cada parâmetro na sua faixa (triangular mín, med, máx,
 independentes) e refazendo a cascata por município, o N4 do estado fica entre
-5.130 e 6.895 mi Nm³/ano em 90 % dos sorteios (−14 % a +15 % do med). As duas
+5.130 e 6.895 mi Nm³/ano em 90 % dos sorteios (−14,1 % a +15,5 % do med). As duas
 leituras são os dois limites: parâmetros independentes e parâmetros que andam
 todos juntos. O modelo reproduz o mín, o med e o máx do snapshot linha a
 linha.
@@ -77,7 +79,7 @@ Onde fica o intervalo real depende de quais parâmetros andam juntos
 
 | O que anda junto | Intervalo de 90 % do N4 (mi Nm³/ano) | Contra o med |
 |---|---|---|
-| nada (independentes) | 5.130–6.887 | −14 % a +15 % |
+| nada (independentes) | 5.130–6.895 ¹ | −14,1 % a +15,5 % |
 | o mesmo elemento quando cita a mesma referência, ρ = 1 | 4.892–7.173 | −18 % a +20 % |
 | idem, mais os valores da equipe de um mesmo elemento juntos, ρ = 1 | 4.738–7.356 | −21 % a +23 % |
 | idem, também entre elementos do mesmo artigo, ρ = 1 | 4.537–7.761 | −24 % a +30 % |
@@ -85,6 +87,9 @@ Onde fica o intervalo real depende de quais parâmetros andam juntos
 | todos os parâmetros de um substrato, ρ = 1 | 4.560–8.756 | −24 % a +47 % |
 | palha, bagaço, torta e vinhaça juntos, ρ = 1 | 3.449–10.177 | −42 % a +70 % |
 | tudo junto, ρ = 1 | 2.692–11.815 | −55 % a +98 % |
+
+¹ Da rodada de `outputs/incerteza_cp2b/`. A rodada da correlação, com outra
+semente, dá 5.130–6.887; as duas batem em 0,12 %.
 
 - O que as fontes citadas sustentam (coluna `fonte` do arquivo de parâmetros e
   refs do `feedstocks.yaml`, `fontes.csv`): andam juntos o BMP de bagaço,
@@ -121,10 +126,11 @@ Onde fica o intervalo real depende de quais parâmetros andam juntos
   maiores ficam no top 50 em ao menos 90 % dos sorteios. A exceção é a
   capital (rank 4 a 48, por RSU e lodo). No cenário com toda a literatura,
   45 dos 50 continuam.
-- A incerteza relativa é maior onde o N4 é pequeno: no leste (Vale do
-  Paraíba, litoral norte, metrópole), onde pesam leite, RSU e lodo, o
-  intervalo de 90 % passa de 150 % do med; no interior canavieiro fica entre
-  25 e 75 %.
+- A incerteza relativa é maior onde o N4 é pequeno. A mediana municipal da
+  amplitude p5–p95 sobre o med é 125 % na região intermediária de São Paulo
+  e 435 % na de São José dos Campos, onde pesam leite, RSU e lodo; nas nove
+  regiões do interior fica entre 47 % e 60 % (calculado de
+  `outputs/incerteza_cp2b/ranking.csv`, municípios com N4 med acima de zero).
 
 ## O que pede decisão
 

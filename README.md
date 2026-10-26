@@ -27,6 +27,7 @@ PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
 - `outputs/diagnostico_n4_zero/`: onde a cascata zera os municípios de N4 med zero.
 - `outputs/fl_variantes/`: o N4 com cada variante do FL espacial do snapshot, os municípios de N4 zero em cada uma e se o FL zero segue um limiar de oferta.
 - `docs/NOTA_METODO_CP2B.md`: nota ao time do método.
+- `docs/METODO_ARTIGO.md`: texto de método e resultados para o artigo (inglês), com os números finais e de onde cada um vem.
 - `tests/`: testes com dados sintéticos; não precisam do snapshot.
 
 ## Como rodar
