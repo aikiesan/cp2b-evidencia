@@ -249,8 +249,25 @@ a fração que não vai para a peletização, ele resolve. Se não, a fonte de 2
   município, sobretudo leite e RSU), mas o FS × FL é zero. Todos voltam a ter
   N4 no cenário máximo (0,09 a 2,93 mi). No estado é pouco (cerca de 6 mi de
   N3), mas é uma escolha de método que o artigo precisa dizer, para o mapa
-  não ser lido como ausência de resíduo. Pergunta: qual é o limiar de oferta
-  abaixo do qual o FL vai a zero?
+  não ser lido como ausência de resíduo.
+- O que as variantes do FL mostram (`outputs/fl_variantes/`; lá são 27
+  municípios, porque N4 abaixo de 1 Nm³/ano conta como zero e entra
+  Tapiraí). O snapshot usa a variante de codigestão alocada nos 16
+  substratos espaciais, e ela reproduz o N4. Nenhuma das outras quatro
+  (codigestão por cobertura, mono, mono alocada, palha em qualquer hub)
+  devolve N4 relevante a esses municípios: no máximo 0,11 mi (Silveiras, por
+  cobertura). O zero não vem da alocação; vale para todas as variantes.
+- Não há limiar de oferta municipal. Em nenhum substrato o FL zero separa
+  pela oferta, nem da linha nem do município: na palha med há linhas com FL
+  zero e 3.567 m³ CH₄/dia e linhas com FL acima de zero e 12 m³/dia. O zero
+  depende do cenário (146 municípios no mín, 27 no med, nenhum no máx), o
+  que sugere que conta a oferta em volta, que forma ou não um hub viável, e
+  não a do município. Pergunta para quem fez o fl_v5: qual é a regra que leva
+  o FL a zero (raio até o hub, tamanho mínimo do hub)? Uma frase no artigo
+  basta.
+- A escolha da variante mexe pouco no estado: o N4 med vai de −3,8 % (mono
+  alocada) a +4,5 % (palha em qualquer hub), menos que a incerteza dos
+  parâmetros. No mín pesa mais (−12 % a +6 %).
 - Palhas de milho e de soja: a mediana dos sorteios fica 29 % (milho) e 19 %
   (soja) abaixo do med do CP2b. As faixas têm o med perto do máximo (FL do
   milho 0,35–0,67–0,75, da soja 0,30–0,55–0,70; FC do milho 0,25–0,40–0,50),

@@ -89,3 +89,15 @@ def test_without_the_snapshot_it_says_so(tmp_path, monkeypatch):
     F.main()
     text = (tmp_path / "out" / "RELATORIO.md").read_text(encoding="utf-8")
     assert "Não rodou" in text and not (tmp_path / "out" / "variantes.csv").exists()
+
+
+def test_a_substrate_outside_the_fl_file_keeps_its_n4():
+    rows, fl = data()
+    rows += [{"ibge": "1", "codigo": "PASTO", "cenario": "max", "n3": 10.0, "fsfl": 0.5, "n4": 5.0}]
+    res = F.build(rows, fl, ["fl_codig_alocado", "fl_codigestao"], names())
+    assert all(c["resultado"] for c in res["conferencia"])
+    detail = res["conferencia"][-1]["detalhe"]
+    assert "fora do FL espacial" in detail and "PASTO max" in detail
+    v = {(r["cenario"], r["variante"]): r["n4"] for r in res["variantes"]}
+    assert v[("max", "fl_codigestao")] - v[("max", "fl_codig_alocado")] == pytest.approx(
+        sum(n3 * 1.0 * (a - b) for n3, b, a, _ in MUN.values()))

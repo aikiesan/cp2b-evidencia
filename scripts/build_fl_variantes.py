@@ -48,6 +48,7 @@ SUPPLY = "oferta_l3_ch4_m3_dia"
 SCEN = ("min", "med", "max")
 EPS = 1e-9
 FS_TOL = 1e-6          # relative spread allowed in FS × FL / FL within a substrate and scenario
+NO_FL = "sem linha no arquivo do FL"
 ZERO_NM3 = 1.0         # a municipality's N4 below 1 Nm³/year is zero (the model's float noise is ~1e-12)
 
 
@@ -97,7 +98,7 @@ def identify(rows: list[dict], fl: dict, variants: list[str]) -> dict:
     for key, items in sorted(groups.items()):
         found = (None, None, "nenhuma variante reproduz o FS × FL")
         if all(f is None for _, f in items):
-            found = (None, None, "sem linha no arquivo do FL")
+            found = (None, None, NO_FL)
         for v in variants:
             pairs = [(fsfl, f[v]) for fsfl, f in items if f is not None and f.get(v) is not None]
             if len(pairs) < len(items):
@@ -193,10 +194,14 @@ def build(rows: list[dict], fl: dict, variants: list[str], names) -> dict:
         dev = abs(got / snap[s] - 1) if snap[s] else abs(got)
         chk.append({"checagem": f"a variante identificada reproduz o N4 do snapshot, {s} (±0,01 %)",
                     "resultado": dev <= 1e-4, "detalhe": f"{mi(got)} contra {mi(snap[s])} mi"})
-    open_ = [k for k, (v, _, _) in ident.items() if v is None]
-    chk.append({"checagem": "toda combinação de substrato e cenário com N3 tem a variante identificada",
-                "resultado": not open_, "detalhe": "; ".join(f"{c} {s}: {ident[(c, s)][2]}" for c, s in open_)
-                or f"{len(ident)} combinações"})
+    no_fl = [k for k, (v, _, note) in ident.items() if v is None and note == NO_FL]
+    open_ = [k for k, (v, _, note) in ident.items() if v is None and note != NO_FL]
+    chk.append({"checagem": "toda combinação de substrato e cenário com linhas no arquivo do FL tem a variante "
+                "identificada", "resultado": not open_,
+                "detalhe": "; ".join(f"{c} {s}: {ident[(c, s)][2]}" for c, s in open_)
+                or f"{len(ident) - len(no_fl)} combinações"
+                + (f"; fora do FL espacial, com o N4 do snapshot em todas as variantes: "
+                   f"{', '.join(f'{c} {s}' for c, s in no_fl)}" if no_fl else "")})
 
     var_rows, sub_rows = [], []
     for s in SCEN:
