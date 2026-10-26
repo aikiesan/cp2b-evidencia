@@ -43,9 +43,12 @@ mantenedores, não pelo Claude.
 ## O que ainda não dá para fazer aqui
 
 O FL espacial entra como na incerteza: interpolado no N3 de cada município.
-Refazer o modelo do FL (por exemplo, contando a oferta dos vizinhos) precisa do
-código do fl_v5, que não está neste repositório nem no PILAR-2b; só as saídas
-dele estão no snapshot.
+O código do fl_v5 (v5.1) está em `../fl_espacial/` (veja o LEIA-ME de lá), mas
+refazer o FL ainda não roda aqui. O pipeline precisa da malha viária do OSM,
+dos shapefiles e cadastros de entrada, que ficam fora do git, e de cerca de
+1h40 de máquina. Enquanto isso, uma mudança que mexe no N3 (C02, BMP do
+bagaço) entra com o FL da v5.1; uma que só mexe no FS (C01) não muda o FL,
+porque o FS vem depois do N3.
 
 ## Candidatas de hoje
 

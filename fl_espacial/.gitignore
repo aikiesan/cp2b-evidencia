@@ -1,0 +1,7 @@
+# fl_comum.py cria estas pastas ao ser importado; nada delas entra no git
+outputs/
+outputs_v5*/
+cache/
+logs/
+.venv*/
+*.bak

@@ -28,6 +28,7 @@ PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
 - `outputs/fl_variantes/`: o N4 com cada variante do FL espacial do snapshot, os municípios de N4 zero em cada uma e se o FL zero segue um limiar de oferta.
 - `outputs/v52/`: o que cada mudança proposta para a v5.2 (`v52/mudancas.csv`) faz no N4, no ranking e no intervalo de 90 %.
 - `v52/`: a v5.2 em construção; como propor uma mudança está em `v52/README.md`.
+- `fl_espacial/`: o código e as notas do FL espacial v5.1 (fl_v5) e a cascata v5.1 que gerou o snapshot; só código, sem dados de entrada, cache nem saídas (veja `fl_espacial/LEIA-ME.md`).
 - `docs/NOTA_METODO_CP2B.md`: nota ao time do método.
 - `docs/METODO_ARTIGO.md`: texto de método e resultados para o artigo (inglês), com os números finais e de onde cada um vem.
 - `tests/`: testes com dados sintéticos; não precisam do snapshot.

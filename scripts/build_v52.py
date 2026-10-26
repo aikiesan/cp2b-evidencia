@@ -22,8 +22,8 @@ changes together and for accepted plus candidates:
   so the difference is the change, not the sampling)
 
 The spatial FL follows each municipality's N3 as in the uncertainty model; it is
-not re-run. A change to the FL model itself needs the fl_v5 code, which is not
-in this repository.
+not re-run. The fl_v5 code is in fl_espacial/, but re-running it needs inputs
+kept outside git (OSM roads, shapefiles, registries).
 
 Nothing here changes the platform or the snapshot. When v5.2 closes, the
 accepted changes go to PILAR-2b as a patch the maintainers apply themselves.

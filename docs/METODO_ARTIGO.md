@@ -48,8 +48,21 @@ Insert these sentences where FS, FCo and FL are first defined.
   so pasture cattle contribute to N1 but not to N2–N4 by premise.
 - **Logistic factor (FL).** FL is municipality- and substrate-specific and
   comes from the CP2b spatial model (fl_v5), co-digestion with allocation
-  variant. `[TEAM: one sentence on the fl_v5 rule, including what sets FL to
-  zero: distance to a hub, minimum hub size, or both.]` Where FL is zero, the
+  variant. N3 is placed on a 1-km grid or at the point where it is generated
+  (mill, wastewater plant, farm), and each point takes the weight w(d) of
+  the road distance d (OpenStreetMap network) to the nearest selected hub:
+  w = 1 up to r1, falling linearly to 0 at r2. The radii depend on the
+  substrate class and scenario (med: liquids 5/15 km, wet solids 15/30 km,
+  dry solids 10/25 km). Sugarcane straw goes only to the mills, with radii from
+  the road-distance percentiles (med 27.2/41.7 km). Candidate hubs are existing
+  plants (mills, wastewater plants, operating biogas plants, juice factories)
+  and a 4-km grid. They enter greedily, and a hub enters only if the residue
+  it adds, net of what earlier hubs already cover, is at least Q_min (3,200,
+  1,500 and 500 Nm³ CH₄ d⁻¹ in min, med and max). Municipal FL is the
+  supply-weighted mean of its points. FL is therefore zero when no selected hub
+  lies within r2 by road of the municipality's supply: both the radius and the
+  minimum hub size set it. `[TEAM: confirm; read from the fl_v5 code in
+  fl_espacial/ (04b_alocacao.py, config_fl.yaml).]` Where FL is zero, the
   residue exists and is not consumed by existing uses, but no plant is counted
   in the municipality.
 
@@ -269,8 +282,10 @@ straw rows with FL = 0 reach 3,567 m³ CH₄ d⁻¹, while rows with FL > 0 star
 at 12 m³ CH₄ d⁻¹.
 
 The number of zero municipalities depends on the scenario: 146 in min, 27 in
-med and 0 in max.¹ This suggests that viability depends on the supply around
-the municipality rather than its own supply. The choice of variant moves state
+med and 0 in max.¹ This follows from the FL rule (section 2.x): a hub needs
+Q_min of residue from the supply around it, and Q_min falls from 3,200 to
+500 Nm³ CH₄ d⁻¹ between min and max while the radii grow, so what counts is
+the supply around the municipality, not its own. The choice of variant moves state
 N4 by −3.8 % (mono-digestion with allocation) to +4.5 % (straw at any hub) in
 med, and by −12.1 % to +6.3 % in min. In med this is less than the parameter
 uncertainty.
@@ -302,7 +317,7 @@ uncertainty.
 | 1 | Time between harvest and baling assumed by the straw FS of 0.92 | 2.x, 3.z | −11.1 % if FS = 0.67 |
 | 2 | Source of the straw FCo of 0.90, or state it as a gap | 2.x, Limitations | 3.0 % of variance |
 | 3 | Source of the bagasse FCo range 0.05–0.15 | 3.x | 8.4 % of variance |
-| 4 | fl_v5 rule that sets FL = 0 (hub radius, minimum hub size) | 2.x, 3.w | 26 municipalities |
+| 4 | fl_v5 rule that sets FL = 0: drafted from the code (radius and Q_min); confirm | 2.x, 3.w | 26 municipalities |
 | 5 | FS definition: align DECISOES_METODOLOGICAS.md with DEC-013 | 2.x | −6.7 % under the other reading |
 | 6 | Dairy g: total excretion or collectable fraction? | 3.z | +1.0 % / +0.4 % |
 | 7 | Feedlot g × ST representative of SP, or anchor on faecal dry matter? | 3.z | −0.4 % |

@@ -270,7 +270,11 @@ a fração que não vai para a peletização, ele resolve. Se não, a fonte de 2
   que sugere que conta a oferta em volta, que forma ou não um hub viável, e
   não a do município. Pergunta para quem fez o fl_v5: qual é a regra que leva
   o FL a zero (raio até o hub, tamanho mínimo do hub)? Uma frase no artigo
-  basta.
+  basta. Resposta lida do código (`fl_espacial/04b_alocacao.py`), a
+  confirmar: as duas coisas. O FL de cada célula é o w(d) da distância por
+  estrada até o hub selecionado mais próximo, zero além de r2, e um hub só é
+  selecionado se acrescenta pelo menos Q_min de resíduo (3.200, 1.500 e 500
+  Nm³ CH₄/dia no mín, med e máx).
 - A escolha da variante mexe pouco no estado: o N4 med vai de −3,8 % (mono
   alocada) a +4,5 % (palha em qualquer hub), menos que a incerteza dos
   parâmetros. No mín pesa mais (−12 % a +6 %).
