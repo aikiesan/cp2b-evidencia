@@ -1,0 +1,5 @@
+checagem,resultado,detalhe
+"a variante identificada reproduz o N4 do snapshot, min (±0,01 %)",True,"1.882,6 contra 1.882,6 mi"
+"a variante identificada reproduz o N4 do snapshot, med (±0,01 %)",True,"5.971,7 contra 5.971,7 mi"
+"a variante identificada reproduz o N4 do snapshot, max (±0,01 %)",True,"15.576,9 contra 15.576,9 mi"
+toda combinação de substrato e cenário com linhas no arquivo do FL tem a variante identificada,True,"48 combinações; fora do FL espacial, com o N4 do snapshot em todas as variantes: BOV_PASTO_MISTO max"

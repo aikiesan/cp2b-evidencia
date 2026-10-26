@@ -1,0 +1,16 @@
+cenario,variante,descricao,n4,n4_rel_usada,municipios_n4_zero,zero_que_abre,zero_novos
+min,fl_codig_alocado,"B · codigestão, alocado",1882577068.8657608,0.0,146,0,0
+min,fl_codigestao,"A · codigestão, cobertura",2001799394.4915843,0.06332932000369795,122,24,0
+min,fl_mono,"C · mono, cobertura",1782721641.6710005,-0.05304188011539013,160,7,21
+min,fl_mono_alocado,"D · mono, alocado",1735591979.5042431,-0.07807653231964373,169,0,23
+min,fl_codig_alocado_palhaqh,B · palha em qualquer hub,1654432890.2255983,-0.12118716540917907,160,8,22
+med,fl_codig_alocado,"B · codigestão, alocado",5971705062.308865,0.0,27,0,0
+med,fl_codigestao,"A · codigestão, cobertura",6136615307.080217,0.027615269516943153,15,12,0
+med,fl_mono,"C · mono, cobertura",5927552899.017396,-0.0073935606046823255,30,6,9
+med,fl_mono_alocado,"D · mono, alocado",5742611791.892942,-0.03836312544332976,47,1,21
+med,fl_codig_alocado_palhaqh,B · palha em qualquer hub,6238033230.510939,0.04459834593691436,24,3,0
+max,fl_codig_alocado,"B · codigestão, alocado",15576853642.438374,0.0,0,0,0
+max,fl_codigestao,"A · codigestão, cobertura",15632786529.745434,0.0035907692651533374,0,0,0
+max,fl_mono,"C · mono, cobertura",15602863676.548536,0.0016697874106810229,0,0,0
+max,fl_mono_alocado,"D · mono, alocado",15461557206.258066,-0.0074017795138158204,0,0,0
+max,fl_codig_alocado_palhaqh,B · palha em qualquer hub,15853932892.462585,0.01778788299514633,0,0,0
