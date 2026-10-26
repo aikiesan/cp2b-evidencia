@@ -47,6 +47,19 @@ sha256). A cópia em `Project_Twin/.../fl_espacial/outputs` é idêntica.
 | `outputs/fl_v5_municipio_substrato.csv` | `2a7b664b1f20` |
 | `outputs/fl_v5_estado_substrato.csv` | `1bd83a1785ea` |
 
+## Reprodução conferida (26/10/2026)
+
+Numa cópia da pasta (`Metodo_CP2b/fl_espacial_v52/`), com o cache da v5.1 e o
+`Metodo_CP2b/.venv` (pandas 2.2.3, numpy 2.2.6), `04b_alocacao.py` (1,8 min) e
+`06_integracao.py` (0,1 min) geraram `fl_v5_municipio_substrato.csv`,
+`fl_v5_estado_substrato.csv`, `fl_municipio_alocado.csv`, `fl_estado_alocado.csv`
+e `alocacao_hubs_codigestao.csv` byte a byte iguais aos da v5.1. As etapas
+00–04 (grafo, oferta, hubs, bacias) não foram refeitas: entram pelo cache.
+
+Cuidado ao rodar: `06_integracao.py` grava em `integracao.saida_v5`, que no
+config aponta para a pasta da v5.1 (`Metodo_CP2b/outputs_v5`). Numa cópia,
+troque esse caminho antes.
+
 ## Para rodar de novo
 
 Não roda neste repositório como está. Os caminhos de `config_fl.yaml` e de

@@ -62,7 +62,9 @@ Insert these sentences where FS, FCo and FL are first defined.
   supply-weighted mean of its points. FL is therefore zero when no selected hub
   lies within r2 by road of the municipality's supply: both the radius and the
   minimum hub size set it. `[TEAM: confirm; read from the fl_v5 code in
-  fl_espacial/ (04b_alocacao.py, config_fl.yaml).]` Where FL is zero, the
+  fl_espacial/ (04b_alocacao.py, config_fl.yaml).]` Re-running the allocation
+  and integration steps from the cached network reproduces the published FL
+  tables byte for byte. Where FL is zero, the
   residue exists and is not consumed by existing uses, but no plant is counted
   in the municipality.
 
