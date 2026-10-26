@@ -1,0 +1,104 @@
+
+== ESTADO (bi Nm³ CH4/ano) ==
+ cenario       max     med     min
+L1         42.997  23.643  11.610
+L2         29.834  15.208   6.636
+L3a        16.639   7.230   2.943
+L3         16.411   7.002   2.822
+L4         15.577   5.972   1.883
+U_efetivo   0.229   0.229   0.121
+
+== ESTADO sem lignocelulósicos ==
+ cenario     max    med    min
+L1       11.170  5.052  2.112
+L2        6.798  3.049  1.396
+L3a       6.534  2.886  1.212
+L3        6.335  2.687  1.109
+L4        6.067  2.386  0.837
+
+== BASES (med) ==
+   nivel  CH4_bi_Nm3_ano  CH4_M_Nm3_dia  biogas_eq_M_Nm3_dia  biometano_eq_M_Nm3_dia  y_CH4_medio_ponderado  eletricidade_GWh_ano
+0    L1          23.643         64.774              116.609                  66.798                  0.555             89572.178
+1    L2          15.208         41.665               74.934                  42.967                  0.556             57615.355
+2    L3           7.002         19.183               34.051                  19.783                  0.563             26527.279
+3    L4           5.972         16.361               29.019                  16.872                  0.564             22624.402
+
+== POR FLUXO (med) ==
+                L1      L2    L3a     L3     L4  U_efetivo  ret_L3_%  share_L3_%
+fluxo                                                                          
+cattle      1.627   0.139  0.139  0.138  0.079      0.001     8.491       1.973
+citrus      0.219   0.164  0.041  0.041  0.036      0.000    18.750       0.585
+coffee      0.045   0.041  0.024  0.024  0.018      0.000    54.000       0.349
+corn        0.653   0.261  0.248  0.248  0.187      0.000    38.000       3.542
+poultry     0.459   0.412  0.391  0.389  0.360      0.002    84.836       5.561
+rpo         0.056   0.028  0.025  0.025  0.023      0.000    45.000       0.359
+rsu         0.499   0.325  0.325  0.162  0.154      0.163    32.339       2.307
+sewage      0.103   0.055  0.055  0.051  0.043      0.004    50.170       0.735
+soybean     0.797   0.239  0.239  0.239  0.178      0.000    30.000       3.417
+sugarcane  19.148  13.512  5.711  5.653  4.878      0.058    29.523      80.735
+swine       0.037   0.032  0.032  0.031  0.016      0.001    82.454       0.437
+
+== POR SUBSTRATO (med) ==
+                               L1     L2    L3a     L3     L4
+fluxo     codigo                                            
+cattle    BOV_CONFINADO    0.092  0.060  0.060  0.060  0.056
+          BOV_LEITE        0.158  0.079  0.079  0.078  0.024
+          BOV_PASTO_MISTO  1.377  0.000  0.000  0.000  0.000
+citrus    BAGACO_CITROS    0.219  0.164  0.041  0.041  0.036
+coffee    CASCA_CAFE       0.045  0.041  0.024  0.024  0.018
+corn      PALHA_MILHO      0.653  0.261  0.248  0.248  0.187
+poultry   AVES_CORTE       0.326  0.293  0.278  0.276  0.255
+          AVES_POSTURA     0.133  0.119  0.113  0.113  0.105
+rpo       PODA_URBANA      0.056  0.028  0.025  0.025  0.023
+rsu       RSU_ORGANICO     0.499  0.325  0.325  0.162  0.154
+sewage    LODO_ETE         0.103  0.055  0.055  0.051  0.043
+soybean   PALHA_SOJA       0.797  0.239  0.239  0.239  0.178
+sugarcane BAGACO           8.731  8.295  0.829  0.817  0.792
+          PALHA            8.409  3.364  3.027  3.011  2.429
+          TORTA_FILTRO     1.062  0.956  0.956  0.941  0.847
+          VINHACA          0.946  0.898  0.898  0.884  0.810
+swine     SUINOS           0.037  0.032  0.032  0.031  0.016
+
+== DIAGNÓSTICO ==
+ {
+ "ano_PAM_PPM": 2024,
+ "municipios": 645,
+ "pam_celulas_confidenciais": 266,
+ "cana_PAM_t": 418569112,
+ "cana_moida_UNICA_t": 356508000,
+ "etanol_UNICA_m3": 14426000,
+ "usinas_SP": 160,
+ "usinas_sem_municipio": 1,
+ "municipios_com_usina": 123,
+ "laranja_PAM_t": 12002362,
+ "municipios_com_fabrica_suco": 14,
+ "bov_total_PPM": 10756815,
+ "vacas_ordenhadas": 792040,
+ "bov_confinado_GEDAVE": 291832,
+ "bov_pasto_misto": 9672943,
+ "gedave_bov_nomes_sem_match": [],
+ "aves_corte": 148241697,
+ "aves_postura": 56776816,
+ "aves_share_comercial_estado": 0.9981,
+ "rsu_coletado_t": 14754212,
+ "rsu_fontes": {
+  "SNIS 2022 CO119": 629,
+  "per capita Atlas × cobertura": 16
+ },
+ "indice_tratamento_pond": 0.773,
+ "frac_ete_digestao_pond": 0.703,
+ "esgoto_fc_pond": 0.54,
+ "uso_existente_alocavel_bi": 0.2289,
+ "uso_existente_nao_alocado_bi": 0.0,
+ "fl_espacial": "codig_alocado"
+}
+
+== ALOCAÇÃO U (agregada) ==
+A saída original lista as 52 plantas uma a uma, com o nome do titular. Aqui ela
+aparece somada por fluxo e nível, para não publicar dados de pessoas.
+fluxo      nivel      plantas  ch4 (Nm³/ano)
+livestock  municipio       23    3.8225e+06
+rsu        rgint           21    1.6313e+08
+sewage     rgint            1    3.9515e+06
+sugarcane  municipio        7    5.7975e+07
+total                      52    2.2888e+08
