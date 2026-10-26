@@ -1,0 +1,13 @@
+checagem,resultado,detalhe
+total do estado N3 min,True,"2.821,9 mi (loader 2.821,9)"
+total do estado N1 med,True,"23.642,6 mi (loader 23.642,6)"
+total do estado N2 med,True,"15.207,6 mi (loader 15.207,6)"
+total do estado N3 med,True,"7.001,9 mi (loader 7.001,9)"
+total do estado N4 med,True,"5.971,7 mi (loader 5.971,7)"
+total do estado N3 max,True,"16.410,6 mi (loader 16.410,6)"
+"N3 = máx(N3a − U, 0) em cada linha",True,0 linhas fora de 32895
+N4 = N3 × FS × FL em cada linha,True,0 linhas fora de 32895
+"modelo reproduz mín, med e máx do snapshot por substrato (±0,1 %)",True,"maior desvio 0,000 %"
+"U = mín(uso existente, N3a) em cada linha e cenário (informativo: o modelo interpola o U)",vale,"0 linhas fora; 0,00 % do U"
+"v5.1 sem mudanças reproduz o N4 do snapshot no mín, med e máx (±0,01 %)",True,"1.882,6 · 5.971,7 · 15.576,9 mi"
+"toda linha de mudancas.csv é lida, confere com a v5.1 e entra no modelo",True,2 mudanças
