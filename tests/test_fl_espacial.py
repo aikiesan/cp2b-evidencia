@@ -152,3 +152,9 @@ def test_without_the_tables_it_says_so(run):
     F.main()
     text = (run / "out" / "RELATORIO.md").read_text(encoding="utf-8")
     assert "Não rodou" in text and not (run / "out" / "zeros_distancia.csv").exists()
+
+
+def test_map_classes_put_b_first():
+    sets = {(v, "med"): s for v, s in zip(V, ({"1", "2"}, {"1"}, {"1", "2", "3"}, {"1", "2", "3", "4"}))}
+    value, n = F.map_classes(sets)
+    assert value == {"1": 3.0, "2": 2.0, "3": 1.0, "4": 1.0} and n == [2, 1, 1]

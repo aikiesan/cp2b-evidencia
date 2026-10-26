@@ -208,7 +208,7 @@ def legend(where, classes, title: str, empty: str | None, **kw) -> None:
 
 
 def single_map(path: Path, rings, values, classes, title: str, subtitle: str, legend_title: str,
-               empty: str | None) -> None:
+               empty: str | None, source: str = SOURCE) -> None:
     fig = plt.figure(figsize=(10, 6.4), facecolor=SURFACE)
     ax = fig.add_axes((0.02, 0.08, 0.78, 0.76))
     draw(ax, rings, values, classes)
@@ -216,7 +216,7 @@ def single_map(path: Path, rings, values, classes, title: str, subtitle: str, le
     legend(fig, classes, legend_title, empty, loc="center left", bbox_to_anchor=(0.81, 0.46))
     fig.text(0.04, 0.95, title, fontsize=13, color=INK, weight="bold", va="top")
     fig.text(0.04, 0.905, subtitle, fontsize=9, color=INK2, va="top")
-    fig.text(0.04, 0.03, SOURCE, fontsize=7, color=INK2)
+    fig.text(0.04, 0.03, source, fontsize=7, color=INK2)
     fig.savefig(path, dpi=200, facecolor=SURFACE)
     plt.close(fig)
 

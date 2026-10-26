@@ -69,6 +69,7 @@ NEEDED = {
 # sha256 of the two fl_v5 tables as published with v5.1 (fl_espacial/LEIA-ME.md)
 REFERENCE = {"fl_v5_municipio_substrato.csv": "2a7b664b1f20", "fl_v5_estado_substrato.csv": "1bd83a1785ea"}
 EPS = 1e-12
+MAP_SOURCE = "Fonte: tabelas do fl_v5 (CP2b v5.1) em data/fl_v51/; malha municipal do IBGE."
 NEAR_ZERO = 0.01       # municipalities whose largest FL B med is above zero but at most this
 C02_SHOWN = 5e-4       # state |ΔFL| below this is not listed
 
@@ -253,25 +254,35 @@ def build(data: dict, cfg: dict) -> dict:
 # ── Map ─────────────────────────────────────────────────────────────────────
 
 
+def map_classes(sets: dict) -> tuple[dict[str, float], list[int]]:
+    """Med, per municipality: 3 zero in all four variants, 2 zero in B (the one CP2b uses) but not in all,
+    1 zero only in other variants, 0 in none; and how many municipalities fall in classes 1–3."""
+    z = [sets.get((v, "med"), set()) for v, _ in VARIANTS]
+    every, b, any_ = set.intersection(*z), z[0], set.union(*z)
+    value = {m: 3.0 if m in every else 2.0 if m in b else 1.0 for m in any_}
+    return value, [len(any_ - b), len(b - every), len(every)]
+
+
 def zero_map(path: Path, res: dict) -> str:
-    """Med: in how many of the four variants each municipality has FL zero. Returns a note for the report."""
+    """Med: the municipalities with FL zero in B, in all four variants, or only in others. Returns a report note."""
     try:
         mesh, origin, sha = M.load_mesh()
     except Exception as e:  # noqa: BLE001 — no mesh is a note, not a failure
         return (f"Mapa não desenhado: a malha do IBGE não pôde ser lida ({type(e).__name__}); rode de novo com "
                 "acesso à API do IBGE ou com CP2B_MALHA apontando para a malha municipal.")
     rings = M.polygons(mesh)
-    count: dict = defaultdict(int)
-    for v, _ in VARIANTS:
-        for m in res["zero_sets"].get((v, "med"), set()):
-            count[m] += 1
-    values = {c: float(count.get(c, 0)) for c in rings}
-    classes = ([0.0, 0.5, 1.5, 2.5, 3.5, math.inf], ["nenhuma", "1", "2", "3", "as 4"],
-               [M.NEUTRAL, *M.RED])
+    value, n = map_classes(res["zero_sets"])
+    values = {c: value.get(c, 0.0) for c in rings}
+    classes = ([0.0, 0.5, 1.5, 2.5, math.inf],
+               ["em nenhuma", f"só fora da B ({n[0]})", f"na B, não nas 4 ({n[1]})", f"nas 4 ({n[2]})"],
+               [M.NEUTRAL, M.RED[0], M.RED[2], M.RED[3]])
     M.single_map(path, rings, values, classes, "Municípios com FL espacial zero no cenário med",
-                 "Em quantas das quatro variantes do fl_v5 (A, B, C, D) o FL é zero em todos os substratos.",
-                 "Variantes com FL zero", None)
-    return f"Malha: {origin} (sha256 {sha[:12]}…)."
+                 f"FL zero em todos os substratos. B (codigestão alocada) é a variante do CP2b: {n[1] + n[2]} "
+                 "municípios; A cobertura, C mono, D mono alocada.", "FL zero na variante", None, source=MAP_SOURCE)
+    missing = sorted(set(value) - set(rings))
+    return (f"Malha: {origin} (sha256 {sha[:12]}…). No mapa, {n[2]} municípios zeram nas quatro variantes, "
+            f"{n[1]} na B e não em todas, e {n[0]} só fora da B"
+            + (f"; sem polígono: {', '.join(missing)}" if missing else "") + ".")
 
 
 # ── Report ──────────────────────────────────────────────────────────────────
