@@ -204,16 +204,111 @@ FL estadual com outro r2 (por classe) e outro Q_min:
 | 7500 | 36887 | 0,984 | 0,827 |
 | 10000 | 33609 | 0,979 | 0,781 |
 
-## 6. Conferência
+## 6. Perturbação da oferta (B, palha nas usinas)
+
+A oferta N3 de cada substrato multiplicada por um fator lognormal de média 1, o mesmo nos três cenários, e a alocação gulosa refeita (o filtro de candidatos acompanha o ruído). A rodada sem ruído repete os hubs e o FL municipal da v5.1. Com o fator igual dentro do município, o FL municipal de um substrato só muda se a rede de hubs mudar.
+
+| Ruído | Cenário | Hubs (v5.1 → faixa) | Jaccard mediano | FL estadual v5.1 (p05–p95) | Zerados v5.1 (faixa) | Zeram sempre | Zeram alguma vez | Linhas mun. × subst. com p95 − p05 > 0,1 | Spearman mín. | Top-50 mín. |
+|---|---|---|---:|---|---|---:|---:|---|---:|---:|
+| 10 % por município | min | 175 → 171–180 | 0,95 | 0,776 (0,774–0,777) | 143 (140–159) | 139 | 162 | 370 de 5.953 | 0,991 | 46 |
+| 10 % por município | med | 455 → 450–467 | 0,73 | 0,920 (0,919–0,921) | 26 (23–30) | 23 | 33 | 1.348 de 6.127 | 0,998 | 46 |
+| 10 % por município | max | 752 → 742–765 | 0,61 | 0,979 (0,978–0,979) | 0 (0–0) | 0 | 0 | 685 de 6.136 | 0,998 | 45 |
+| 30 % por município | min | 175 → 167–179 | 0,80 | 0,776 (0,772–0,779) | 143 (139–162) | 125 | 169 | 898 de 5.953 | 0,982 | 41 |
+| 30 % por município | med | 455 → 439–464 | 0,52 | 0,920 (0,918–0,922) | 26 (18–32) | 14 | 44 | 2.434 de 6.127 | 0,989 | 41 |
+| 30 % por município | max | 752 → 732–764 | 0,40 | 0,979 (0,978–0,980) | 0 (0–1) | 0 | 1 | 1.101 de 6.136 | 0,988 | 40 |
+| 20 % por substrato × 20 % por município | min | 175 → 160–195 | 0,82 | 0,776 (0,755–0,791) | 143 (137–172) | 126 | 188 | 996 de 5.953 | 0,982 | 42 |
+| 20 % por substrato × 20 % por município | med | 455 → 414–496 | 0,55 | 0,920 (0,912–0,928) | 26 (14–38) | 12 | 44 | 2.312 de 6.127 | 0,990 | 41 |
+| 20 % por substrato × 20 % por município | max | 752 → 702–827 | 0,43 | 0,979 (0,975–0,981) | 0 (0–1) | 0 | 1 | 1.035 de 6.136 | 0,989 | 42 |
+
+Jaccard: hubs em comum com a v5.1 sobre a união. Spearman e top-50: ordem dos municípios pela oferta coberta (N3 × FL), contra a v5.1; inclui o ruído da própria oferta.
+
+Substratos com o FL estadual mais largo no med (p05–p95):
+
+| Substrato | FL v5.1 | 10 % por município | 30 % por município | 20 % por substrato × 20 % por município |
+|---|---:|---|---|---|
+| LODO_ETE | 0,835 | 0,812–0,855 | 0,777–0,862 | 0,796–0,854 |
+| BOV_LEITE | 0,308 | 0,302–0,315 | 0,302–0,327 | 0,279–0,348 |
+| SUINOS | 0,534 | 0,517–0,552 | 0,502–0,562 | 0,506–0,566 |
+| PALHA_MILHO | 0,838 | 0,837–0,846 | 0,836–0,851 | 0,823–0,863 |
+| CASCA_CAFE | 0,767 | 0,761–0,777 | 0,755–0,791 | 0,755–0,794 |
+| PALHA_SOJA | 0,827 | 0,824–0,834 | 0,826–0,838 | 0,810–0,845 |
+| RSU_ORGANICO | 0,951 | 0,950–0,954 | 0,947–0,960 | 0,939–0,961 |
+| PODA_URBANA | 0,950 | 0,946–0,952 | 0,942–0,955 | 0,938–0,957 |
+
+Municípios com FL B med zero na v5.1 ou em alguma rodada (47): fração das rodadas em que zeram.
+
+| Município | Zero na v5.1 | 10 % por município | 30 % por município | 20 % por substrato × 20 % por município |
+|---|---|---:|---:|---:|
+| Arapeí | sim | 1,00 | 1,00 | 1,00 |
+| Areias | sim | 1,00 | 1,00 | 1,00 |
+| Bananal | sim | 1,00 | 1,00 | 1,00 |
+| Barra do Turvo | sim | 1,00 | 1,00 | 1,00 |
+| Iporanga | sim | 1,00 | 1,00 | 1,00 |
+| Itaoca | sim | 1,00 | 1,00 | 1,00 |
+| Itapirapuã Paulista | sim | 1,00 | 1,00 | 1,00 |
+| Miracatu | sim | 1,00 | 1,00 | 1,00 |
+| Pedro de Toledo | sim | 1,00 | 1,00 | 1,00 |
+| Ribeira | sim | 1,00 | 1,00 | 1,00 |
+| São Bento do Sapucaí | sim | 1,00 | 1,00 | 1,00 |
+| São José do Barreiro | sim | 1,00 | 1,00 | 1,00 |
+| Juquiá | sim | 1,00 | 1,00 | 0,97 |
+| Ilha Comprida | sim | 1,00 | 1,00 | 0,90 |
+| Juquitiba | sim | 1,00 | 0,87 | 0,90 |
+| Cananéia | sim | 1,00 | 0,83 | 0,83 |
+| Eldorado | sim | 1,00 | 0,73 | 0,77 |
+| Sete Barras | sim | 1,00 | 0,70 | 0,80 |
+| Iguape | sim | 1,00 | 0,70 | 0,73 |
+| Cajati | sim | 1,00 | 0,63 | 0,73 |
+| Jacupiranga | sim | 1,00 | 0,63 | 0,73 |
+| Pariquera-Açu | sim | 1,00 | 0,63 | 0,73 |
+| Registro | sim | 1,00 | 0,63 | 0,73 |
+| Queluz | sim | 0,60 | 0,47 | 0,57 |
+| Silveiras | sim | 0,60 | 0,47 | 0,57 |
+| Lavrinhas | sim | 0,60 | 0,43 | 0,53 |
+| Ubatuba | não | 0,20 | 0,57 | 0,33 |
+| Caiuá | não | 0,40 | 0,30 | 0,37 |
+| Igaratá | não | 0,27 | 0,37 | 0,43 |
+| São Luiz do Paraitinga | não | 0,13 | 0,37 | 0,47 |
+| Natividade da Serra | não | 0,17 | 0,43 | 0,27 |
+| Lagoinha | não | 0,10 | 0,23 | 0,40 |
+| Joanópolis | não | 0,07 | 0,27 | 0,10 |
+| Campos do Jordão | não | 0,00 | 0,33 | 0,10 |
+| Santo Antônio do Pinhal | não | 0,00 | 0,33 | 0,10 |
+| Santa Clara d'Oeste | não | 0,00 | 0,17 | 0,23 |
+| Cruzeiro | não | 0,00 | 0,17 | 0,13 |
+| Caraguatatuba | não | 0,00 | 0,07 | 0,10 |
+| Ilhabela | não | 0,00 | 0,07 | 0,10 |
+| São Sebastião | não | 0,00 | 0,07 | 0,10 |
+| São Lourenço da Serra | não | 0,00 | 0,07 | 0,03 |
+| Bom Sucesso de Itararé | não | 0,00 | 0,03 | 0,00 |
+| Itanhaém | não | 0,00 | 0,00 | 0,03 |
+| Itariri | não | 0,00 | 0,00 | 0,03 |
+| Paraibuna | não | 0,00 | 0,03 | 0,00 |
+| Peruíbe | não | 0,00 | 0,00 | 0,03 |
+| Salesópolis | não | 0,00 | 0,03 | 0,00 |
+
+Mapa da perturbação não desenhado aqui (sem a malha do IBGE); sai ao rodar o script com a malha.
+
+## 7. Bananal: oferta acima do Q_min e nenhum hub
+
+- Oferta N3 med: 1.648,3 Nm³/dia; sem a palha de cana (77,3), que vai só às usinas, 1.571,0 para a codigestão, 85 % dela em líquidos (raios de 5/15 km). Fonte: `fl_v5_municipio_substrato.csv`.
+- 57 candidatos a hub alcançam essa oferta; 0 viáveis pela bacia de cobertura (Q_min 1.500 Nm³/dia).
+- O melhor (grade, a 0,4 km da oferta) junta 617,9 Nm³/dia pesados por w(d), 41 % do Q_min; 617,9 vêm do próprio Bananal. Fonte: `v52_bananal_candidatos.csv`.
+
+## 8. Conferência
 
 | Checagem | Resultado | Detalhe |
 |---|---|---|
-| as tabelas de data/fl_v51 conferem com o MANIFESTO.csv | ok | 10 arquivos, sha256 e tamanho |
+| as tabelas de data/fl_v51 conferem com o MANIFESTO.csv | ok | 15 arquivos, sha256 e tamanho |
 | fl_v5_municipio_substrato.csv é o publicado com a v5.1 (sha256 2a7b664b1f20…) | ok | sha256 2a7b664b1f20… |
 | fl_v5_estado_substrato.csv é o publicado com a v5.1 (sha256 1bd83a1785ea…) | ok | sha256 1bd83a1785ea… |
 | os municípios da tabela de distâncias são os de FL B med zero | ok | 26 na tabela, 26 com FL B med zero |
 | c02_fl_delta: d_FL = FL C02 − FL v5.1 | ok | 48 linhas |
 | c02_fl_municipio_delta só tem |ΔFL| > 0,01 | ok | 835 linhas |
+| perturbação: rodadas por desenho e cenário iguais às do resumo | ok | 270 rodadas em 9 grupos |
+| perturbação: hubs, FL estadual e zerados da v5.1 iguais em todos os desenhos | ok | min: 175 hubs; med: 455 hubs; max: 752 hubs |
+| perturbação: os zerados da v5.1 são os de FL B zero na tabela fl_v5 | ok | min, med e max |
+| Bananal: FL B med zero, nenhum candidato viável e o melhor abaixo do Q_min | ok | 57 candidatos; melhor 617,9 Nm³/dia |
 
 ## Como ler
 

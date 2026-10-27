@@ -59,6 +59,13 @@ a história é outra: 835 linhas município × substrato mudam mais de 0,01, at�
 lugar. As bacias de cobertura (filtro dos candidatos) ficaram as da v5.1,
 então esse efeito é um piso.
 
+A perturbação da oferta (`../outputs/fl_espacial/`, §6) diz o mesmo de forma
+geral: com ruído de 10 % a 30 % na oferta de cada município, o FL estadual med
+fica em 0,912–0,928 e o ranking municipal mantém Spearman ≥ 0,98, mas os hubs e
+o FL municipal por substrato mudam. Uma candidata que mexe na oferta de poucos
+municípios pode, então, mudar o FL de municípios longe dela; o `build_v52.py`
+não mede isso.
+
 ## Candidatas de hoje
 
 - C01: FS da palha de cana pela decomposição no solo (espera o tempo entre

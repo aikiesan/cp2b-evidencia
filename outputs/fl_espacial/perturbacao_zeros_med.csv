@@ -1,0 +1,48 @@
+ibge,municipio,zero_v51,mun10,mun30,sub20_mun20
+3503158,Arapeí,True,1.0,1.0,1.0
+3503505,Areias,True,1.0,1.0,1.0
+3504909,Bananal,True,1.0,1.0,1.0
+3505401,Barra do Turvo,True,1.0,1.0,1.0
+3521200,Iporanga,True,1.0,1.0,1.0
+3522158,Itaoca,True,1.0,1.0,1.0
+3522653,Itapirapuã Paulista,True,1.0,1.0,1.0
+3529906,Miracatu,True,1.0,1.0,1.0
+3537206,Pedro de Toledo,True,1.0,1.0,1.0
+3542800,Ribeira,True,1.0,1.0,1.0
+3548609,São Bento do Sapucaí,True,1.0,1.0,1.0
+3549607,São José do Barreiro,True,1.0,1.0,1.0
+3526100,Juquiá,True,1.0,1.0,0.966667
+3520426,Ilha Comprida,True,1.0,1.0,0.9
+3526209,Juquitiba,True,1.0,0.866667,0.9
+3509908,Cananéia,True,1.0,0.833333,0.833333
+3514809,Eldorado,True,1.0,0.733333,0.766667
+3551801,Sete Barras,True,1.0,0.7,0.8
+3520301,Iguape,True,1.0,0.7,0.733333
+3509254,Cajati,True,1.0,0.633333,0.733333
+3524600,Jacupiranga,True,1.0,0.633333,0.733333
+3536208,Pariquera-Açu,True,1.0,0.633333,0.733333
+3542602,Registro,True,1.0,0.633333,0.733333
+3541901,Queluz,True,0.6,0.466667,0.566667
+3552007,Silveiras,True,0.6,0.466667,0.566667
+3526605,Lavrinhas,True,0.6,0.433333,0.533333
+3555406,Ubatuba,False,0.2,0.566667,0.333333
+3509106,Caiuá,False,0.4,0.3,0.366667
+3520202,Igaratá,False,0.266667,0.366667,0.433333
+3550001,São Luiz do Paraitinga,False,0.133333,0.366667,0.466667
+3532306,Natividade da Serra,False,0.166667,0.433333,0.266667
+3526308,Lagoinha,False,0.1,0.233333,0.4
+3525508,Joanópolis,False,0.066667,0.266667,0.1
+3509700,Campos do Jordão,False,0.0,0.333333,0.1
+3548203,Santo Antônio do Pinhal,False,0.0,0.333333,0.1
+3546108,Santa Clara d'Oeste,False,0.0,0.166667,0.233333
+3513405,Cruzeiro,False,0.0,0.166667,0.133333
+3510500,Caraguatatuba,False,0.0,0.066667,0.1
+3520400,Ilhabela,False,0.0,0.066667,0.1
+3550704,São Sebastião,False,0.0,0.066667,0.1
+3549953,São Lourenço da Serra,False,0.0,0.066667,0.033333
+3507159,Bom Sucesso de Itararé,False,0.0,0.033333,0.0
+3522109,Itanhaém,False,0.0,0.0,0.033333
+3523305,Itariri,False,0.0,0.0,0.033333
+3535606,Paraibuna,False,0.0,0.033333,0.0
+3537602,Peruíbe,False,0.0,0.0,0.033333
+3545001,Salesópolis,False,0.0,0.033333,0.0

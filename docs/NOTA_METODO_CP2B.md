@@ -282,10 +282,24 @@ a fração que não vai para a peletização, ele resolve. Se não, a fonte de 2
   oferta própria fica abaixo do Q_min de 1.500 Nm³/dia, então o município não
   forma um hub sozinho. A exceção é Bananal (1.648 Nm³/dia), que também não
   ganha hub. Sem a palha de cana, que vai só para as usinas, sobram 1.571 para
-  a codigestão, 85 % esterco de leite espalhado em 87 pontos, com os raios de
-  5/15 km dos líquidos. Dos 57 candidatos que alcançam essa oferta, nenhum é
-  viável: o melhor junta 618 Nm³/dia pesados por w(d), quase tudo do próprio
-  Bananal, contra 1.500 do Q_min.
+  a codigestão, 85 % em líquidos (83 % esterco de leite), com os raios de
+  5/15 km. Dos 57 candidatos que alcançam essa oferta, nenhum é viável: o
+  melhor junta 618 Nm³/dia pesados por w(d), todo do próprio Bananal, contra
+  1.500 do Q_min (`outputs/fl_espacial/`, §7).
+- Perturbação da oferta (`outputs/fl_espacial/`, §6): a oferta N3 de cada
+  município × substrato multiplicada por um fator lognormal de média 1 (10 %
+  e 30 % por município, ou 20 % por substrato × 20 % por município; 30
+  rodadas cada) e a alocação refeita. A rodada sem ruído repete a v5.1. O FL
+  estadual med fica em 0,919–0,921, 0,918–0,922 e 0,912–0,928 (p05–p95) e o
+  ranking municipal da oferta coberta mantém Spearman ≥ 0,98. Os hubs mudam
+  (Jaccard mediano 0,73, 0,52 e 0,55 com a v5.1) e o FL municipal por
+  substrato também: 1.348, 2.434 e 2.312 das 6.127 linhas têm p95 − p05
+  acima de 0,1. Dos 26 zerados, 23, 14 e 12 zeram em todas as rodadas; os 12
+  que zeram sempre nos três desenhos são do Vale do Ribeira e do Vale
+  Histórico/Mantiqueira (Bananal entre eles). Queluz, Silveiras e Lavrinhas
+  zeram em 43–60 % das rodadas, e até 21 municípios com potencial na v5.1
+  zeram em alguma (Ubatuba, Caiuá, Igaratá com mais frequência). Leitura: o
+  número estadual e o ranking aguentam; o FL de um município isolado, não.
 - FL municipal e hubs: rodando a alocação de novo com o BMP do bagaço
   proposto para a v5.2 (C02), o FL estadual muda no máximo 0,005, mas 835
   linhas município × substrato mudam mais de 0,01, até ±0,95 no leite e nos

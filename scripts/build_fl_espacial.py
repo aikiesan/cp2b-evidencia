@@ -13,9 +13,13 @@ match, then reports:
   against the collection radius r2 and the hub threshold Q_min
   what the C02 change (bagasse BMP) does to the FL, state and municipality
   the r2, Q_min, network and allocation sensitivities already run by fl_v5
+  how state FL, the hub network and the zeroed municipalities move when the
+  supply gets lognormal noise (v52_perturbacao.py), if those tables are there
+  why Bananal, the one zeroed municipality with supply above Q_min, gets no hub
 
-and draws the municipalities that each variant zeroes on the IBGE mesh (as in
-build_mapas_incerteza.py; skipped with a note if the mesh cannot be read).
+and draws on the IBGE mesh the municipalities that each variant zeroes and how
+much municipal FL moves under the noise (as in build_mapas_incerteza.py;
+skipped with a note if the mesh cannot be read).
 
 Nothing here re-runs fl_v5 or changes the platform; the radii and Q_min come
 from fl_espacial/config_fl.yaml.
@@ -25,7 +29,8 @@ Run from the repo root:
 
 Outputs (outputs/fl_espacial/):
   estado_variantes.csv · zeros_variantes.csv · zeros_distancia.csv · c02_estado.csv ·
-  c02_municipios.csv · conferencia.csv · mapa_zeros_variantes.png · RELATORIO.md
+  c02_municipios.csv · perturbacao.csv · perturbacao_zeros_med.csv · conferencia.csv ·
+  mapa_zeros_variantes.png · mapa_perturbacao_fl.png · RELATORIO.md
 """
 
 from __future__ import annotations
@@ -66,6 +71,22 @@ NEEDED = {
     "v52_zeros_distancia_hub.csv": ("ibge", "municipio", "codigo", "classe", "oferta_m3dia", "d_min_km",
                                     "d_mediana_km", "r1_km", "r2_km"),
 }
+# Read when listed in the manifest (written by fl_espacial/analises_v52/); without them their sections say so
+OPTIONAL = {
+    "pert_resumo.csv": ("desenho", "cenario", "rodadas", "linhas_mun_substrato", "linhas_max_abs_d_acima_01",
+                        "linhas_p95_p05_acima_01", "hubs_v51", "municipios_zero_v51", "municipios_zero_sempre",
+                        "municipios_zero_alguma_vez"),
+    "pert_execucoes.csv": ("desenho", "cv_substrato", "cv_municipio", "cenario", "rodada", "hubs", "hubs_v51",
+                           "jaccard", "municipios_fl_zero", "municipios_fl_zero_v51", "FL_estado", "FL_estado_v51",
+                           "spearman_cob_mun", "top50_em_comum"),
+    "pert_fl_estado.csv": ("desenho", "cenario", "codigo", "FL_v51", "p05", "p95"),
+    "pert_fl_municipio_total.csv": ("desenho", "cenario", "ibge", "FL_v51", "p05", "p95", "frac_zero", "zero_v51"),
+    "v52_bananal_candidatos.csv": ("hub_id", "tipo", "d_min_km", "bacia_cobertura", "viavel", "de_bananal_w",
+                                   "ganho_sozinho"),
+}
+PERT = ("pert_resumo.csv", "pert_execucoes.csv", "pert_fl_estado.csv", "pert_fl_municipio_total.csv")
+BANANAL = "3504909"
+MAP_DESIGN = "mun30"   # the perturbation map: municipal noise only, the larger CV
 # sha256 of the two fl_v5 tables as published with v5.1 (fl_espacial/LEIA-ME.md)
 REFERENCE = {"fl_v5_municipio_substrato.csv": "2a7b664b1f20", "fl_v5_estado_substrato.csv": "1bd83a1785ea"}
 EPS = 1e-12
@@ -112,16 +133,23 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def load(folder: Path) -> tuple[dict | None, list[dict], str]:
-    """{file: rows}, the manifest checks, and why it did not load (empty if it did)."""
+    """{file: rows}, the manifest checks, and why it did not load (empty if it did).
+
+    The NEEDED tables must all be there; an OPTIONAL one is read only if the manifest lists it. A table that is
+    there and does not match the manifest refuses the whole folder."""
     man = folder / "MANIFESTO.csv"
     if not man.exists():
         return None, [], f"sem {man.relative_to(ROOT) if man.is_relative_to(ROOT) else man}"
     listed = {r["arquivo"]: r for r in _read(man)}
     chk = []
     for name in NEEDED:
-        p = folder / name
-        if name not in listed or not p.exists():
+        if name not in listed or not (folder / name).exists():
             return None, chk, f"falta {name} {'no manifesto' if name not in listed else 'na pasta'}"
+    tables = {**NEEDED, **{n: c for n, c in OPTIONAL.items() if n in listed}}
+    for name in tables:
+        p = folder / name
+        if not p.exists():
+            return None, chk, f"falta {name} na pasta (está no manifesto)"
         sha = hashlib.sha256(p.read_bytes()).hexdigest()
         if sha != listed[name]["sha256"] or p.stat().st_size != int(listed[name]["bytes"]):
             return None, chk, f"{name} não confere com o MANIFESTO.csv (sha256 ou tamanho)"
@@ -129,20 +157,20 @@ def load(folder: Path) -> tuple[dict | None, list[dict], str]:
             chk.append({"checagem": f"{name} é o publicado com a v5.1 (sha256 {REFERENCE[name]}…)",
                         "resultado": sha.startswith(REFERENCE[name]), "detalhe": f"sha256 {sha[:12]}…"})
     data = {}
-    for name, cols in NEEDED.items():
+    for name, cols in tables.items():
         rows = _read(folder / name)
         missing = [c for c in cols if c not in (rows[0] if rows else {})]
         if missing:
             return None, chk, f"{name} sem as colunas {', '.join(missing)}"
         data[name] = rows
     chk.insert(0, {"checagem": "as tabelas de data/fl_v51 conferem com o MANIFESTO.csv", "resultado": True,
-                   "detalhe": f"{len(NEEDED)} arquivos, sha256 e tamanho"})
+                   "detalhe": f"{len(tables)} arquivos, sha256 e tamanho"})
     return data, chk, ""
 
 
 def config() -> dict:
     cfg = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
-    return {"q_min": cfg["q_min"], "raios_km": cfg["raios_km"]}
+    return {"q_min": cfg["q_min"], "raios_km": cfg["raios_km"], "classes_raio": cfg["classes_raio"]}
 
 
 # ── Analysis ────────────────────────────────────────────────────────────────
@@ -179,6 +207,129 @@ def _median(xs: list[float]) -> float:
     s = sorted(xs)
     n = len(s)
     return (s[n // 2] if n % 2 else (s[n // 2 - 1] + s[n // 2]) / 2) if n else math.nan
+
+
+def _quantile(xs: list[float], p: float) -> float:
+    """Linear interpolation between order statistics (numpy's default), as v52_perturbacao.py uses."""
+    s = sorted(xs)
+    if not s:
+        return math.nan
+    h = (len(s) - 1) * p
+    lo = math.floor(h)
+    return s[lo] + (h - lo) * (s[min(lo + 1, len(s) - 1)] - s[lo])
+
+
+def _true(v) -> bool:
+    return str(v).strip().lower() in ("true", "1")
+
+
+def perturbation(data: dict, zero_sets: dict, names: dict) -> dict | None:
+    """Per noise design × scenario: hubs, state FL, zeroed municipalities, how many municipal FLs move; the widest
+    state FLs and the municipalities that zero in some run (med); and the checks against the fl_v5 tables."""
+    if any(n not in data for n in PERT):
+        return None
+    ex, summ = data["pert_execucoes.csv"], {(r["desenho"], r["cenario"]): r for r in data["pert_resumo.csv"]}
+    designs = list(dict.fromkeys(r["desenho"] for r in ex))
+    label = {}
+    for r in ex:
+        cs, cm = _num(r["cv_substrato"]) or 0.0, _num(r["cv_municipio"]) or 0.0
+        label[r["desenho"]] = " × ".join([f"{fmt(100 * cs, 0)} % por substrato"] * (cs > 0)
+                                         + [f"{fmt(100 * cm, 0)} % por município"] * (cm > 0))
+    by: dict = defaultdict(list)
+    for r in ex:
+        by[(r["desenho"], r["cenario"])].append(r)
+    rows, chk = [], []
+    for d in designs:
+        for s in SCEN:
+            g, sm = by.get((d, s), []), summ.get((d, s))
+            if not g or sm is None:
+                continue
+            fl = [_num(r["FL_estado"]) for r in g]
+            rows.append({"desenho": d, "rotulo": label[d], "cenario": s, "rodadas": len(g),
+                         "hubs_v51": int(float(g[0]["hubs_v51"])), "hubs_min": min(int(float(r["hubs"])) for r in g),
+                         "hubs_max": max(int(float(r["hubs"])) for r in g),
+                         "jaccard_mediana": _median([_num(r["jaccard"]) for r in g]),
+                         "FL_estado_v51": _num(g[0]["FL_estado_v51"]), "FL_estado_p05": _quantile(fl, .05),
+                         "FL_estado_p95": _quantile(fl, .95), "zero_v51": int(float(sm["municipios_zero_v51"])),
+                         "zero_min": min(int(float(r["municipios_fl_zero"])) for r in g),
+                         "zero_max": max(int(float(r["municipios_fl_zero"])) for r in g),
+                         "zero_sempre": int(float(sm["municipios_zero_sempre"])),
+                         "zero_alguma_vez": int(float(sm["municipios_zero_alguma_vez"])),
+                         "linhas_mun_substrato": int(float(sm["linhas_mun_substrato"])),
+                         "linhas_mudam_01": int(float(sm["linhas_max_abs_d_acima_01"])),
+                         "linhas_p95_p05_acima_01": int(float(sm["linhas_p95_p05_acima_01"])),
+                         "spearman_min": min(_num(r["spearman_cob_mun"]) for r in g),
+                         "top50_min": min(int(float(r["top50_em_comum"])) for r in g)})
+    bad = [f"{r['desenho']} {r['cenario']}" for r in rows if r["rodadas"] != int(float(summ[(r["desenho"],
+                                                                                       r["cenario"])]["rodadas"]))]
+    chk.append({"checagem": "perturbação: rodadas por desenho e cenário iguais às do resumo", "resultado": not bad,
+                "detalhe": f"{sum(r['rodadas'] for r in rows)} rodadas em {len(rows)} grupos"
+                + (f"; diferem: {', '.join(bad)}" if bad else "")})
+    base = {}
+    for s in SCEN:
+        g = [r for r in ex if r["cenario"] == s]
+        base[s] = ({r["hubs_v51"] for r in g}, {round(_num(r["FL_estado_v51"]), 9) for r in g},
+                   {r["municipios_fl_zero_v51"] for r in g})
+    same = all(len(a) == 1 and len(b) == 1 and len(c) == 1 for a, b, c in base.values())
+    chk.append({"checagem": "perturbação: hubs, FL estadual e zerados da v5.1 iguais em todos os desenhos",
+                "resultado": same, "detalhe": "; ".join(f"{s}: {', '.join(sorted(a))} hubs" for s, (a, _, _)
+                                                        in base.items())})
+    tot = data["pert_fl_municipio_total.csv"]
+    diff = []
+    for s in SCEN:
+        mine = {_ibge(r["ibge"]) for r in tot if r["cenario"] == s and r["desenho"] == designs[0]
+                and _true(r["zero_v51"])}
+        if mine != zero_sets.get(("FL_codig_alocado", s), set()):
+            diff.append(s)
+    chk.append({"checagem": "perturbação: os zerados da v5.1 são os de FL B zero na tabela fl_v5",
+                "resultado": not diff,
+                "detalhe": "min, med e max" + (f"; diferem em {', '.join(diff)}" if diff else "")})
+    widths: dict = defaultdict(dict)
+    fl0 = {}
+    for r in data["pert_fl_estado.csv"]:
+        if r["cenario"] == "med":
+            widths[r["codigo"]][r["desenho"]] = (_num(r["p05"]), _num(r["p95"]))
+            fl0[r["codigo"]] = _num(r["FL_v51"])
+    wide = sorted(widths, key=lambda c: -max(b - a for a, b in widths[c].values()))[:8]
+    zrows: dict = {}
+    for r in tot:
+        if r["cenario"] == "med" and ((_num(r["frac_zero"]) or 0) > 0 or _true(r["zero_v51"])):
+            m = _ibge(r["ibge"])
+            z = zrows.setdefault(m, {"ibge": m, "municipio": names.get(m, m), "zero_v51": _true(r["zero_v51"]),
+                                     **{d: 0.0 for d in designs}})
+            z[r["desenho"]] = _num(r["frac_zero"]) or 0.0
+    zlist = sorted(zrows.values(), key=lambda z: (-z["zero_v51"], -sum(z[d] for d in designs), z["municipio"]))
+    amp = {_ibge(r["ibge"]): (_num(r["p95"]) or 0.0) - (_num(r["p05"]) or 0.0) for r in tot
+           if r["cenario"] == "med" and r["desenho"] == MAP_DESIGN}
+    return {"designs": designs, "label": label, "rows": rows, "wide": [(c, fl0[c], widths[c]) for c in wide],
+            "zeros_med": zlist, "amp": amp, "runs": next((r["rodadas"] for r in rows if r["desenho"] == MAP_DESIGN),
+                                                         None), "conferencia": chk}
+
+
+def bananal(data: dict, cfg: dict, zero_med: set, q_min: float) -> dict | None:
+    """Bananal's supply (med) by class from the fl_v5 table and what its candidate hubs gather (notebook run)."""
+    cand = data.get("v52_bananal_candidatos.csv")
+    if cand is None:
+        return None
+    cls = {c: k for k, lst in cfg["classes_raio"].items() for c in lst}
+    sup: dict = defaultdict(float)
+    name = BANANAL
+    for r in data["fl_v5_municipio_substrato.csv"]:
+        if _ibge(r["ibge"]) == BANANAL and r["cenario"] == "med":
+            name = r["municipio"]
+            sup["PALHA" if r["codigo"] == "PALHA" else cls.get(r["codigo"], "outros")] += \
+                _num(r["oferta_L3_m3dia"]) or 0.0
+    co = sum(v for k, v in sup.items() if k != "PALHA")
+    best = max(cand, key=lambda r: _num(r["ganho_sozinho"]) or 0.0)
+    out = {"municipio": name, "oferta_total": sum(sup.values()), "oferta_codig": co,
+           "liquidos": sup.get("liquidos", 0.0), "candidatos": len(cand),
+           "viaveis": sum(_true(r["viavel"]) for r in cand), "melhor": _num(best["ganho_sozinho"]) or 0.0,
+           "melhor_tipo": best["tipo"], "melhor_d_km": _num(best["d_min_km"]),
+           "melhor_de_bananal": _num(best["de_bananal_w"]) or 0.0, "q_min": q_min}
+    out["conferencia"] = [{"checagem": "Bananal: FL B med zero, nenhum candidato viável e o melhor abaixo do Q_min",
+                           "resultado": BANANAL in zero_med and out["viaveis"] == 0 and out["melhor"] < q_min,
+                           "detalhe": f"{out['candidatos']} candidatos; melhor {fmt(out['melhor'], 1)} Nm³/dia"}]
+    return out
 
 
 def build(data: dict, cfg: dict) -> dict:
@@ -244,8 +395,12 @@ def build(data: dict, cfg: dict) -> dict:
                     "alocacao_maxw": max((abs(_num(r["dif_codig_maxw"]) or 0) for r in aloc), default=None),
                     "alocacao_exclusivo": max((abs(_num(r["dif_codig_exclusivo"]) or 0) for r in aloc),
                                               default=None)})
-    return {"estado": state, "zeros": zrows, "zero_sets": z, "near": [(m, names.get(m, m),
-            top[("FL_codig_alocado", "med")][m]) for m in near], "dist": dist, "q_min": q_min,
+    pert = perturbation(data, z, names)
+    ban = bananal(data, cfg, zero_b, q_min)
+    chk += (pert or {}).get("conferencia", []) + (ban or {}).get("conferencia", [])
+    return {"estado": state, "zeros": zrows, "zero_sets": z, "pert": pert, "bananal": ban,
+            "near": [(m, names.get(m, m), top[("FL_codig_alocado", "med")][m]) for m in near],
+            "dist": dist, "q_min": q_min,
             "r2": cfg["raios_km"]["med"], "c02_estado": c02_state, "c02_lista": c02_list, "c02_mun": c02_mun,
             "mclp": mclp, "mclp_top": mclp_top, "robustez": rob, "r2_tab": data["sensibilidade_r2.csv"],
             "qmin_tab": data["sensibilidade_qmin.csv"], "conferencia": chk}
@@ -285,6 +440,28 @@ def zero_map(path: Path, res: dict) -> str:
             + (f"; sem polígono: {', '.join(missing)}" if missing else "") + ".")
 
 
+def pert_map(path: Path, res: dict) -> str:
+    """Med: amplitude p05–p95 of each municipality's FL B (all substrates) under the MAP_DESIGN noise."""
+    p = res["pert"]
+    if not p or not p["amp"]:
+        return ""
+    try:
+        mesh, _, _ = M.load_mesh()
+    except Exception as e:  # noqa: BLE001 — no mesh is a note, not a failure
+        return f"Mapa da perturbação não desenhado: a malha do IBGE não pôde ser lida ({type(e).__name__})."
+    rings = M.polygons(mesh)
+    values = {c: p["amp"].get(c) for c in rings}
+    classes = ([0.0, 0.01, 0.05, 0.1, 0.2, math.inf], ["< 0,01", "0,01–0,05", "0,05–0,10", "0,10–0,20", "≥ 0,20"],
+               [M.BLUE[0], M.BLUE[2], M.BLUE[3], M.BLUE[5], M.BLUE[6]])
+    M.single_map(path, rings, values, classes, "Quanto o FL municipal varia com ruído na oferta (med)",
+                 f"FL B do município, todos os substratos: amplitude entre os percentis 5 e 95 de {p['runs']} rodadas "
+                 f"com ruído de {p['label'][MAP_DESIGN]} × substrato.", "p95 − p05 do FL", "sem oferta",
+                 source=MAP_SOURCE)
+    n = [sum(1 for v in p["amp"].values() if lo <= v < hi) for lo, hi in zip(classes[0], classes[0][1:])]
+    counts = "; ".join(f"{lab}: {k}" for lab, k in zip(classes[1], n))
+    return f"No mapa da perturbação ({MAP_DESIGN}, med), municípios por classe de p95 − p05: {counts}."
+
+
 # ── Report ──────────────────────────────────────────────────────────────────
 
 
@@ -299,7 +476,62 @@ def _signed(x, nd=4) -> str:
     return ("+" if x > 0 else "") + fmt(x, nd)
 
 
-def report(res: dict, map_note: str) -> list[str]:
+def report_pert(res: dict, map_note: str) -> list[str]:
+    p = res["pert"]
+    L = ["", "## 6. Perturbação da oferta (B, palha nas usinas)", ""]
+    if not p:
+        return L + [f"Não rodou: faltam em `data/fl_v51/` as tabelas {', '.join(f'`{n}`' for n in PERT)} "
+                    "(`fl_espacial/analises_v52/v52_perturbacao.py`)."]
+    L += ["A oferta N3 de cada substrato multiplicada por um fator lognormal de média 1, o mesmo nos três cenários, e "
+          "a alocação gulosa refeita (o filtro de candidatos acompanha o ruído). A rodada sem ruído repete os hubs e o "
+          "FL municipal da v5.1. Com o fator igual dentro do município, o FL municipal de um substrato só muda se a "
+          "rede de hubs mudar.", "",
+          "| Ruído | Cenário | Hubs (v5.1 → faixa) | Jaccard mediano | FL estadual v5.1 (p05–p95) | "
+          "Zerados v5.1 (faixa) | Zeram sempre | Zeram alguma vez | Linhas mun. × subst. com p95 − p05 > 0,1 | "
+          "Spearman mín. | Top-50 mín. |", "|---|---|---|---:|---|---|---:|---:|---|---:|---:|"]
+    L += [f"| {r['rotulo']} | {r['cenario']} | {r['hubs_v51']} → {r['hubs_min']}–{r['hubs_max']} | "
+          f"{fmt(r['jaccard_mediana'], 2)} | {fmt(r['FL_estado_v51'], 3)} ({fmt(r['FL_estado_p05'], 3)}–"
+          f"{fmt(r['FL_estado_p95'], 3)}) | {r['zero_v51']} ({r['zero_min']}–{r['zero_max']}) | {r['zero_sempre']} | "
+          f"{r['zero_alguma_vez']} | {fmt(r['linhas_p95_p05_acima_01'], 0)} de {fmt(r['linhas_mun_substrato'], 0)} | "
+          f"{fmt(r['spearman_min'], 3)} | {r['top50_min']} |" for r in p["rows"]]
+    L += ["", "Jaccard: hubs em comum com a v5.1 sobre a união. Spearman e top-50: ordem dos municípios pela oferta "
+          "coberta (N3 × FL), contra a v5.1; inclui o ruído da própria oferta.", "",
+          "Substratos com o FL estadual mais largo no med (p05–p95):", "",
+          "| Substrato | FL v5.1 | " + " | ".join(p["label"][d] for d in p["designs"]) + " |",
+          "|---|---:|" + "---|" * len(p["designs"])]
+    L += [f"| {c} | {fmt(f0, 3)} | " + " | ".join(f"{fmt(w[d][0], 3)}–{fmt(w[d][1], 3)}" if d in w else "—"
+                                                  for d in p["designs"]) + " |" for c, f0, w in p["wide"]]
+    z = p["zeros_med"]
+    L += ["", f"Municípios com FL B med zero na v5.1 ou em alguma rodada ({len(z)}): fração das rodadas em que zeram.",
+          "", "| Município | Zero na v5.1 | " + " | ".join(p["label"][d] for d in p["designs"]) + " |",
+          "|---|---|" + "---:|" * len(p["designs"])]
+    L += [f"| {r['municipio']} | {'sim' if r['zero_v51'] else 'não'} | "
+          + " | ".join(fmt(r[d], 2) for d in p["designs"]) + " |" for r in z]
+    if map_note:
+        L += ["", map_note + (" Mapa: `mapa_perturbacao_fl.png`." if map_note.startswith("No mapa") else "")]
+    return L
+
+
+def report_bananal(res: dict) -> list[str]:
+    b = res["bananal"]
+    L = ["", "## 7. Bananal: oferta acima do Q_min e nenhum hub", ""]
+    if not b:
+        return L + ["Não rodou: falta `data/fl_v51/v52_bananal_candidatos.csv` "
+                    "(`fl_espacial/analises_v52/v52_bananal.py`)."]
+    pal = b["oferta_total"] - b["oferta_codig"]
+    return L + [
+        f"- Oferta N3 med: {fmt(b['oferta_total'], 1)} Nm³/dia; sem a palha de cana ({fmt(pal, 1)}), que vai só às "
+        f"usinas, {fmt(b['oferta_codig'], 1)} para a codigestão, "
+        f"{fmt(100 * b['liquidos'] / b['oferta_codig'], 0) if b['oferta_codig'] else '—'} % "
+        "dela em líquidos (raios de 5/15 km). Fonte: `fl_v5_municipio_substrato.csv`.",
+        f"- {b['candidatos']} candidatos a hub alcançam essa oferta; {b['viaveis']} viáveis pela bacia de cobertura "
+        f"(Q_min {fmt(b['q_min'], 0)} Nm³/dia).",
+        f"- O melhor ({b['melhor_tipo']}, a {_f(b['melhor_d_km'], 1)} km da oferta) junta {fmt(b['melhor'], 1)} "
+        f"Nm³/dia pesados por w(d), {fmt(100 * b['melhor'] / b['q_min'], 0)} % do Q_min; "
+        f"{fmt(b['melhor_de_bananal'], 1)} vêm do próprio Bananal. Fonte: `v52_bananal_candidatos.csv`."]
+
+
+def report(res: dict, map_note: str, pert_note: str = "") -> list[str]:
     L = ["# O FL espacial do CP2b v5.1, lido das saídas do fl_v5", "",
          "> Tabelas agregadas de `data/fl_v51/` (conferidas com o `MANIFESTO.csv`), escritas pelo código de "
          "`fl_espacial/`. FL entre 0 e 1; oferta em Nm³ de CH₄ por dia (N3). Nada aqui roda o fl_v5 de novo.", "",
@@ -375,7 +607,8 @@ def report(res: dict, map_note: str) -> list[str]:
           "|---:|---:|---:|---:|"]
     L += [f"| {r['q_min']} | {r['hubs_viaveis_co']} | {_f(_num(r['FL_co_sem_palha']))} | "
           f"{_f(_num(r['FL_mono_sem_palha']))} |" for r in res["qmin_tab"]]
-    L += ["", "## 6. Conferência", "", "| Checagem | Resultado | Detalhe |", "|---|---|---|"]
+    L += report_pert(res, pert_note) + report_bananal(res)
+    L += ["", "## 8. Conferência", "", "| Checagem | Resultado | Detalhe |", "|---|---|---|"]
     L += [f"| {c['checagem']} | {'ok' if c['resultado'] else 'FALHOU'} | {c['detalhe']} |" for c in res["conferencia"]]
     L += ["", "## Como ler", "",
           "- Um município zera quando nenhuma oferta dele fica a menos de r2 de um hub selecionado; um hub só entra "
@@ -397,13 +630,17 @@ def main() -> None:
     res = build(data, config())
     res["conferencia"] = chk + res["conferencia"]
     note = zero_map(OUT / "mapa_zeros_variantes.png", res)
+    pnote = pert_map(OUT / "mapa_perturbacao_fl.png", res)
     write_csv(OUT / "estado_variantes.csv", res["estado"])
     write_csv(OUT / "zeros_variantes.csv", res["zeros"])
     write_csv(OUT / "zeros_distancia.csv", res["dist"])
     write_csv(OUT / "c02_estado.csv", res["c02_estado"])
     write_csv(OUT / "c02_municipios.csv", res["c02_mun"])
+    if res["pert"]:
+        write_csv(OUT / "perturbacao.csv", res["pert"]["rows"])
+        write_csv(OUT / "perturbacao_zeros_med.csv", res["pert"]["zeros_med"])
     write_csv(OUT / "conferencia.csv", res["conferencia"])
-    (OUT / "RELATORIO.md").write_text("\n".join(report(res, note)) + "\n", encoding="utf-8")
+    (OUT / "RELATORIO.md").write_text("\n".join(report(res, note, pnote)) + "\n", encoding="utf-8")
     failed = [c["checagem"] for c in res["conferencia"] if not c["resultado"]]
     print(f"conferência: {'ok' if not failed else 'FALHOU em ' + '; '.join(failed)}")
     print(f"Wrote {OUT.relative_to(ROOT) if OUT.is_relative_to(ROOT) else OUT}/")

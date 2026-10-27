@@ -142,6 +142,8 @@ def test_the_report_and_the_map(run, monkeypatch):
     assert "## 3. Por que os municípios zeram" in text
     assert "1 municípios; hub mais próximo a 30,0–30,0 km" in text and "M3 (0,0040)" in text
     assert (run / "out" / "mapa_zeros_variantes.png").exists() and "Mapa: `mapa_zeros_variantes.png`" in text
+    assert "## 6. Perturbação da oferta" in text and "Não rodou: faltam em `data/fl_v51/`" in text
+    assert not (run / "out" / "mapa_perturbacao_fl.png").exists() and not (run / "out" / "perturbacao.csv").exists()
     rows = list(csv.DictReader((run / "out" / "conferencia.csv").open(encoding="utf-8")))
     assert [r["checagem"] for r in rows if r["resultado"] == "False"] == [
         f"{n} é o publicado com a v5.1 (sha256 {h}…)" for n, h in F.REFERENCE.items()]
@@ -158,3 +160,101 @@ def test_map_classes_put_b_first():
     sets = {(v, "med"): s for v, s in zip(V, ({"1", "2"}, {"1"}, {"1", "2", "3"}, {"1", "2", "3", "4"}))}
     value, n = F.map_classes(sets)
     assert value == {"1": 3.0, "2": 2.0, "3": 1.0, "4": 1.0} and n == [2, 1, 1]
+
+
+# frac_zero of each municipality in every design and scenario; "2" is the one zero in B in the fl_v5 tables
+MUN_ZERO = {"3500105": 0.0, "3500204": 1.0, "3500303": 0.5}
+CFG_CLS = {**CFG, "classes_raio": {"liquidos": ["BOV_LEITE"], "solidos_secos": ["PALHA", "BAGACO"]}}
+
+
+def pert_tables(hubs_v51=10):
+    designs = (("mun30", 0.0, 0.3), ("sub20_mun20", 0.2, 0.2))
+    ex, summ, est, tot = [], [], [], []
+    for d, cs, cm in designs:
+        for s in F.SCEN:
+            for k, fl in ((1, 0.69), (2, 0.71)):
+                ex.append({"desenho": d, "cv_substrato": cs, "cv_municipio": cm, "cenario": s, "rodada": k,
+                           "hubs": 9 + k, "hubs_v51": hubs_v51 if (d, s, k) == ("mun30", "med", 1) else 10,
+                           "jaccard": 0.8, "municipios_fl_zero": k, "municipios_fl_zero_v51": 1, "FL_estado": fl,
+                           "FL_estado_v51": 0.7, "spearman_cob_mun": 0.99, "top50_em_comum": 3})
+            summ.append({"desenho": d, "cenario": s, "rodadas": 2, "linhas_mun_substrato": 6,
+                         "linhas_max_abs_d_acima_01": 2, "linhas_p95_p05_acima_01": 1, "hubs_v51": 10,
+                         "municipios_zero_v51": 1, "municipios_zero_sempre": 1, "municipios_zero_alguma_vez": 2})
+            est += [{"desenho": d, "cenario": s, "codigo": c, "FL_v51": 0.7, "p05": 0.7 - w, "p95": 0.7 + w}
+                    for c, w in (("BOV_LEITE", 0.05), ("BAGACO", 0.01))]
+            tot += [{"desenho": d, "cenario": s, "ibge": m, "FL_v51": 0.5, "p05": 0.4, "p95": 0.65 if z else 0.47,
+                     "frac_zero": z, "zero_v51": m == "3500204"} for m, z in MUN_ZERO.items()]
+    return {"pert_resumo.csv": summ, "pert_execucoes.csv": ex, "pert_fl_estado.csv": est,
+            "pert_fl_municipio_total.csv": tot,
+            "v52_bananal_candidatos.csv": [
+                {"hub_id": 7, "tipo": "grade", "d_min_km": 0.4, "bacia_cobertura": 618.0, "viavel": False,
+                 "de_bananal_w": 600.0, "ganho_sozinho": 618.0},
+                {"hub_id": 9, "tipo": "ete", "d_min_km": 10.0, "bacia_cobertura": 500.0, "viavel": False,
+                 "de_bananal_w": 80.0, "ganho_sozinho": 500.0}]}
+
+
+def with_bananal():
+    """tables() and pert_tables() plus Bananal: FL zero in every variant, zero in every perturbed run."""
+    t = {**tables(), **pert_tables()}
+    for s in F.SCEN:
+        for code, v in (("BOV_LEITE", 1338.0), ("PALHA", 77.0), ("BAGACO", 196.0)):
+            t["fl_v5_municipio_substrato.csv"].append({"ibge": F.BANANAL, "codigo": code, "cenario": s,
+                                                       "municipio": "Bananal", **dict.fromkeys(V, 0.0),
+                                                       "oferta_L3_m3dia": v})
+    t["pert_fl_municipio_total.csv"] += [{**r, "ibge": F.BANANAL} for r in t["pert_fl_municipio_total.csv"]
+                                         if r["ibge"] == "3500204"]
+    return t
+
+
+def test_perturbation_and_bananal(run):
+    write(run / "fl_v51", with_bananal())
+    data, chk, why = F.load(run / "fl_v51")
+    assert why == "" and "15 arquivos" in chk[0]["detalhe"]
+    res = F.build(data, CFG_CLS)
+    p = res["pert"]
+    assert [r["cenario"] for r in p["rows"]] == ["min", "med", "max"] * 2
+    r = next(r for r in p["rows"] if (r["desenho"], r["cenario"]) == ("sub20_mun20", "med"))
+    assert r["rotulo"] == "20 % por substrato × 20 % por município"
+    assert r["FL_estado_p05"] == pytest.approx(0.691) and (r["hubs_min"], r["hubs_max"]) == (10, 11)
+    assert [c for c, _, _ in p["wide"]] == ["BOV_LEITE", "BAGACO"]
+    assert [z["ibge"] for z in p["zeros_med"]] == [F.BANANAL, "3500204", "3500303"]
+    assert p["amp"]["3500105"] == pytest.approx(0.07) and p["amp"]["3500204"] == pytest.approx(0.25)
+    b = res["bananal"]
+    assert (b["oferta_total"], b["oferta_codig"], b["liquidos"]) == (1611.0, 1534.0, 1338.0)
+    assert (b["candidatos"], b["viaveis"], b["melhor"]) == (2, 0, 618.0)
+    mine = [c for c in res["conferencia"] if c["checagem"].startswith(("perturbação", "Bananal"))]
+    assert len(mine) == 4 and all(c["resultado"] for c in mine), mine
+    text = "\n".join(F.report(res, "", ""))
+    assert "## 6. Perturbação da oferta" in text and "| 30 % por município | med | 10 → 10–11 |" in text
+    assert "1.534,0 para a codigestão, 87 % dela em líquidos" in text and "41 % do Q_min" in text
+
+
+def test_a_baseline_that_differs_between_designs_fails_the_check(run):
+    write(run / "fl_v51", {**tables(), **pert_tables(hubs_v51=12)})
+    data, _, _ = F.load(run / "fl_v51")
+    chk = {c["checagem"]: c for c in F.build(data, CFG_CLS)["conferencia"]}
+    assert not chk["perturbação: hubs, FL estadual e zerados da v5.1 iguais em todos os desenhos"]["resultado"]
+    assert not chk["Bananal: FL B med zero, nenhum candidato viável e o melhor abaixo do Q_min"]["resultado"]
+
+
+def test_a_perturbation_table_that_does_not_match_the_manifest_is_refused(run):
+    write(run / "fl_v51", {**tables(), **pert_tables()})
+    with (run / "fl_v51" / "pert_resumo.csv").open("a", encoding="utf-8") as fh:
+        fh.write("x,med,2,6,2,1,10,1,1,2\n")
+    data, _, why = F.load(run / "fl_v51")
+    assert data is None and "pert_resumo.csv não confere" in why
+
+
+def test_the_perturbation_map(run, monkeypatch):
+    write(run / "fl_v51", with_bananal())
+    ring = [[0, -22.0], [1, -22.0], [1, -21.0], [0, -21.0], [0, -22.0]]
+    mesh = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "properties": {"codarea": m}, "geometry": {"type": "Polygon", "coordinates": [ring]}}
+        for m in (*MUN, F.BANANAL)]}
+    (run / "mesh.geojson").write_text(json.dumps(mesh), encoding="utf-8")
+    monkeypatch.setenv("CP2B_MALHA", str(run / "mesh.geojson"))
+    F.main()
+    text = (run / "out" / "RELATORIO.md").read_text(encoding="utf-8")
+    assert (run / "out" / "mapa_perturbacao_fl.png").exists() and "Mapa: `mapa_perturbacao_fl.png`" in text
+    assert "< 0,01: 0; 0,01–0,05: 0; 0,05–0,10: 1; 0,10–0,20: 0; ≥ 0,20: 3" in text
+    assert (run / "out" / "perturbacao.csv").exists() and "## 7. Bananal" in text
