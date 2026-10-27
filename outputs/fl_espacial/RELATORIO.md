@@ -287,7 +287,7 @@ Municípios com FL B med zero na v5.1 ou em alguma rodada (47): fração das rod
 | Peruíbe | não | 0,00 | 0,00 | 0,03 |
 | Salesópolis | não | 0,00 | 0,03 | 0,00 |
 
-Mapa da perturbação não desenhado aqui (sem a malha do IBGE); sai ao rodar o script com a malha.
+No mapa da perturbação (mun30, med), municípios por classe de p95 − p05: < 0,01: 109; 0,01–0,05: 241; 0,05–0,10: 124; 0,10–0,20: 91; ≥ 0,20: 80. Mapa: `mapa_perturbacao_fl.png`.
 
 ## 7. Bananal: oferta acima do Q_min e nenhum hub
 
