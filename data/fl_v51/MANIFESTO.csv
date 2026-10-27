@@ -9,3 +9,10 @@ fl_alocado_robustez.csv,v5.1,17348,257e0968b66bf903d7c2475abd80317b24a6dc859e1d9
 c02_fl_delta.csv,v5.2 C02 (fl_espacial_v52_C02),6861,604243b98ae331276dc003514d58e03672e0212b2ef971cad5c34614bb020f01
 c02_fl_municipio_delta.csv,v5.2 C02 (fl_espacial_v52_C02),64715,6e4b7f8e58d77483f4ee51f14004fcb1c30c588de83e0fad39c565f80f9db820
 v52_zeros_distancia_hub.csv,v5.1 reproduzida (fl_espacial_v52),15185,287423e9b78c63c66a01c723af1c040c72452debef34812d9e990b67c7031ae4
+pert_resumo.csv,"v5.2 perturbacao da oferta (fl_espacial_v52, script 9ce49e2)",843,5ccd3e87ffd0263a0caaa6c6413aac660ac33e0ba7d9184fa0f42b47b25aed45
+pert_execucoes.csv,"v5.2 perturbacao da oferta (fl_espacial_v52, script 9ce49e2)",25959,c82acf524a0ce7ed382501fa6068547453dd10b83bf10e8e0cac768da5883333
+pert_fl_estado.csv,"v5.2 perturbacao da oferta (fl_espacial_v52, script 9ce49e2)",9566,d3307d66e71dcbb3854ff9ef3461eab96598a2ca5a30496351d8b7bbd21668f1
+pert_fl_municipio_total.csv,"v5.2 perturbacao da oferta (fl_espacial_v52, script 9ce49e2)",375566,52772b1889478fc882de6f8dcd3e77865fde0098044cf6786d56ec19a7df6582
+pert_fl_municipio_substrato.csv,"v5.2 perturbacao da oferta (fl_espacial_v52, script 9ce49e2)",1764975,13d84a6ebfe460f1aab8c86afa642e2126ca537b3866ebfce604043c94143f47
+pert_hubs.csv,"v5.2 perturbacao da oferta (fl_espacial_v52, script 9ce49e2)",466136,f93453a7e38ac4334c7989ef7dd97b34c644b328f2b4e4feca18d9eb08752669
+v52_bananal_candidatos.csv,v5.1 reproduzida (fl_espacial_v52),3487,a56524046987342c0d23c640f68c8cc7ab52b4ed1c8eecb5c06093cba366adfa

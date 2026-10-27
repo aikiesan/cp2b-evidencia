@@ -1,0 +1,10 @@
+desenho,cenario,rodadas,linhas_mun_substrato,linhas_max_abs_d_acima_001,linhas_max_abs_d_acima_01,linhas_p95_p05_acima_01,hubs_v51_em_todas,hubs_v51,hubs_fora_v51_alguma_vez,municipios_zero_v51,municipios_zero_min,municipios_zero_max,municipios_zero_alguma_vez,municipios_zero_sempre
+mun10,min,30,5953,739,498,370,149,175,41,143,140,159,162,139
+mun10,med,30,6127,2722,1579,1348,204,455,416,26,23,30,33,23
+mun10,max,30,6136,1908,817,685,207,752,1164,0,0,0,0,0
+mun30,min,30,5953,1639,1119,898,105,175,142,143,139,162,169,125
+mun30,med,30,6127,3827,2699,2434,77,455,946,26,18,32,44,14
+mun30,max,30,6136,2400,1233,1101,38,752,2250,0,0,1,1,0
+sub20_mun20,min,30,5953,1708,1206,996,107,175,138,143,137,172,188,126
+sub20_mun20,med,30,6127,3740,2598,2312,99,455,879,26,14,38,44,12
+sub20_mun20,max,30,6136,2327,1184,1035,58,752,2130,0,0,1,1,0
