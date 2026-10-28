@@ -1,5 +1,5 @@
 checagem,resultado,detalhe
-as tabelas de data/fl_v51 conferem com o MANIFESTO.csv,True,"15 arquivos, sha256 e tamanho"
+as tabelas de data/fl_v51 conferem com o MANIFESTO.csv,True,"16 arquivos, sha256 e tamanho"
 fl_v5_municipio_substrato.csv é o publicado com a v5.1 (sha256 2a7b664b1f20…),True,sha256 2a7b664b1f20…
 fl_v5_estado_substrato.csv é o publicado com a v5.1 (sha256 1bd83a1785ea…),True,sha256 1bd83a1785ea…
 os municípios da tabela de distâncias são os de FL B med zero,True,"26 na tabela, 26 com FL B med zero"

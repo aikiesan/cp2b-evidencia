@@ -77,8 +77,10 @@ relatório em `../outputs/fl_espacial/`):
   candidatos usa a bacia pelos pares escalada pela razão com ruído/sem ruído.
   Cada rodada fica em `runs/` da cópia, então a rodada retoma se parar.
 
-Os quatro scripts estão em `analises_v52/` (`v52_c02_oferta.py`, `v52_zeros.py`,
-`v52_bananal.py`, `v52_perturbacao.py`); rodam com `cwd` na cópia, pelo
+Os scripts estão em `analises_v52/` (`v52_c02_oferta.py`, `v52_zeros.py`,
+`v52_bananal.py`, `v52_perturbacao.py` e `v52_pert_exporta.py`, que exporta o FL
+de cada rodada no med para `../scripts/build_incerteza_rede.py`, depois de
+conferir os quantis com os da perturbação); rodam com `cwd` na cópia, pelo
 `Metodo_CP2b/.venv`.
 
 Cuidado ao rodar: `06_integracao.py` grava em `integracao.saida_v5`, que no

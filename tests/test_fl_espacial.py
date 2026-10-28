@@ -179,13 +179,18 @@ def pert_tables(hubs_v51=10):
                            "FL_estado_v51": 0.7, "spearman_cob_mun": 0.99, "top50_em_comum": 3})
             summ.append({"desenho": d, "cenario": s, "rodadas": 2, "linhas_mun_substrato": 6,
                          "linhas_max_abs_d_acima_01": 2, "linhas_p95_p05_acima_01": 1, "hubs_v51": 10,
-                         "municipios_zero_v51": 1, "municipios_zero_sempre": 1, "municipios_zero_alguma_vez": 2})
+                         "municipios_zero_v51": 1, "municipios_zero_sempre": 1, "municipios_zero_alguma_vez": 2,
+                         "hubs_v51_em_todas": 7, "hubs_fora_v51_alguma_vez": 4})
             est += [{"desenho": d, "cenario": s, "codigo": c, "FL_v51": 0.7, "p05": 0.7 - w, "p95": 0.7 + w}
                     for c, w in (("BOV_LEITE", 0.05), ("BAGACO", 0.01))]
             tot += [{"desenho": d, "cenario": s, "ibge": m, "FL_v51": 0.5, "p05": 0.4, "p95": 0.65 if z else 0.47,
                      "frac_zero": z, "zero_v51": m == "3500204"} for m, z in MUN_ZERO.items()]
+    hubs = [{"desenho": d, "cenario": "med", "hub_id": h, "tipo": tipo, "na_v51": na, "frac_rodadas": f}
+            for d, _, _ in designs
+            for h, tipo, na, f in ((1, "usina", True, 1.0), (2, "grade", True, 0.95), (3, "grade", True, 0.5),
+                                   (4, "grade", False, 0.5))]
     return {"pert_resumo.csv": summ, "pert_execucoes.csv": ex, "pert_fl_estado.csv": est,
-            "pert_fl_municipio_total.csv": tot,
+            "pert_fl_municipio_total.csv": tot, "pert_hubs.csv": hubs,
             "v52_bananal_candidatos.csv": [
                 {"hub_id": 7, "tipo": "grade", "d_min_km": 0.4, "bacia_cobertura": 618.0, "viavel": False,
                  "de_bananal_w": 600.0, "ganho_sozinho": 618.0},
@@ -209,7 +214,7 @@ def with_bananal():
 def test_perturbation_and_bananal(run):
     write(run / "fl_v51", with_bananal())
     data, chk, why = F.load(run / "fl_v51")
-    assert why == "" and "15 arquivos" in chk[0]["detalhe"]
+    assert why == "" and "16 arquivos" in chk[0]["detalhe"]
     res = F.build(data, CFG_CLS)
     p = res["pert"]
     assert [r["cenario"] for r in p["rows"]] == ["min", "med", "max"] * 2
@@ -227,6 +232,10 @@ def test_perturbation_and_bananal(run):
     text = "\n".join(F.report(res, "", ""))
     assert "## 6. Perturbação da oferta" in text and "| 30 % por município | med | 10 → 10–11 |" in text
     assert "1.534,0 para a codigestão, 87 % dela em líquidos" in text and "41 % do Q_min" in text
+    h = next(r for r in p["hubs"] if r["desenho"] == "mun30")
+    assert (h["em_todas"], h["de_fora"], h["grade_estaveis"], h["grade_v51"]) == (7, 4, 1, 2)
+    assert (h["existente_estaveis"], h["existente_v51"]) == (1, 1)
+    assert "| 30 % por município | 10 | 7 | 1 de 2 | 1 de 1 | 4 |" in text
 
 
 def test_a_baseline_that_differs_between_designs_fails_the_check(run):

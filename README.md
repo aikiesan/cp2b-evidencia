@@ -27,6 +27,7 @@ PILAR-2b (o loader do CP2b e o `feedstocks.yaml`); nada aqui escreve lá.
 - `outputs/diagnostico_n4_zero/`: onde a cascata zera os municípios de N4 med zero.
 - `outputs/fl_variantes/`: o N4 com cada variante do FL espacial do snapshot, os municípios de N4 zero em cada uma e se o FL zero segue um limiar de oferta.
 - `outputs/fl_espacial/`: o FL do fl_v5 lido das próprias saídas (`data/fl_v51/`, conferidas pelo `MANIFESTO.csv`): FL estadual por variante, municípios zerados e a distância de cada um ao hub selecionado contra o r2 e o Q_min, o efeito da C02 no FL e as sensibilidades do fl_v5. O mapa dos zerados precisa da malha do IBGE.
+- `outputs/incerteza_rede/`: a incerteza municipal do N4 com a rede de hubs: cada sorteio da incerteza recebe uma rodada da perturbação da oferta do fl_v5 (`data/fl_v51/pert_fl_rodadas_med.csv`), e o FL de cada município se desloca pelo que a rodada mudou. Quanto o intervalo municipal alarga, o top 50 e os municípios zerados.
 - `data/fl_v51/`: tabelas agregadas do fl_v5 (v5.1 e a rodada da C02), copiadas pelo time; só agregados por município e estado.
 - `outputs/v52/`: o que cada mudança proposta para a v5.2 (`v52/mudancas.csv`) faz no N4, no ranking e no intervalo de 90 %.
 - `v52/`: a v5.2 em construção; como propor uma mudança está em `v52/README.md`.
@@ -53,6 +54,7 @@ python scripts/build_incerteza_correlacao.py
 python scripts/build_diagnostico_n4_zero.py
 python scripts/build_fl_variantes.py
 python scripts/build_fl_espacial.py
+python scripts/build_incerteza_rede.py
 python scripts/build_v52.py
 python -m pytest -q
 ```

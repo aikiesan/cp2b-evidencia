@@ -83,10 +83,14 @@ OPTIONAL = {
     "pert_fl_municipio_total.csv": ("desenho", "cenario", "ibge", "FL_v51", "p05", "p95", "frac_zero", "zero_v51"),
     "v52_bananal_candidatos.csv": ("hub_id", "tipo", "d_min_km", "bacia_cobertura", "viavel", "de_bananal_w",
                                    "ganho_sozinho"),
+    "pert_hubs.csv": ("desenho", "cenario", "hub_id", "tipo", "na_v51", "frac_rodadas"),
+    # read by build_incerteza_rede.py; checked here with the rest of the folder
+    "pert_fl_rodadas_med.csv": ("desenho", "ibge", "codigo", "FL_v51", "r01"),
 }
 PERT = ("pert_resumo.csv", "pert_execucoes.csv", "pert_fl_estado.csv", "pert_fl_municipio_total.csv")
 BANANAL = "3504909"
 MAP_DESIGN = "mun30"   # the perturbation map: municipal noise only, the larger CV
+STEADY = 0.9           # a hub is steady when it is selected in at least this share of the runs
 # sha256 of the two fl_v5 tables as published with v5.1 (fl_espacial/LEIA-ME.md)
 REFERENCE = {"fl_v5_municipio_substrato.csv": "2a7b664b1f20", "fl_v5_estado_substrato.csv": "1bd83a1785ea"}
 EPS = 1e-12
@@ -302,8 +306,8 @@ def perturbation(data: dict, zero_sets: dict, names: dict) -> dict | None:
     amp = {_ibge(r["ibge"]): (_num(r["p95"]) or 0.0) - (_num(r["p05"]) or 0.0) for r in tot
            if r["cenario"] == "med" and r["desenho"] == MAP_DESIGN}
     return {"designs": designs, "label": label, "rows": rows, "wide": [(c, fl0[c], widths[c]) for c in wide],
-            "zeros_med": zlist, "amp": amp, "runs": next((r["rodadas"] for r in rows if r["desenho"] == MAP_DESIGN),
-                                                         None), "conferencia": chk}
+            "zeros_med": zlist, "amp": amp, "hubs": steady_hubs(data, designs, summ),
+            "runs": next((r["rodadas"] for r in rows if r["desenho"] == MAP_DESIGN), None), "conferencia": chk}
 
 
 def bananal(data: dict, cfg: dict, zero_med: set, q_min: float) -> dict | None:
@@ -476,6 +480,28 @@ def _signed(x, nd=4) -> str:
     return ("+" if x > 0 else "") + fmt(x, nd)
 
 
+def steady_hubs(data: dict, designs: list[str], summ: dict) -> list[dict]:
+    """Med, per design: how many v5.1 hubs are selected in every run and in at least STEADY of them (grid cells
+    and existing plants apart), and how many hubs outside v5.1 enter some run."""
+    hubs = data.get("pert_hubs.csv")
+    out = []
+    for d in designs:
+        sm = summ.get((d, "med"))
+        if sm is None:
+            continue
+        row = {"desenho": d, "hubs_v51": int(float(sm["hubs_v51"])),
+               "em_todas": int(float(sm["hubs_v51_em_todas"])) if sm.get("hubs_v51_em_todas") else None,
+               "de_fora": int(float(sm["hubs_fora_v51_alguma_vez"])) if sm.get("hubs_fora_v51_alguma_vez") else None}
+        if hubs:
+            g = [r for r in hubs if r["desenho"] == d and r["cenario"] == "med" and _true(r["na_v51"])]
+            for kind, test in (("grade", lambda t: t == "grade"), ("existente", lambda t: t != "grade")):
+                k = [r for r in g if test(r["tipo"])]
+                row[f"{kind}_v51"] = len(k)
+                row[f"{kind}_estaveis"] = sum((_num(r["frac_rodadas"]) or 0.0) >= STEADY for r in k)
+        out.append(row)
+    return out
+
+
 def report_pert(res: dict, map_note: str) -> list[str]:
     p = res["pert"]
     L = ["", "## 6. Perturbação da oferta (B, palha nas usinas)", ""]
@@ -501,6 +527,19 @@ def report_pert(res: dict, map_note: str) -> list[str]:
           "|---|---:|" + "---|" * len(p["designs"])]
     L += [f"| {c} | {fmt(f0, 3)} | " + " | ".join(f"{fmt(w[d][0], 3)}–{fmt(w[d][1], 3)}" if d in w else "—"
                                                   for d in p["designs"]) + " |" for c, f0, w in p["wide"]]
+    h = [r for r in p.get("hubs", []) if r["em_todas"] is not None]
+    if h:
+        steady = "grade_v51" in h[0]
+        L += ["", "Hubs da v5.1 que se mantêm (med):", "",
+              "| Ruído | Hubs v5.1 | Em todas as rodadas |"
+              + (f" Em ≥ {fmt(100 * STEADY, 0)} %: grade | Em ≥ {fmt(100 * STEADY, 0)} %: plantas existentes |"
+                 if steady else "") + " Hubs de fora da v5.1 em alguma rodada |",
+              "|---|---:|---:|" + ("---:|---:|" if steady else "") + "---:|"]
+        L += [f"| {p['label'][r['desenho']]} | {r['hubs_v51']} | {r['em_todas']} |"
+              + (f" {r['grade_estaveis']} de {r['grade_v51']} | {r['existente_estaveis']} de {r['existente_v51']} |"
+                 if steady else "") + f" {fmt(r['de_fora'], 0) if r['de_fora'] is not None else '—'} |" for r in h]
+        L += ["", "Plantas existentes: usinas, biogás, ETE e fábricas de suco que o fl_v5 aceita como hub; grade: "
+              "células candidatas da grade."]
     z = p["zeros_med"]
     L += ["", f"Municípios com FL B med zero na v5.1 ou em alguma rodada ({len(z)}): fração das rodadas em que zeram.",
           "", "| Município | Zero na v5.1 | " + " | ".join(p["label"][d] for d in p["designs"]) + " |",

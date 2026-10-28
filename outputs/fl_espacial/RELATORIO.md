@@ -235,6 +235,16 @@ Substratos com o FL estadual mais largo no med (p05–p95):
 | RSU_ORGANICO | 0,951 | 0,950–0,954 | 0,947–0,960 | 0,939–0,961 |
 | PODA_URBANA | 0,950 | 0,946–0,952 | 0,942–0,955 | 0,938–0,957 |
 
+Hubs da v5.1 que se mantêm (med):
+
+| Ruído | Hubs v5.1 | Em todas as rodadas | Em ≥ 90 %: grade | Em ≥ 90 %: plantas existentes | Hubs de fora da v5.1 em alguma rodada |
+|---|---:|---:|---:|---:|---:|
+| 10 % por município | 455 | 204 | 246 de 423 | 20 de 32 | 416 |
+| 30 % por município | 455 | 77 | 136 de 423 | 7 de 32 | 946 |
+| 20 % por substrato × 20 % por município | 455 | 99 | 157 de 423 | 10 de 32 | 879 |
+
+Plantas existentes: usinas, biogás, ETE e fábricas de suco que o fl_v5 aceita como hub; grade: células candidatas da grade.
+
 Municípios com FL B med zero na v5.1 ou em alguma rodada (47): fração das rodadas em que zeram.
 
 | Município | Zero na v5.1 | 10 % por município | 30 % por município | 20 % por substrato × 20 % por município |
@@ -299,7 +309,7 @@ No mapa da perturbação (mun30, med), municípios por classe de p95 − p05: < 
 
 | Checagem | Resultado | Detalhe |
 |---|---|---|
-| as tabelas de data/fl_v51 conferem com o MANIFESTO.csv | ok | 15 arquivos, sha256 e tamanho |
+| as tabelas de data/fl_v51 conferem com o MANIFESTO.csv | ok | 16 arquivos, sha256 e tamanho |
 | fl_v5_municipio_substrato.csv é o publicado com a v5.1 (sha256 2a7b664b1f20…) | ok | sha256 2a7b664b1f20… |
 | fl_v5_estado_substrato.csv é o publicado com a v5.1 (sha256 1bd83a1785ea…) | ok | sha256 1bd83a1785ea… |
 | os municípios da tabela de distâncias são os de FL B med zero | ok | 26 na tabela, 26 com FL B med zero |
